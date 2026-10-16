@@ -1,0 +1,520 @@
+/*
+ * teacher/assignments
+ * One stylesheet per template/page; base holds the shared shell and design system.
+ *
+ * Colours come from the --sp-* tokens where they exist. Surfaces, borders and
+ * tracks are derived from currentColor, so they follow light/dark automatically.
+ */
+
+.sp-asg {
+	--asg-surface: var(--sp-surface, #fff);
+	--asg-border: var(--sp-border, color-mix(in srgb, currentColor 14%, transparent));
+	--asg-subtle: color-mix(in srgb, currentColor 5%, transparent);
+	--asg-track: color-mix(in srgb, currentColor 12%, transparent);
+	--asg-muted: var(--sp-muted, #667085);
+	--asg-primary: var(--sp-primary, #4f46e5);
+	--asg-accent-text: color-mix(in srgb, var(--asg-primary) 75%, currentColor);
+	--asg-good: #12b76a;
+	--asg-warn: #b54708;
+	--asg-radius: 14px;
+	--asg-shadow: var(--sp-shadow-sm, 0 1px 2px rgba(16, 24, 40, 0.06));
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) .sp-asg {
+		--asg-warn: #fdb022;
+	}
+}
+
+:root[data-theme="dark"] .sp-asg {
+	--asg-warn: #fdb022;
+}
+
+/* Visually hidden, still read by screen readers */
+.sp-asg-sr {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* Page header ------------------------------------------------------------ */
+
+.sp-asg-head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 1.25rem;
+}
+
+.sp-asg .sp-page-head {
+	margin: 0;
+}
+
+.sp-asg .sp-page-sub {
+	margin: 0.25rem 0 0;
+	max-width: 60ch;
+	color: var(--asg-muted);
+}
+
+.sp-asg .sp-muted {
+	color: var(--asg-muted);
+}
+
+/* Buttons ---------------------------------------------------------------- */
+
+.sp-asg .sp-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.4rem;
+	min-height: 44px;
+	padding-inline: 1.15rem;
+	border-radius: var(--asg-radius);
+	font-size: 0.875rem;
+	font-weight: 600;
+	transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+
+}
+
+.sp-asg .sp-btn-sm {
+	min-height: 36px;
+	padding-inline: 0.9rem;
+	font-size: 0.875rem;
+}
+
+.sp-asg .sp-asg-add::before {
+	content: "+" / "";
+	font-size: 1.1em;
+	font-weight: 700;
+	line-height: 1;
+}
+
+.sp-asg .sp-asg-open::after {
+	content: "\2192" / "";
+	transition: transform 0.15s ease;
+}
+
+.sp-asg .sp-asg-open:hover::after {
+	transform: translateX(3px);
+}
+
+/* Summary strip ---------------------------------------------------------- */
+
+.sp-asg-summary {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 0.75rem;
+	margin: 0 0 1.25rem;
+}
+
+.sp-asg-stat {
+	display: flex;
+	flex-direction: column-reverse; /* value above label, label first in the DOM */
+	gap: 0.15rem;
+	padding: 0.85rem 1rem;
+	background: var(--asg-surface);
+	border: 1px solid var(--asg-border);
+	border-radius: var(--asg-radius);
+	box-shadow: var(--asg-shadow);
+}
+
+.sp-asg-stat dt {
+	color: var(--asg-muted);
+	font-size: 0.8125rem;
+}
+
+.sp-asg-stat dd {
+	margin: 0;
+	font-size: 1.5rem;
+	font-weight: 700;
+	line-height: 1.2;
+	font-variant-numeric: tabular-nums;
+}
+
+/* Class jump chips ------------------------------------------------------- */
+
+.sp-asg-jump {
+	display: flex;
+	gap: 0.5rem;
+	margin-bottom: 1.25rem;
+	padding-bottom: 0.25rem;
+	overflow-x: auto;
+	scrollbar-width: thin;
+}
+
+.sp-asg-jump a {
+	display: inline-flex;
+	flex: none;
+	align-items: center;
+	gap: 0.45rem;
+	min-height: 36px;
+	padding: 0 0.5rem 0 0.9rem;
+	color: inherit;
+	font-size: 0.875rem;
+	text-decoration: none;
+	white-space: nowrap;
+	background: var(--asg-surface);
+	border: 1px solid var(--asg-border);
+	border-radius: 999px;
+	transition: border-color 0.15s ease;
+}
+
+.sp-asg-jump a:hover {
+	border-color: var(--asg-primary);
+}
+
+.sp-asg-jump a:focus-visible,
+.sp-asg-title-link:focus-visible {
+	outline: 2px solid var(--asg-primary);
+	outline-offset: 2px;
+}
+
+.sp-asg-count {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 1.5rem;
+	height: 1.5rem;
+	padding: 0 0.5rem;
+	color: var(--asg-muted);
+	font-size: 0.8125rem;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+	background: var(--asg-subtle);
+	border-radius: 999px;
+}
+
+/* Class cards ------------------------------------------------------------ */
+
+.sp-asg-classes {
+	display: grid;
+	gap: 1.5rem;
+}
+
+.sp-asg-class {
+	overflow: hidden;
+	scroll-margin-top: 1rem;
+	background: var(--asg-surface);
+	border: 1px solid var(--asg-border);
+	border-radius: var(--asg-radius);
+	box-shadow: var(--asg-shadow);
+}
+
+.sp-asg-class-head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.75rem;
+	padding: 0.9rem 1.15rem;
+}
+
+.sp-asg-class-title {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	margin: 0;
+	font-size: 1.0625rem;
+	line-height: 1.3;
+	overflow-wrap: anywhere;
+}
+
+.sp-asg-class-empty {
+	margin: 0;
+	padding: 1.25rem 1.15rem 1.35rem;
+	color: var(--asg-muted);
+	border-top: 1px solid var(--asg-border);
+}
+
+/* Table ------------------------------------------------------------------ */
+
+.sp-asg-tablewrap {
+	overflow-x: auto;
+	border-top: 1px solid var(--asg-border);
+}
+
+.sp-asg-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.9375rem;
+}
+
+.sp-asg-table th {
+	padding: 0.65rem 1.15rem;
+	color: var(--asg-muted);
+	font-size: 0.75rem;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-align: left;
+	text-transform: uppercase;
+	white-space: nowrap;
+	background: var(--asg-subtle);
+}
+
+.sp-asg-table td {
+	padding: 0.9rem 1.15rem;
+	vertical-align: middle;
+	border-top: 1px solid var(--asg-border);
+}
+
+.sp-asg-table tbody tr:first-child td {
+	border-top: 0;
+}
+
+.sp-asg-table tbody tr {
+	transition: background-color 0.15s ease;
+}
+
+@media (hover: hover) {
+	.sp-asg-table tbody tr:hover {
+		background: var(--asg-subtle);
+	}
+}
+
+.sp-asg-cell-title {
+	width: 34%;
+	min-width: 14rem;
+}
+
+.sp-asg-title-link {
+	display: block;
+	color: inherit;
+	font-weight: 600;
+	text-decoration: none;
+	overflow-wrap: anywhere;
+}
+
+.sp-asg-title-link:hover {
+	color: var(--asg-accent-text);
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+.sp-asg-row.is-draft .sp-asg-title-link {
+	color: var(--asg-muted);
+}
+
+.sp-asg-type {
+	display: inline-block;
+	margin-top: 0.3rem;
+	padding: 0.1rem 0.55rem;
+	color: var(--asg-muted);
+	font-size: 0.75rem;
+	font-weight: 600;
+	background: var(--asg-subtle);
+	border-radius: 999px;
+}
+
+.sp-asg-type.is-exam {
+	color: var(--asg-accent-text);
+	background: color-mix(in srgb, var(--asg-primary) 12%, transparent);
+}
+
+.sp-asg-table .sp-badge {
+	white-space: nowrap;
+}
+
+.sp-asg-when {
+	display: flex;
+	flex-direction: column;
+	gap: 0.1rem;
+}
+
+.sp-asg-date {
+	font-variant-numeric: tabular-nums;
+}
+
+.sp-asg-when-meta {
+	color: var(--asg-muted);
+	font-size: 0.8125rem;
+}
+
+.sp-asg-soon {
+	color: var(--asg-warn);
+	font-weight: 600;
+}
+
+.sp-asg-prog {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	min-width: 9.5rem;
+}
+
+.sp-asg-prog-bar {
+	height: 6px;
+	overflow: hidden;
+	background: var(--asg-track);
+	border-radius: 999px;
+}
+
+.sp-asg-prog-bar > span {
+	display: block;
+	height: 100%;
+	background: var(--asg-primary);
+	border-radius: inherit;
+	transition: width 0.4s ease;
+}
+
+.sp-asg-prog.is-complete .sp-asg-prog-bar > span {
+	background: var(--asg-good);
+}
+
+.sp-asg-prog-text {
+	color: var(--asg-muted);
+	font-size: 0.8125rem;
+	font-variant-numeric: tabular-nums;
+}
+
+.sp-asg-prog-text strong {
+	color: inherit;
+	font-weight: 600;
+}
+
+.sp-asg-cell-action {
+	width: 1%;
+	text-align: right;
+	white-space: nowrap;
+}
+
+/* Empty states ----------------------------------------------------------- */
+
+.sp-asg .sp-asg-empty {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.35rem;
+	padding: 3rem 1.5rem;
+	text-align: center;
+	background: var(--asg-surface);
+	border: 1px dashed var(--asg-border);
+	border-radius: var(--asg-radius);
+}
+
+.sp-asg-empty-icon {
+	margin-bottom: 0.5rem;
+	color: var(--asg-muted);
+}
+
+.sp-asg-empty-title {
+	margin: 0;
+	font-size: 1.0625rem;
+	font-weight: 600;
+}
+
+.sp-asg-empty-text {
+	margin: 0;
+	max-width: 42ch;
+	color: var(--asg-muted);
+}
+
+/* Small screens: each row becomes a card --------------------------------- */
+
+@media (max-width: 720px) {
+	.sp-asg-head .sp-btn {
+		width: 100%;
+	}
+
+	.sp-asg-class-head .sp-btn {
+		min-height: 44px;
+	}
+
+	.sp-asg-tablewrap {
+		overflow: visible;
+	}
+
+	.sp-asg-table,
+	.sp-asg-table tbody {
+		display: block;
+	}
+
+	.sp-asg-table thead {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+	}
+
+	.sp-asg-table tr {
+		display: grid;
+		gap: 0.6rem;
+		padding: 1rem 1.15rem;
+		border-top: 1px solid var(--asg-border);
+	}
+
+	.sp-asg-table tbody tr:first-child {
+		border-top: 0;
+	}
+
+	.sp-asg-table td,
+	.sp-asg-table tbody tr:first-child td {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		padding: 0;
+		border: 0;
+	}
+
+	.sp-asg-table td[data-label]::before {
+		content: attr(data-label);
+		flex: none;
+		color: var(--asg-muted);
+		font-size: 0.8125rem;
+	}
+
+	.sp-asg-cell-title {
+		display: block;
+		width: auto;
+		min-width: 0;
+	}
+
+	.sp-asg-when {
+		align-items: flex-end;
+		text-align: right;
+	}
+
+	.sp-asg-prog {
+		flex: 1;
+		max-width: 14rem;
+	}
+
+	.sp-asg-cell-action {
+		width: auto;
+	}
+
+	.sp-asg-cell-action .sp-btn {
+		width: 100%;
+	}
+
+	.sp-asg-summary {
+		gap: 0.5rem;
+	}
+
+	.sp-asg-stat {
+		padding: 0.7rem 0.75rem;
+	}
+
+	.sp-asg-stat dd {
+		font-size: 1.25rem;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.sp-asg-table tbody tr,
+	.sp-asg-jump a,
+	.sp-asg-prog-bar > span,
+	.sp-asg .sp-asg-open::after {
+		transition: none;
+	}
+}

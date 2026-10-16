@@ -1,0 +1,57 @@
+/*
+ * portal/calendar
+ * Split from portal.css by private/tools/sp-split-css.php.
+ * One stylesheet per template/page; base holds the shared shell and design system.
+ */
+
+.sp-page-head {
+	margin-bottom: 1.5rem;
+}
+
+.sp-page-head h1 {
+	font-size: 1.7rem;
+	line-height: 1.25;
+	margin: 0 0 0.25rem;
+}
+
+.sp-muted {
+	color: var(--sp-muted);
+	font-size: 0.9rem;
+}
+
+.sp-list-item .sp-muted {
+	display: block;
+}
+
+.sp-table td .sp-muted {
+	display: block;
+}
+
+.sp-card-meta,
+.sp-muted {
+	color: var(--sp-muted);
+}
+
+.sp-page-head h1 {
+	letter-spacing: -0.02em;
+}
+
+.sp-progress-text .sp-muted {
+	font-size: 0.74rem;
+}
+
+.sp-progress-list li:first-child .sp-muted {
+	color: rgba(255, 255, 255, 0.78);
+}
+
+.sp-course-name .sp-muted {
+	font-size: 0.76rem;
+}
+
+@media (max-width: 640px) {
+	.sp-page-head h1 {
+		font-size: 1.4rem;
+	}
+
+}
+

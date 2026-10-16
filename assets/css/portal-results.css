@@ -1,0 +1,362 @@
+/*
+ * portal/results
+ * Split from portal.css by private/tools/sp-split-css.php.
+ * One stylesheet per template/page; base holds the shared shell and design system.
+ */
+
+.sp-page-head {
+	margin-bottom: 1.5rem;
+}
+
+.sp-page-head h1 {
+	font-size: 1.7rem;
+	line-height: 1.25;
+	margin: 0 0 0.25rem;
+}
+
+.sp-page-sub {
+	color: var(--sp-muted);
+	margin: 0;
+}
+
+.sp-muted {
+	color: var(--sp-muted);
+	font-size: 0.9rem;
+}
+
+.sp-card {
+	background: var(--sp-surface);
+	border: 1px solid var(--sp-border);
+	border-radius: var(--sp-radius);
+	margin-bottom: 1rem;
+	padding: 1.25rem;
+}
+
+.sp-card-title {
+	font-size: 1.08rem;
+	margin: 0 0 0.35rem;
+}
+
+.sp-card-list {
+	display: flex;
+	flex-direction: column;
+}
+
+.sp-badge {
+	border-radius: 999px;
+	display: inline-block;
+	font-size: 0.8rem;
+	font-weight: 600;
+	padding: 0.15rem 0.6rem;
+}
+
+.sp-badge-grade { background: #e0e7ff; color: var(--sp-primary); }
+
+.sp-list-item .sp-muted {
+	display: block;
+}
+
+.sp-notice {
+	border-radius: var(--sp-radius);
+	margin-bottom: 1rem;
+	padding: 0.85rem 1rem;
+}
+
+.sp-notice-warn { background: var(--sp-warn-bg); color: var(--sp-warn); }
+
+.sp-empty {
+	background: var(--sp-surface);
+	border: 1px dashed var(--sp-border);
+	border-radius: var(--sp-radius);
+	color: var(--sp-muted);
+	padding: 1.5rem;
+	text-align: center;
+}
+
+.sp-auth .sp-notice {
+	margin: 0 0 1.25rem;
+}
+
+.sp-table-wrap {
+	background: var(--sp-surface);
+	border: 1px solid var(--sp-border);
+	border-radius: var(--sp-radius);
+	margin-bottom: 1rem;
+	overflow-x: auto;
+}
+
+.sp-table {
+	border-collapse: collapse;
+	font-size: 0.92rem;
+	width: 100%;
+}
+
+.sp-table th,
+.sp-table td {
+	border-bottom: 1px solid var(--sp-border);
+	padding: 0.65rem 0.85rem;
+	text-align: left;
+	vertical-align: middle;
+}
+
+.sp-table th {
+	background: var(--sp-bg);
+	color: var(--sp-muted);
+	font-size: 0.82rem;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+}
+
+.sp-table tbody tr:last-child td {
+	border-bottom: none;
+}
+
+.sp-table td .sp-muted {
+	display: block;
+}
+
+.sp-result-summary {
+	align-items: center;
+	display: flex;
+	gap: 1rem;
+	margin: 0.75rem 0 1rem;
+}
+
+.sp-result-score {
+	text-align: center;
+}
+
+.sp-result-percentage {
+	display: block;
+	font-size: 2rem;
+	font-weight: 700;
+	line-height: 1;
+}
+
+.sp-result-label {
+	color: var(--sp-muted);
+	font-size: 0.8rem;
+}
+
+.sp-result-meta {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+}
+
+.sp-card {
+	background: var(--sp-surface);
+	border: 1px solid var(--sp-border);
+	border-radius: var(--sp-radius);
+	box-shadow: var(--sp-shadow-sm);
+	transition: box-shadow 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+}
+
+.sp-card:hover {
+	border-color: #d6dcea;
+	box-shadow: var(--sp-shadow);
+	transform: translateY(-2px);
+}
+
+.sp-card-title {
+	font-size: 1.02rem;
+	font-weight: 650;
+	letter-spacing: -0.01em;
+}
+
+.sp-card-meta,
+.sp-muted {
+	color: var(--sp-muted);
+}
+
+.sp-notice {
+	border-radius: var(--sp-radius-sm);
+	border-left-width: 4px;
+	font-size: 0.93rem;
+	padding: 0.8rem 1rem;
+}
+
+.sp-notice-warn {
+	background: var(--sp-warn-bg);
+	border-color: var(--sp-warn);
+	color: #78350f;
+}
+
+.sp-badge,
+.sp-chip {
+	border-radius: 999px;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+	white-space: nowrap;
+}
+
+.sp-badge-grade {
+	background: var(--sp-primary-soft);
+	color: var(--sp-primary-dark);
+	font-size: 0.95rem;
+	min-width: 2.4rem;
+	text-align: center;
+}
+
+.sp-table-wrap {
+	border: 1px solid var(--sp-border);
+	border-radius: var(--sp-radius);
+	box-shadow: var(--sp-shadow-sm);
+	overflow-x: auto;
+}
+
+.sp-table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.sp-table th {
+	background: #f8fafc;
+	border-bottom: 1px solid var(--sp-border);
+	color: #475569;
+	font-size: 0.78rem;
+	font-weight: 650;
+	letter-spacing: 0.04em;
+	padding: 0.7rem 0.9rem;
+	text-align: left;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+
+.sp-table td {
+	border-bottom: 1px solid #f1f4f8;
+	padding: 0.7rem 0.9rem;
+	vertical-align: middle;
+}
+
+.sp-table tbody tr:last-child td {
+	border-bottom: 0;
+}
+
+.sp-table tbody tr {
+	transition: background-color 0.12s ease;
+}
+
+.sp-table tbody tr:hover {
+	background: #fafbfd;
+}
+
+.sp-result-summary {
+	background: linear-gradient(135deg, var(--sp-primary-soft) 0%, #fff 100%);
+	border: 1px solid var(--sp-border);
+	border-radius: var(--sp-radius);
+}
+
+.sp-result-percentage {
+	font-size: 2.6rem;
+	font-weight: 700;
+	letter-spacing: -0.03em;
+	line-height: 1;
+}
+
+.sp-result-score {
+	font-variant-numeric: tabular-nums;
+}
+
+.sp-empty {
+	background: var(--sp-surface);
+	border: 1px dashed #cdd5e0;
+	border-radius: var(--sp-radius);
+	color: var(--sp-muted);
+	padding: 2.25rem 1.5rem;
+	text-align: center;
+}
+
+.sp-empty strong {
+	color: var(--sp-text);
+	display: block;
+	margin-bottom: 0.25rem;
+}
+
+.sp-page-head h1 {
+	letter-spacing: -0.02em;
+}
+
+.sp-progress-text .sp-muted {
+	font-size: 0.74rem;
+}
+
+.sp-progress-list li:first-child .sp-muted {
+	color: rgba(255, 255, 255, 0.78);
+}
+
+.sp-course-name .sp-muted {
+	font-size: 0.76rem;
+}
+
+@media (max-width: 640px) {
+	.sp-page-head h1 {
+		font-size: 1.4rem;
+	}
+
+	.sp-table thead {
+		display: none;
+	}
+
+	.sp-table,
+	.sp-table tbody,
+	.sp-table tr,
+	.sp-table td {
+		display: block;
+		width: 100%;
+	}
+
+	.sp-table tr {
+		border-bottom: 1px solid var(--sp-border);
+		padding: 0.5rem 0;
+	}
+
+	.sp-table td {
+		border: none;
+		display: flex;
+		gap: 0.75rem;
+		justify-content: space-between;
+		padding: 0.35rem 0.85rem;
+		text-align: right;
+	}
+
+	.sp-table td::before {
+		color: var(--sp-muted);
+		content: attr(data-label);
+		font-size: 0.8rem;
+		font-weight: 700;
+		text-transform: uppercase;
+	}
+
+	.sp-card:hover {
+		transform: none;
+	}
+
+	.sp-result-percentage {
+		font-size: 2.1rem;
+	}
+
+	.sp-table th[scope="row"] {
+		display: block;
+		width: 100%;
+	}
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.sp-card:hover,
+	.sp-btn:active {
+		transform: none;
+	}
+
+}
+
+@media print {
+	.sp-card,
+	.sp-table-wrap {
+		box-shadow: none;
+	}
+
+}
+

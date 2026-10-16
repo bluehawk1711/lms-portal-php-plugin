@@ -1,0 +1,604 @@
+/*
+ * teacher/home
+ * Split from teacher.css by private/tools/sp-split-css.php.
+ * One stylesheet per template/page; base holds the shared shell and design system.
+ */
+
+.sp-attendance-name .sp-muted {
+	font-size: 0.82rem;
+}
+
+.sp-teacher-portal .sp-dash-top {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 1.1rem;
+}
+
+.sp-teacher-portal .sp-dash-greeting {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin: 0;
+	font-size: 1.5rem;
+	font-weight: 800;
+	line-height: 1.2;
+	color: var(--sp-text);
+}
+
+.sp-teacher-portal .sp-dash-bell-badge {
+	position: absolute;
+	top: -0.3rem;
+	right: -0.3rem;
+	min-width: 1.2rem;
+	height: 1.2rem;
+	padding: 0 0.3rem;
+	display: grid;
+	place-items: center;
+	background: var(--sp-bad);
+	color: #ffffff;
+	font-size: 0.65rem;
+	font-weight: 700;
+	line-height: 1;
+	border-radius: 999px;
+	border: 2px solid var(--sp-surface);
+}
+
+.sp-teacher-portal .sp-dash-banner {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1.5rem;
+	padding: 1.6rem 1.8rem;
+	border-radius: var(--sp-radius);
+	background: linear-gradient(120deg, var(--sp-primary-dark) 0%, var(--sp-primary) 55%, var(--sp-accent-dark) 100%);
+	color: #ffffff;
+	box-shadow: var(--sp-shadow);
+	overflow: hidden;
+	font-family: var(--sp-font);
+}
+
+.sp-teacher-portal .sp-dash-banner::after {
+	content: "";
+	position: absolute;
+	right: -4rem;
+	top: -6rem;
+	width: 16rem;
+	height: 16rem;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.07);
+}
+
+.sp-teacher-portal .sp-dash-banner-body {
+	position: relative;
+	z-index: 1;
+	min-width: 0;
+}
+
+.sp-teacher-portal .sp-dash-banner-kicker {
+	margin: 0 0 0.45rem;
+	font-size: 0.72rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.12em;
+	color: rgba(255, 255, 255, 0.75);
+}
+
+.sp-teacher-portal .sp-dash-banner h2 {
+	margin: 0 0 0.5rem;
+	font-size: 1.35rem;
+	font-weight: 800;
+	line-height: 1.25;
+	color: #ffffff;
+}
+
+.sp-teacher-portal .sp-dash-banner-text {
+	margin: 0 0 1rem;
+	font-size: 0.92rem;
+	line-height: 1.5;
+	color: rgba(255, 255, 255, 0.88);
+}
+
+.sp-teacher-portal .sp-dash-banner-btn {
+	display: inline-block;
+	padding: 0.6rem 1.15rem;
+	border-radius: 999px;
+	background: #ffffff;
+	color: var(--sp-primary-dark);
+	font-size: 0.88rem;
+	font-weight: 700;
+	text-decoration: none;
+	box-shadow: var(--sp-shadow);
+	transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.sp-teacher-portal .sp-dash-banner-btn:hover {
+	background: #f8fafc;
+	transform: translateY(-1px);
+}
+
+.sp-teacher-portal .sp-dash-banner-btn:focus-visible {
+	outline: none;
+	box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.55);
+}
+
+.sp-teacher-portal .sp-dash-banner-art {
+	position: relative;
+	z-index: 1;
+	flex: none;
+	display: grid;
+	place-items: center;
+}
+
+.sp-teacher-portal .sp-dash-banner-ring {
+	display: grid;
+	place-items: center;
+	align-content: center;
+	width: 8.5rem;
+	height: 8.5rem;
+	border-radius: 50%;
+	border: 2px dashed rgba(255, 255, 255, 0.45);
+	background: rgba(255, 255, 255, 0.08);
+	text-align: center;
+}
+
+.sp-teacher-portal .sp-dash-banner-ring strong {
+	font-size: 2rem;
+	font-weight: 800;
+	line-height: 1;
+	color: #ffffff;
+}
+
+.sp-teacher-portal .sp-dash-banner-ring span {
+	margin-top: 0.25rem;
+	font-size: 0.68rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	color: rgba(255, 255, 255, 0.8);
+}
+
+.sp-teacher-portal .sp-dash {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 300px;
+	gap: 1.25rem;
+	align-items: start;
+	margin-top: 1.25rem;
+}
+
+.sp-teacher-portal .sp-dash-main {
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+	min-width: 0;
+}
+
+.sp-teacher-portal .sp-dash-row {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1.25rem;
+}
+
+.sp-teacher-portal .sp-dash-rail {
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+	min-width: 0;
+}
+
+.sp-teacher-portal .sp-dash-card {
+	padding: 1.15rem 1.25rem;
+	background: var(--sp-surface);
+	border: 1px solid var(--sp-border);
+	border-radius: var(--sp-radius);
+	box-shadow: var(--sp-shadow-sm);
+	font-family: var(--sp-font);
+}
+
+.sp-teacher-portal .sp-dash-card-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.75rem;
+	margin: 0 0 0.9rem;
+}
+
+.sp-teacher-portal .sp-dash-card-head h2 {
+	margin: 0;
+	font-size: 1rem;
+	font-weight: 700;
+	color: var(--sp-text);
+}
+
+.sp-teacher-portal .sp-dash-card-head a {
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: var(--sp-primary);
+	text-decoration: none;
+}
+
+.sp-teacher-portal .sp-dash-card-head a:hover {
+	text-decoration: underline;
+}
+
+.sp-teacher-portal .sp-dash-card-note {
+	font-size: 0.75rem;
+	font-weight: 600;
+	color: var(--sp-muted);
+}
+
+.sp-teacher-portal .sp-dash-people {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.3rem;
+}
+
+.sp-teacher-portal .sp-dash-person {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0.5rem 0.35rem;
+	border-radius: var(--sp-radius-sm);
+	transition: background-color 0.15s ease;
+}
+
+.sp-teacher-portal .sp-dash-person:hover {
+	background: var(--sp-bg);
+}
+
+.sp-teacher-portal .sp-dash-avatar {
+	display: grid;
+	place-items: center;
+	width: 2.35rem;
+	height: 2.35rem;
+	border-radius: 50%;
+	background: linear-gradient(135deg, var(--sp-primary-soft), var(--sp-accent-soft));
+	color: var(--sp-primary-dark);
+	font-size: 0.78rem;
+	font-weight: 700;
+	flex: none;
+}
+
+.sp-teacher-portal .sp-dash-person-text {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	flex: 1;
+	line-height: 1.25;
+}
+
+.sp-teacher-portal .sp-dash-person-text strong {
+	font-size: 0.9rem;
+	font-weight: 600;
+	color: var(--sp-text);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.sp-teacher-portal .sp-dash-person-text span {
+	font-size: 0.75rem;
+	color: var(--sp-muted);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.sp-teacher-portal .sp-dash-groups {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.4rem;
+}
+
+.sp-teacher-portal .sp-dash-group {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.sp-teacher-portal .sp-dash-group-link {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0.55rem 0.4rem;
+	border-radius: var(--sp-radius-sm);
+	color: inherit;
+	text-decoration: none;
+	transition: background-color 0.15s ease;
+}
+
+.sp-teacher-portal .sp-dash-group-link:hover {
+	background: var(--sp-bg);
+}
+
+.sp-teacher-portal .sp-dash-group-link:focus-visible {
+	outline: none;
+	box-shadow: var(--sp-ring);
+}
+
+.sp-teacher-portal .sp-dash-tile {
+	display: grid;
+	place-items: center;
+	width: 2.35rem;
+	height: 2.35rem;
+	border-radius: var(--sp-radius-sm);
+	background: linear-gradient(135deg, var(--sp-primary), var(--sp-accent));
+	color: #ffffff;
+	font-size: 0.78rem;
+	font-weight: 700;
+	flex: none;
+}
+
+.sp-teacher-portal .sp-dash-group-text {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	flex: 1;
+	line-height: 1.25;
+}
+
+.sp-teacher-portal .sp-dash-group-text strong {
+	font-size: 0.9rem;
+	font-weight: 600;
+	color: var(--sp-text);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.sp-teacher-portal .sp-dash-group-text span {
+	font-size: 0.75rem;
+	color: var(--sp-muted);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.sp-teacher-portal .sp-dash-chip {
+	flex: none;
+	padding: 0.2rem 0.5rem;
+	border-radius: 999px;
+	background: var(--sp-border);
+	color: var(--sp-muted);
+	font-size: 0.7rem;
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+.sp-teacher-portal .sp-dash-chip-warn {
+	background: var(--sp-warn-bg);
+	color: var(--sp-warn);
+}
+
+.sp-teacher-portal .sp-dash-profile {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.3rem;
+	padding: 1.4rem 1.15rem;
+	text-align: center;
+}
+
+.sp-teacher-portal .sp-dash-avatar-lg {
+	width: 4.25rem;
+	height: 4.25rem;
+	margin-bottom: 0.35rem;
+	font-size: 1.25rem;
+}
+
+.sp-teacher-portal .sp-dash-profile-name {
+	font-size: 1rem;
+	font-weight: 700;
+	color: var(--sp-text);
+}
+
+.sp-teacher-portal .sp-dash-profile-role {
+	font-size: 0.75rem;
+	color: var(--sp-muted);
+}
+
+.sp-teacher-portal .sp-dash-online {
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+	margin-top: 0.3rem;
+	font-size: 0.72rem;
+	font-weight: 600;
+	color: var(--sp-good);
+}
+
+.sp-teacher-portal .sp-dash-online-dot {
+	width: 0.5rem;
+	height: 0.5rem;
+	border-radius: 50%;
+	background: var(--sp-good);
+	box-shadow: 0 0 0 3px var(--sp-good-bg);
+}
+
+.sp-teacher-portal .sp-cal {
+	display: grid;
+	grid-template-columns: repeat(7, minmax(0, 1fr));
+	gap: 3px;
+}
+
+.sp-teacher-portal .sp-cal-row {
+	grid-column: 1 / -1;
+}
+
+.sp-teacher-portal .sp-cal-head {
+	display: grid;
+	grid-template-columns: repeat(7, minmax(0, 1fr));
+	gap: 3px;
+}
+
+.sp-teacher-portal .sp-cal-head span {
+	padding: 0.25rem 0;
+	font-size: 0.68rem;
+	font-weight: 600;
+	text-align: center;
+	text-transform: uppercase;
+	color: var(--sp-muted);
+}
+
+.sp-teacher-portal .sp-cal-cell {
+	display: grid;
+	place-items: center;
+	min-height: 1.9rem;
+	aspect-ratio: 1;
+	border-radius: 50%;
+	font-size: 0.78rem;
+	color: var(--sp-text);
+}
+
+.sp-teacher-portal .sp-cal-cell.is-empty {
+	visibility: hidden;
+}
+
+.sp-teacher-portal .sp-cal-cell.is-today {
+	background: var(--sp-primary);
+	color: #ffffff;
+	font-weight: 700;
+}
+
+.sp-teacher-portal .sp-cal-dot {
+	width: 0.32rem;
+	height: 0.32rem;
+	margin-top: -0.4rem;
+	border-radius: 50%;
+	background: var(--sp-warn);
+	box-shadow: 0 0 0 1.5px var(--sp-surface);
+}
+
+.sp-teacher-portal .sp-cal-cell.is-today .sp-cal-dot {
+	background: #ffffff;
+	box-shadow: 0 0 0 1.5px var(--sp-primary);
+}
+
+.sp-teacher-portal .sp-dash-timeline {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.15rem;
+}
+
+.sp-teacher-portal .sp-dash-timeline-time {
+	flex: none;
+	width: 4.4rem;
+	padding-top: 0.1rem;
+	font-size: 0.72rem;
+	font-weight: 700;
+	text-align: right;
+	color: var(--sp-muted);
+}
+
+.sp-teacher-portal .sp-dash-timeline-body {
+	display: flex;
+	flex-direction: column;
+	gap: 0.2rem;
+	min-width: 0;
+	padding-left: 0.75rem;
+	border-left: 2px solid var(--sp-border);
+}
+
+.sp-teacher-portal .sp-dash-timeline-item.is-now .sp-dash-timeline-body {
+	border-left-color: var(--sp-primary);
+}
+
+.sp-teacher-portal .sp-dash-timeline-body a {
+	font-size: 0.88rem;
+	font-weight: 600;
+	color: var(--sp-text);
+	text-decoration: none;
+}
+
+.sp-teacher-portal .sp-dash-timeline-body a:hover {
+	color: var(--sp-primary);
+}
+
+.sp-teacher-portal .sp-dash-timeline-meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.4rem;
+	font-size: 0.72rem;
+	color: var(--sp-muted);
+}
+
+.sp-teacher-portal .sp-dash-now {
+	padding: 0.1rem 0.45rem;
+	border-radius: 999px;
+	background: #ffffff;
+	color: var(--sp-primary);
+	font-size: 0.66rem;
+	font-weight: 700;
+}
+
+.sp-mat-badge.sp-badge-good {
+	color: var(--mat-good);
+	background: var(--mat-good-soft);
+}
+
+.sp-mat .sp-muted { color: #98a2b3; }
+
+@media (max-width: 1180px) {
+	.sp-teacher-portal .sp-dash {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.sp-teacher-portal .sp-dash-rail {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		align-items: start;
+	}
+
+}
+
+@media (max-width: 640px) {
+	.sp-teacher-portal .sp-dash-greeting {
+		font-size: 1.25rem;
+	}
+
+	.sp-teacher-portal .sp-dash-banner {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1rem;
+		padding: 1.25rem;
+	}
+
+	.sp-teacher-portal .sp-dash-banner-art {
+		display: none;
+	}
+
+	.sp-teacher-portal .sp-dash-row {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.sp-teacher-portal .sp-side-nav-link,
+	.sp-teacher-portal .sp-side-promo-btn,
+	.sp-teacher-portal .sp-dash-banner-btn,
+	.sp-teacher-portal .sp-dash-bell,
+	.sp-teacher-portal .sp-dash-person,
+	.sp-teacher-portal .sp-dash-group-link {
+		transition: none;
+	}
+
+	.sp-teacher-portal .sp-side-promo-btn:hover,
+	.sp-teacher-portal .sp-dash-banner-btn:hover {
+		transform: none;
+	}
+
+}
+

@@ -1,0 +1,125 @@
+/*
+ * admin/classes
+ * Split from admin.css by private/tools/sp-split-css.php.
+ * One stylesheet per template/page; base holds the shared shell and design system.
+ */
+
+.sp-required {
+	color: #b32d2e;
+}
+
+.sp-scope > .sp-table,
+.sp-scope > .sp-table-wrap,
+.sp-scope > .widefat,
+.sp-scope > form {
+	margin-top: 20px;
+}
+
+.sp-admin-grid {
+	display: grid;
+	gap: 20px;
+	grid-template-columns: 1fr;
+	margin-top: 16px;
+}
+
+.sp-admin-panel {
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 8px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+	margin-bottom: 20px;
+	padding: 4px 22px 18px;
+}
+
+.sp-admin-panel > h2:first-child {
+	color: #1d2327;
+	font-size: 15px;
+	margin-top: 16px;
+}
+
+.sp-admin-muted {
+	color: #646970;
+	font-size: 13px;
+}
+
+.sp-table-wrap {
+	max-width: 100%;
+	overflow-x: auto;
+}
+
+.sp-admin-actions {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.sp-admin-inline {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin: 0 4px 4px 0;
+}
+
+.sp-admin-timings {
+	border-collapse: collapse;
+	margin: 0 0 8px;
+	max-width: 360px;
+}
+
+.sp-admin-timings th,
+.sp-admin-timings td {
+	border: 0;
+	padding: 3px 12px 3px 0;
+	text-align: left;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+.sp-admin-timings thead th {
+	border-bottom: 1px solid #dcdcde;
+	font-size: 11px;
+	text-transform: uppercase;
+}
+
+.sp-admin-timings input[type="time"] {
+	max-width: 130px;
+}
+
+.sp-pill {
+	border-radius: 999px;
+	display: inline-block;
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	margin-right: 4px;
+	padding: 3px 10px;
+	white-space: nowrap;
+}
+
+.sp-pill-info {
+	background: #f0f6fc;
+	color: #17457a;
+}
+
+@media (min-width: 1100px) {
+	.sp-admin-grid {
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.sp-admin-grid.sp-admin-grid-single {
+		grid-template-columns: 1fr;
+	}
+
+}
+
+@media (max-width: 782px) {
+	.sp-admin-panel {
+		padding: 4px 14px 14px;
+	}
+
+	.sp-admin-grid {
+		grid-template-columns: 1fr;
+	}
+
+}
+

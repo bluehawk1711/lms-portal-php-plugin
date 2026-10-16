@@ -1,0 +1,16 @@
+/*
+ * teacher/calendar
+ * Split from teacher.css by private/tools/sp-split-css.php.
+ * One stylesheet per template/page; base holds the shared shell and design system.
+ */
+
+.sp-teacher-portal .sp-page-head {
+	margin-bottom: 1rem;
+}
+
+.sp-attendance-name .sp-muted {
+	font-size: 0.82rem;
+}
+
+.sp-mat .sp-muted { color: #98a2b3; }
+

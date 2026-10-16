@@ -1,0 +1,405 @@
+/*
+ * portal/materials
+ * Split from portal.css by private/tools/sp-split-css.php.
+ * One stylesheet per template/page; base holds the shared shell and design system.
+ */
+
+.sp-page-head {
+	margin-bottom: 1.5rem;
+}
+
+.sp-page-head h1 {
+	font-size: 1.7rem;
+	line-height: 1.25;
+	margin: 0 0 0.25rem;
+}
+
+.sp-page-sub {
+	color: var(--sp-muted);
+	margin: 0;
+}
+
+.sp-muted {
+	color: var(--sp-muted);
+	font-size: 0.9rem;
+}
+
+.sp-card {
+	background: var(--sp-surface);
+	border: 1px solid var(--sp-border);
+	border-radius: var(--sp-radius);
+	margin-bottom: 1rem;
+	padding: 1.25rem;
+}
+
+.sp-card-title {
+	font-size: 1.08rem;
+	margin: 0 0 0.35rem;
+}
+
+.sp-card-list {
+	display: flex;
+	flex-direction: column;
+}
+
+.sp-list-item .sp-muted {
+	display: block;
+}
+
+.sp-notice {
+	border-radius: var(--sp-radius);
+	margin-bottom: 1rem;
+	padding: 0.85rem 1rem;
+}
+
+.sp-notice-warn { background: var(--sp-warn-bg); color: var(--sp-warn); }
+
+.sp-empty {
+	background: var(--sp-surface);
+	border: 1px dashed var(--sp-border);
+	border-radius: var(--sp-radius);
+	color: var(--sp-muted);
+	padding: 1.5rem;
+	text-align: center;
+}
+
+.sp-portal .sp-btn {
+	background: transparent;
+	border: 1px solid transparent;
+	border-radius: 7px;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 0.9rem;
+	font-weight: 600;
+	line-height: 1.2;
+	padding: 0.55rem 1rem;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.sp-portal .sp-btn-primary {
+	background: var(--sp-primary);
+	color: #fff;
+}
+
+.sp-portal .sp-btn-primary:hover,
+.sp-portal .sp-btn-primary:focus {
+	background: var(--sp-primary-dark);
+	color: #fff;
+}
+
+.sp-auth .sp-notice {
+	margin: 0 0 1.25rem;
+}
+
+.sp-form > .sp-btn {
+	align-self: flex-start;
+	margin-top: 0.35rem;
+}
+
+.sp-table td .sp-muted {
+	display: block;
+}
+
+.sp-material-head {
+	align-items: flex-start;
+	display: flex;
+	gap: 1rem;
+	justify-content: space-between;
+}
+
+.sp-note-body {
+	border-top: 1px solid var(--sp-border);
+	margin-top: 0.75rem;
+	padding-top: 0.75rem;
+}
+
+.sp-card {
+	background: var(--sp-surface);
+	border: 1px solid var(--sp-border);
+	border-radius: var(--sp-radius);
+	box-shadow: var(--sp-shadow-sm);
+	transition: box-shadow 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+}
+
+.sp-card:hover {
+	border-color: #d6dcea;
+	box-shadow: var(--sp-shadow);
+	transform: translateY(-2px);
+}
+
+.sp-card-title {
+	font-size: 1.02rem;
+	font-weight: 650;
+	letter-spacing: -0.01em;
+}
+
+.sp-card-meta,
+.sp-muted {
+	color: var(--sp-muted);
+}
+
+.sp-portal .sp-btn {
+	border-radius: var(--sp-radius-sm);
+	font-weight: 550;
+	transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+}
+
+.sp-portal .sp-btn:active {
+	transform: translateY(1px);
+}
+
+.sp-portal .sp-btn:focus-visible {
+	box-shadow: var(--sp-ring);
+	outline: 2px solid transparent;
+}
+
+.sp-portal .sp-btn-primary {
+	background: var(--sp-primary);
+	border-color: var(--sp-primary);
+	color: #fff;
+}
+
+.sp-portal .sp-btn-primary:hover,
+.sp-portal .sp-btn-primary:focus-visible {
+	background: var(--sp-primary-dark);
+	border-color: var(--sp-primary-dark);
+	color: #fff;
+}
+
+.sp-notice {
+	border-radius: var(--sp-radius-sm);
+	border-left-width: 4px;
+	font-size: 0.93rem;
+	padding: 0.8rem 1rem;
+}
+
+.sp-notice-warn {
+	background: var(--sp-warn-bg);
+	border-color: var(--sp-warn);
+	color: #78350f;
+}
+
+.sp-empty {
+	background: var(--sp-surface);
+	border: 1px dashed #cdd5e0;
+	border-radius: var(--sp-radius);
+	color: var(--sp-muted);
+	padding: 2.25rem 1.5rem;
+	text-align: center;
+}
+
+.sp-empty strong {
+	color: var(--sp-text);
+	display: block;
+	margin-bottom: 0.25rem;
+}
+
+.sp-page-head h1 {
+	letter-spacing: -0.02em;
+}
+
+.sp-progress-text .sp-muted {
+	font-size: 0.74rem;
+}
+
+.sp-progress-list li:first-child .sp-muted {
+	color: rgba(255, 255, 255, 0.78);
+}
+
+.sp-course-name .sp-muted {
+	font-size: 0.76rem;
+}
+
+@media (max-width: 640px) {
+	.sp-page-head h1 {
+		font-size: 1.4rem;
+	}
+
+	.sp-card-actions .sp-btn {
+		flex: 1 1 auto;
+		text-align: center;
+	}
+
+	.sp-card:hover {
+		transform: none;
+	}
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.sp-card:hover,
+	.sp-btn:active {
+		transform: none;
+	}
+
+}
+
+/* ---------------------------------------------------------------------------
+ * Inline document previews
+ *
+ * There are no download links on this page: every file material is embedded.
+ * The host for the .docx converter is hidden by id because the Mammoth bundle
+ * replaces that element's class with its own status-* marker as it works.
+ * ------------------------------------------------------------------------ */
+
+.sp-embed {
+	/* Documents are for reading here, not for lifting: no text selection,
+	 * no drag-out, no touch callout. */
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	display: block;
+	margin-top: 0.85rem;
+	user-select: none;
+	width: 100%;
+}
+
+.sp-embed-frame {
+	background: #fff;
+	border: 1px solid var(--sp-border);
+	border-radius: var(--sp-radius-sm);
+	height: 70vh;
+	min-height: 420px;
+}
+
+.sp-embed-image {
+	background: #fff;
+	border: 1px solid var(--sp-border);
+	border-radius: var(--sp-radius-sm);
+	height: auto;
+	max-height: 70vh;
+	object-fit: contain;
+}
+
+.sp-embed-docx {
+	align-items: center;
+	background: var(--sp-primary-soft);
+	border: 1px dashed #c3d0ee;
+	border-radius: var(--sp-radius-sm);
+	color: var(--sp-muted);
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	justify-content: center;
+	min-height: 200px;
+	padding: 2rem 1.25rem;
+	text-align: center;
+}
+
+.sp-embed-status {
+	color: var(--sp-muted);
+	font-size: 0.92rem;
+	margin: 0;
+}
+
+.sp-embed-docx.is-ready {
+	background: #fff;
+	border-style: solid;
+	display: block;
+	padding: 1.25rem;
+	text-align: left;
+}
+
+.sp-embed-docx-body {
+	color: var(--sp-text);
+	font-size: 0.97rem;
+	line-height: 1.6;
+	overflow-wrap: break-word;
+}
+
+.sp-embed-docx-body p {
+	margin: 0 0 0.75em;
+}
+
+.sp-embed-docx-body h1 {
+	font-size: 1.5rem;
+}
+
+.sp-embed-docx-body h2 {
+	font-size: 1.25rem;
+}
+
+.sp-embed-docx-body h3,
+.sp-embed-docx-body h4 {
+	font-size: 1.08rem;
+}
+
+.sp-embed-docx-body ul,
+.sp-embed-docx-body ol {
+	margin: 0 0 0.75em;
+	padding-left: 1.4em;
+}
+
+.sp-embed-docx-body li {
+	margin: 0.2em 0;
+}
+
+.sp-embed-docx-body img {
+	height: auto;
+	max-width: 100%;
+}
+
+.sp-embed-docx-body table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.sp-embed-docx-body th,
+.sp-embed-docx-body td {
+	border: 1px solid var(--sp-border);
+	padding: 0.35rem 0.5rem;
+}
+
+.sp-embed-unavailable {
+	background: var(--sp-surface);
+	border: 1px dashed #cdd5e0;
+	border-radius: var(--sp-radius);
+	color: var(--sp-muted);
+	display: flex;
+	flex-direction: column;
+	gap: 0.3rem;
+	padding: 1.5rem;
+	text-align: center;
+}
+
+.sp-embed-unavailable strong {
+	color: var(--sp-text);
+	font-size: 0.95rem;
+}
+
+#mammoth-docx-uploader,
+.sp-mammoth-host {
+	display: none;
+}
+
+@media print {
+	.sp-portal-side,
+	.sp-portal-nav,
+	.sp-portal-top,
+	.sp-portal-rail,
+	.sp-nav-backdrop,
+	.sp-portal-footer,
+	.sp-card-actions,
+	.sp-btn,
+	/* Notes are read on screen only — printing the page must not print them. */
+	.sp-embed,
+	.sp-note-body,
+	.sp-material-file {
+		display: none !important;
+	}
+
+	.sp-card,
+	.sp-table-wrap {
+		box-shadow: none;
+	}
+
+}
+
+ viewer-download-controls::part(button), #print, #more{
+	display: none !important;
+ }
+ #print{
+	display: none !important;
+ }

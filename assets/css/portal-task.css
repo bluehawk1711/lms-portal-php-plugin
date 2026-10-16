@@ -1,0 +1,623 @@
+/*
+ * portal/task
+ * Split from portal.css by private/tools/sp-split-css.php.
+ * One stylesheet per template/page; base holds the shared shell and design system.
+ */
+
+.sp-muted {
+	color: var(--sp-muted);
+	font-size: 0.9rem;
+}
+
+.sp-card {
+	background: var(--sp-surface);
+	border: 1px solid var(--sp-border);
+	border-radius: var(--sp-radius);
+	margin-bottom: 1rem;
+	padding: 1.25rem;
+}
+
+.sp-card-title {
+	font-size: 1.08rem;
+	margin: 0 0 0.35rem;
+}
+
+.sp-card-actions {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin: 1rem 0 0;
+}
+
+.sp-list-item .sp-muted {
+	display: block;
+}
+
+.sp-empty {
+	background: var(--sp-surface);
+	border: 1px dashed var(--sp-border);
+	border-radius: var(--sp-radius);
+	color: var(--sp-muted);
+	padding: 1.5rem;
+	text-align: center;
+}
+
+.sp-portal .sp-btn {
+	background: transparent;
+	border: 1px solid transparent;
+	border-radius: 7px;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 0.9rem;
+	font-weight: 600;
+	line-height: 1.2;
+	padding: 0.55rem 1rem;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.sp-portal .sp-btn-primary {
+	background: var(--sp-primary);
+	color: #fff;
+}
+
+.sp-portal .sp-btn-primary:hover,
+.sp-portal .sp-btn-primary:focus {
+	background: var(--sp-primary-dark);
+	color: #fff;
+}
+
+.sp-form > .sp-btn {
+	align-self: flex-start;
+	margin-top: 0.35rem;
+}
+
+.sp-table td .sp-muted {
+	display: block;
+}
+
+.sp-material-head {
+	align-items: flex-start;
+	display: flex;
+	gap: 1rem;
+	justify-content: space-between;
+}
+
+.sp-note-body {
+	border-top: 1px solid var(--sp-border);
+	margin-top: 0.75rem;
+	padding-top: 0.75rem;
+}
+
+.sp-card {
+	background: var(--sp-surface);
+	border: 1px solid var(--sp-border);
+	border-radius: var(--sp-radius);
+	box-shadow: var(--sp-shadow-sm);
+	transition: box-shadow 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+}
+
+.sp-card:hover {
+	border-color: #d6dcea;
+	box-shadow: var(--sp-shadow);
+	transform: translateY(-2px);
+}
+
+.sp-card-title {
+	font-size: 1.02rem;
+	font-weight: 650;
+	letter-spacing: -0.01em;
+}
+
+.sp-card-meta,
+.sp-muted {
+	color: var(--sp-muted);
+}
+
+.sp-card-actions {
+	border-top: 1px solid var(--sp-border);
+	margin-top: 0.9rem;
+	padding-top: 0.9rem;
+}
+
+.sp-portal .sp-btn {
+	border-radius: var(--sp-radius-sm);
+	font-weight: 550;
+	transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+}
+
+.sp-portal .sp-btn:active {
+	transform: translateY(1px);
+}
+
+.sp-portal .sp-btn:focus-visible {
+	box-shadow: var(--sp-ring);
+	outline: 2px solid transparent;
+}
+
+.sp-portal .sp-btn-primary {
+	background: var(--sp-primary);
+	border-color: var(--sp-primary);
+	color: #fff;
+}
+
+.sp-portal .sp-btn-primary:hover,
+.sp-portal .sp-btn-primary:focus-visible {
+	background: var(--sp-primary-dark);
+	border-color: var(--sp-primary-dark);
+	color: #fff;
+}
+
+.sp-empty {
+	background: var(--sp-surface);
+	border: 1px dashed #cdd5e0;
+	border-radius: var(--sp-radius);
+	color: var(--sp-muted);
+	padding: 2.25rem 1.5rem;
+	text-align: center;
+}
+
+.sp-empty strong {
+	color: var(--sp-text);
+	display: block;
+	margin-bottom: 0.25rem;
+}
+
+.sp-progress-text .sp-muted {
+	font-size: 0.74rem;
+}
+
+.sp-progress-list li:first-child .sp-muted {
+	color: rgba(255, 255, 255, 0.78);
+}
+
+.sp-course-name .sp-muted {
+	font-size: 0.76rem;
+}
+
+.sp-exam-shell {
+	min-height: 100vh;
+	background: #f4f6fb;
+}
+
+.sp-exam-bar {
+	align-items: center;
+	background: #fff;
+	border-bottom: 1px solid #e2e8f0;
+	display: flex;
+	gap: 1rem;
+	padding: 0.75rem 1.5rem;
+}
+
+.sp-exam-back {
+	color: #2563eb;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.sp-exam-back:hover {
+	text-decoration: underline;
+}
+
+.sp-exam-bar-title {
+	color: #64748b;
+	font-size: 0.9rem;
+	font-weight: 600;
+	margin-left: auto;
+}
+
+.sp-exam-bar-user {
+	color: #334155;
+	font-size: 0.9rem;
+	font-weight: 600;
+}
+
+.sp-exam-main {
+	margin: 0 auto;
+	max-width: 1100px;
+	padding: 1.5rem;
+}
+
+.sp-exam-page {
+	max-width: 640px;
+	margin: 2rem auto;
+}
+
+.sp-exam-start {
+	text-align: center;
+}
+
+.sp-exam-start-title {
+	color: #0f172a;
+	font-size: 1.6rem;
+	font-weight: 800;
+	margin: 0 0 0.4rem;
+}
+
+.sp-exam-start-sub {
+	color: #64748b;
+	font-size: 0.95rem;
+	margin: 0 0 1.25rem;
+}
+
+.sp-exam-facts {
+	color: #334155;
+	display: flex;
+	font-size: 0.95rem;
+	gap: 1.5rem;
+	justify-content: center;
+	list-style: none;
+	margin: 0 0 1.25rem;
+	padding: 0;
+}
+
+.sp-exam-start-form {
+	margin: 1.5rem 0 0.75rem;
+}
+
+.sp-exam-start-btn {
+	font-size: 1.05rem;
+	padding: 0.7rem 2.5rem;
+}
+
+.sp-exam-start-hint {
+	color: #94a3b8;
+	font-size: 0.85rem;
+	margin: 0;
+}
+
+.sp-quiz-layout {
+	display: grid;
+	gap: 1.5rem;
+	grid-template-columns: minmax(0, 1fr) 240px;
+}
+
+.sp-quiz-content {
+	background: #fff;
+	border-radius: 16px;
+	box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+	padding: 1.75rem 2rem 2rem;
+}
+
+.sp-quiz-head {
+	align-items: flex-start;
+	display: flex;
+	gap: 1rem;
+	justify-content: space-between;
+	margin-bottom: 1rem;
+}
+
+.sp-quiz-title {
+	color: #0f172a;
+	font-size: 1.5rem;
+	font-weight: 800;
+	margin: 0;
+}
+
+.sp-quiz-meta {
+	align-items: center;
+	display: flex;
+	gap: 0.75rem;
+}
+
+.sp-quiz-timer {
+	background: #eff6ff;
+	border-radius: 8px;
+	color: #1d4ed8;
+	font-size: 0.95rem;
+	font-weight: 700;
+	padding: 0.3rem 0.6rem;
+}
+
+.sp-quiz-timer.is-urgent {
+	background: #fef2f2;
+	color: #dc2626;
+}
+
+.sp-quiz-count {
+	color: #64748b;
+	font-size: 0.9rem;
+	font-weight: 600;
+}
+
+.sp-quiz-progress {
+	background: #e2e8f0;
+	border-radius: 999px;
+	height: 10px;
+	margin-bottom: 1.5rem;
+	overflow: hidden;
+}
+
+.sp-quiz-progress-bar {
+	background: #2563eb;
+	border-radius: 999px;
+	height: 100%;
+	transition: width 0.25s ease;
+}
+
+.sp-quiz-desc {
+	background: #f8fafc;
+	border-radius: 10px;
+	color: #475569;
+	font-size: 0.92rem;
+	margin-bottom: 1.25rem;
+	padding: 0.75rem 1rem;
+}
+
+.sp-quiz-qnum {
+	color: #2563eb;
+	font-size: 0.85rem;
+	font-weight: 700;
+	margin: 0 0 0.4rem;
+}
+
+.sp-quiz-prompt {
+	color: #0f172a;
+	font-size: 1.05rem;
+	font-weight: 600;
+	line-height: 1.55;
+	margin: 0 0 1.25rem;
+}
+
+.sp-quiz-options {
+	display: grid;
+	gap: 0.65rem;
+}
+
+.sp-quiz-option {
+	align-items: center;
+	background: #f1f5f9;
+	border: 2px solid transparent;
+	border-radius: 12px;
+	color: #334155;
+	display: flex;
+	gap: 0.65rem;
+	padding: 0.8rem 1rem;
+	transition: border-color 0.15s, background 0.15s;
+}
+
+.sp-quiz-option.is-correct {
+	background: #ecfdf5;
+	border-color: #10b981;
+	color: #065f46;
+}
+
+.sp-quiz-option.is-wrong {
+	background: #fef2f2;
+	border-color: #ef4444;
+	color: #991b1b;
+}
+
+.sp-quiz-option-mark {
+	align-items: center;
+	border-radius: 50%;
+	display: inline-flex;
+	flex-shrink: 0;
+	font-size: 0.85rem;
+	font-weight: 700;
+	height: 1.5rem;
+	justify-content: center;
+	width: 1.5rem;
+}
+
+.sp-quiz-option.is-correct .sp-quiz-option-mark {
+	background: #10b981;
+	color: #fff;
+}
+
+.sp-quiz-option.is-wrong .sp-quiz-option-mark {
+	background: #ef4444;
+	color: #fff;
+}
+
+.sp-quiz-option-text {
+	flex: 1;
+}
+
+.sp-quiz-option-tag {
+	font-size: 0.75rem;
+	font-weight: 700;
+	white-space: nowrap;
+}
+
+.sp-quiz-option.is-correct .sp-quiz-option-tag {
+	color: #059669;
+}
+
+.sp-quiz-option.is-wrong .sp-quiz-option-tag {
+	color: #dc2626;
+}
+
+.sp-quiz-options .sp-exam-option,
+.sp-quiz-options .sp-radio,
+.sp-quiz-options label {
+	align-items: center;
+	background: #f1f5f9;
+	border: 2px solid transparent;
+	border-radius: 12px;
+	color: #334155;
+	cursor: pointer;
+	display: flex;
+	font-size: 0.95rem;
+	gap: 0.65rem;
+	margin: 0;
+	padding: 0.8rem 1rem;
+	transition: border-color 0.15s, background 0.15s;
+	width: 100%;
+}
+
+.sp-quiz-options .sp-exam-option:hover,
+.sp-quiz-options .sp-radio:hover,
+.sp-quiz-options label:hover {
+	background: #e2e8f0;
+}
+
+.sp-quiz-options input[type="radio"],
+.sp-quiz-options input[type="checkbox"] {
+	accent-color: #2563eb;
+	flex-shrink: 0;
+	height: 1.1rem;
+	margin: 0;
+	width: 1.1rem;
+}
+
+.sp-quiz-given {
+	background: #f8fafc;
+	border-radius: 10px;
+	color: #475569;
+	margin: 0;
+	padding: 0.75rem 1rem;
+}
+
+.sp-quiz-nav {
+	align-items: center;
+	display: flex;
+	gap: 0.75rem;
+	justify-content: flex-end;
+	margin-top: 1.75rem;
+}
+
+.sp-quiz-hint {
+	color: #94a3b8;
+	font-size: 0.82rem;
+	margin: 0.6rem 0 0;
+	text-align: right;
+}
+
+.sp-quiz-submitted {
+	color: #64748b;
+	font-size: 0.85rem;
+	margin: -0.5rem 0 1rem;
+}
+
+.sp-quiz-side {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+.sp-quiz-score {
+	background: #eff6ff;
+	border-radius: 14px;
+	display: none;
+	flex-direction: column;
+	padding: 1rem 1.25rem;
+	text-align: center;
+}
+
+.sp-quiz-score.is-visible {
+	display: flex;
+}
+
+.sp-quiz-score-pct {
+	color: #1e3a8a;
+	font-size: 1.6rem;
+	font-weight: 800;
+}
+
+.sp-quiz-score-label {
+	color: #64748b;
+	font-size: 0.8rem;
+	font-weight: 600;
+}
+
+.sp-quiz-navlist {
+	display: flex;
+	flex-direction: column;
+	gap: 0.4rem;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.sp-quiz-navitem.is-right .sp-quiz-navmark {
+	background: #10b981;
+}
+
+.sp-quiz-navitem.is-wrong .sp-quiz-navmark {
+	background: #ef4444;
+}
+
+.sp-quiz-navmark {
+	align-items: center;
+	border-radius: 50%;
+	color: #fff;
+	display: inline-flex;
+	flex-shrink: 0;
+	font-size: 0.7rem;
+	font-weight: 700;
+	height: 1.3rem;
+	justify-content: center;
+	width: 1.3rem;
+}
+
+@media (max-width: 640px) {
+	.sp-card-actions .sp-btn {
+		flex: 1 1 auto;
+		text-align: center;
+	}
+
+	.sp-card:hover {
+		transform: none;
+	}
+
+	.sp-exam-main {
+		padding: 1rem;
+	}
+
+	.sp-quiz-content {
+		padding: 1.25rem;
+	}
+
+	.sp-quiz-head {
+		flex-direction: column;
+	}
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.sp-card:hover,
+	.sp-btn:active {
+		transform: none;
+	}
+
+}
+
+@media print {
+	.sp-portal-side,
+	.sp-portal-nav,
+	.sp-portal-top,
+	.sp-portal-rail,
+	.sp-nav-backdrop,
+	.sp-portal-footer,
+	.sp-card-actions,
+	.sp-btn {
+		display: none !important;
+	}
+
+	.sp-card,
+	.sp-table-wrap {
+		box-shadow: none;
+	}
+
+}
+
+@media (max-width: 900px) {
+	.sp-quiz-layout {
+		grid-template-columns: 1fr;
+	}
+
+	.sp-quiz-side {
+		order: -1;
+	}
+
+	.sp-quiz-navlist {
+		flex-direction: row;
+		flex-wrap: wrap;
+	}
+
+}
+

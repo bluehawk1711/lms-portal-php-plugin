@@ -1,0 +1,48 @@
+/*
+ * admin/email-log
+ * Split from admin.css by private/tools/sp-split-css.php.
+ * One stylesheet per template/page; base holds the shared shell and design system.
+ */
+
+.sp-scope > .sp-table,
+.sp-scope > .sp-table-wrap,
+.sp-scope > .widefat,
+.sp-scope > form {
+	margin-top: 20px;
+}
+
+.sp-admin-muted {
+	color: #646970;
+	font-size: 13px;
+}
+
+.sp-search,
+.sp-admin-search {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 14px 0;
+}
+
+.sp-search input[type="search"],
+.sp-admin-search input[type="search"],
+.sp-admin-search input[type="text"] {
+	flex: 1 1 260px;
+	max-width: 380px;
+}
+
+.sp-admin-search label {
+	font-weight: 600;
+	line-height: 1.4;
+}
+
+.sp-admin-search select {
+	min-width: 180px;
+}
+
+.sp-table-wrap {
+	max-width: 100%;
+	overflow-x: auto;
+}
+

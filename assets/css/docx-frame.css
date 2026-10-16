@@ -1,0 +1,45 @@
+/*
+ * docx-frame
+ * Injected into the hidden Mammoth preview iframe (data-stylesheets) and,
+ * through it, mirrored into the visible .sp-embed-docx container, so a
+ * converted Word document reads with the portal's typography instead of the
+ * browser's bare defaults.
+ */
+
+body {
+	color: #1f2933;
+	font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+	font-size: 15px;
+	line-height: 1.6;
+	margin: 1.5rem;
+}
+
+img {
+	height: auto;
+	max-width: 100%;
+}
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+th,
+td {
+	border: 1px solid #e5e9f0;
+	padding: 0.35rem 0.5rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	line-height: 1.25;
+	margin: 1.2em 0 0.4em;
+}
+
+pre {
+	white-space: pre-wrap;
+}

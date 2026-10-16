@@ -1,0 +1,866 @@
+/*
+ * teacher/material-edit
+ * Split from teacher.css by private/tools/sp-split-css.php.
+ * One stylesheet per template/page; base holds the shared shell and design system.
+ */
+
+.sp-teacher-portal .sp-page-head {
+	margin-bottom: 1rem;
+}
+
+.sp-teacher-portal .sp-btn {
+	min-height: 44px;
+	padding-left: 1.15rem;
+	padding-right: 1.15rem;
+}
+
+.sp-teacher-portal .sp-page-sub {
+	color: var(--sp-muted);
+}
+
+/* The note / file sections are shown by adding .is-visible (template script). */
+.sp-kind-file,
+.sp-kind-note {
+	display: none;
+}
+
+.sp-kind-note.is-visible,
+.sp-kind-file.is-visible {
+	display: block;
+}
+
+/* =====================================================================
+ * Material edit page (.sp-me)
+ *
+ * Same approach as the list page: every colour comes from the portal's
+ * --sp-* tokens (with fallbacks), tints are derived with color-mix(), and
+ * interactive rules are written as `.sp-me .sp-btn.sp-me-*` so they out-rank
+ * the base .sp-btn rules and `.sp-teacher-portal .sp-btn` sizing.
+ * ===================================================================== */
+
+.sp-me,
+.sp-me *,
+.sp-me *::before,
+.sp-me *::after {
+	box-sizing: border-box;
+}
+
+.sp-me {
+	--me-surface: var(--sp-surface, #ffffff);
+	--me-text: var(--sp-text, #1f2933);
+	--me-muted: var(--sp-muted, #64748b);
+	--me-border: var(--sp-border, #e5e9f0);
+	--me-primary: var(--sp-primary, #1d4ed8);
+	--me-primary-dark: var(--sp-primary-dark, #1e40af);
+	--me-on-primary: var(--sp-on-primary, #ffffff);
+	--me-good: var(--sp-good, #15803d);
+	--me-danger: var(--sp-danger, #b42318);
+	--me-radius: 12px;
+	--me-shadow: var(--sp-shadow-sm, 0 1px 2px rgba(15, 23, 42, 0.06));
+
+	--me-wash: color-mix(in srgb, var(--me-text) 4%, var(--me-surface));
+	--me-tint: color-mix(in srgb, var(--me-primary) 8%, var(--me-surface));
+	--me-tint-strong: color-mix(in srgb, var(--me-primary) 14%, var(--me-surface));
+	--me-line-soft: color-mix(in srgb, var(--me-border) 55%, var(--me-surface));
+	--me-ring: 0 0 0 3px color-mix(in srgb, var(--me-primary) 24%, transparent);
+
+	display: grid;
+	gap: 20px;
+	color: var(--me-text);
+}
+
+.sp-me [hidden] {
+	display: none !important;
+}
+
+/* Visually hidden (in case the theme doesn't define .screen-reader-text) */
+.sp-me .screen-reader-text {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* ---------- Header ---------- */
+
+.sp-me-head {
+	display: grid;
+	gap: 8px;
+	margin: 0;
+}
+
+.sp-me .sp-me-back {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	width: fit-content;
+	color: var(--me-muted);
+	font-size: 13px;
+	font-weight: 600;
+	text-decoration: none;
+	transition: color 0.15s;
+}
+
+.sp-me .sp-me-back svg {
+	transition: transform 0.15s;
+}
+
+.sp-me .sp-me-back:hover {
+	color: var(--me-primary);
+}
+
+.sp-me .sp-me-back:hover svg {
+	transform: translateX(-3px);
+}
+
+.sp-me .sp-me-back:focus-visible {
+	outline: none;
+	border-radius: 6px;
+	box-shadow: var(--me-ring);
+}
+
+.sp-me-titlerow {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px 12px;
+}
+
+.sp-me-head h1 {
+	margin: 0;
+	font-size: 1.75rem;
+	line-height: 1.2;
+	letter-spacing: -0.02em;
+}
+
+.sp-me-head .sp-page-sub {
+	max-width: 62ch;
+	margin: 0;
+	color: var(--me-muted);
+}
+
+.sp-me .sp-me-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 3px 10px;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.5;
+	border: 0;
+	border-radius: 999px;
+}
+
+.sp-me-badge__dot {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: currentColor;
+}
+
+.sp-me .sp-me-badge.sp-badge-good {
+	color: color-mix(in srgb, var(--me-good) 75%, var(--me-text));
+	background: color-mix(in srgb, var(--me-good) 14%, var(--me-surface));
+}
+
+.sp-me .sp-me-badge.sp-badge-muted {
+	color: color-mix(in srgb, var(--me-muted) 70%, var(--me-text));
+	background: color-mix(in srgb, var(--me-muted) 14%, var(--me-surface));
+}
+
+/* ---------- Layout ---------- */
+
+.sp-me-form {
+	margin: 0;
+}
+
+.sp-me-layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 320px;
+	gap: 20px;
+	align-items: start;
+}
+
+.sp-me-main {
+	display: grid;
+	gap: 20px;
+	min-width: 0;
+}
+
+.sp-me-side {
+	display: grid;
+	gap: 16px;
+	position: sticky;
+	top: 1.5rem;
+}
+
+/* ---------- Cards ---------- */
+
+.sp-me-card {
+	background: var(--me-surface);
+	border: 1px solid var(--me-border);
+	border-radius: var(--me-radius);
+	box-shadow: var(--me-shadow);
+	overflow: hidden;
+}
+
+.sp-me-card__head {
+	padding: 16px 20px;
+	border-bottom: 1px solid var(--me-border);
+}
+
+.sp-me-card__head h2 {
+	margin: 0;
+	color: var(--me-text);
+	font-size: 1.0625rem;
+	font-weight: 700;
+	line-height: 1.3;
+	letter-spacing: -0.01em;
+}
+
+.sp-me-card__head p {
+	margin: 2px 0 0;
+	color: var(--me-muted);
+	font-size: 13px;
+}
+
+.sp-me-card__body {
+	display: grid;
+	gap: 20px;
+	padding: 20px;
+}
+
+/* ---------- Form fields ---------- */
+
+.sp-me .sp-field {
+	display: grid;
+	gap: 6px;
+	margin: 0;
+}
+
+.sp-me .sp-field > label,
+.sp-me .sp-fieldset > legend {
+	padding: 0;
+	color: var(--me-text);
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1.4;
+}
+
+.sp-me .sp-fieldset > legend {
+	margin-bottom: 8px;
+}
+
+.sp-me .sp-req {
+	color: color-mix(in srgb, var(--me-danger) 85%, var(--me-text));
+}
+
+.sp-me .sp-help {
+	margin: 0;
+	color: var(--me-muted);
+	font-size: 12.5px;
+}
+
+.sp-me .sp-field input[type="text"],
+.sp-me .sp-field select {
+	display: block;
+	width: 100%;
+	height: auto;
+	min-height: 44px;
+	margin: 0;
+	padding: 0 14px;
+	color: var(--me-text);
+	font: inherit;
+	font-size: 14.5px;
+	background-color: var(--me-surface);
+	border: 1px solid var(--me-border);
+	border-radius: 10px;
+	box-shadow: none;
+	outline: none;
+	-webkit-appearance: none;
+	appearance: none;
+	transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
+}
+
+.sp-me .sp-field input[type="text"]::placeholder {
+	color: var(--me-muted);
+	opacity: 0.85;
+}
+
+.sp-me .sp-field select {
+	padding-right: 40px;
+	cursor: pointer;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 14px center;
+}
+
+.sp-me .sp-field input[type="text"]:hover,
+.sp-me .sp-field select:hover:not(:disabled) {
+	border-color: color-mix(in srgb, var(--me-border) 55%, var(--me-muted));
+}
+
+.sp-me .sp-field input[type="text"]:focus,
+.sp-me .sp-field select:focus {
+	border-color: var(--me-primary);
+	box-shadow: var(--me-ring);
+}
+
+.sp-me .sp-field input[type="text"]:user-invalid,
+.sp-me .sp-field select:user-invalid {
+	border-color: var(--me-danger);
+}
+
+.sp-me .sp-field select:disabled {
+	color: var(--me-muted);
+	cursor: not-allowed;
+	background-color: var(--me-wash);
+	opacity: 1;
+}
+
+.sp-me .sp-fieldset {
+	min-width: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+/* Same reset under the new name the edit form now uses. */
+.sp-me .sp-me-fieldset {
+	min-width: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+/* ---------- Choice cards (type + visibility) ---------- */
+
+.sp-me-choices {
+	display: grid;
+	gap: 10px;
+}
+
+.sp-kind-picker {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* Single-column variant of the choices grid. */
+.sp-me .sp-me-choices--stack {
+	grid-template-columns: minmax(0, 1fr);
+}
+
+.sp-me-choice {
+	position: relative;
+	display: block;
+	margin: 0;
+	cursor: pointer;
+}
+
+/* The radios keep their .sp-kind-toggle class for any existing script, so
+   reset everything that class may add and hide them visually. */
+.sp-me .sp-me-choice input[type="radio"] {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	min-height: 0;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	background: none;
+	border: 0;
+	box-shadow: none;
+	opacity: 0;
+}
+
+.sp-me .sp-me-choice__body {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	height: 100%;
+	padding: 14px 16px;
+	background: var(--me-surface);
+	border: 1px solid var(--me-border);
+	border-radius: 12px;
+	transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+
+.sp-me .sp-me-choice:hover .sp-me-choice__body {
+	background: var(--me-wash);
+	border-color: color-mix(in srgb, var(--me-border) 55%, var(--me-muted));
+}
+
+.sp-me .sp-me-choice input:checked + .sp-me-choice__body {
+	background: var(--me-tint);
+	border-color: var(--me-primary);
+	box-shadow: 0 0 0 1px var(--me-primary);
+}
+
+.sp-me .sp-me-choice input:focus-visible + .sp-me-choice__body {
+	box-shadow: 0 0 0 1px var(--me-primary), var(--me-ring);
+}
+
+.sp-me-choice__icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex: none;
+	width: 36px;
+	height: 36px;
+	color: var(--me-muted);
+	background: var(--me-wash);
+	border-radius: 10px;
+	transition: background 0.15s, color 0.15s;
+}
+
+.sp-me .sp-me-choice input:checked + .sp-me-choice__body .sp-me-choice__icon {
+	color: var(--me-on-primary);
+	background: var(--me-primary);
+}
+
+.sp-me-choice__text {
+	display: grid;
+	gap: 1px;
+	flex: 1;
+	min-width: 0;
+}
+
+.sp-me-choice__title {
+	color: var(--me-text);
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1.35;
+}
+
+.sp-me-choice__hint {
+	color: var(--me-muted);
+	font-size: 12.5px;
+	line-height: 1.4;
+}
+
+/* Radio dot */
+.sp-me-choice__check {
+	position: relative;
+	flex: none;
+	width: 18px;
+	height: 18px;
+	margin-top: 2px;
+	background: var(--me-surface);
+	border: 1.5px solid color-mix(in srgb, var(--me-muted) 55%, var(--me-surface));
+	border-radius: 50%;
+	transition: border-color 0.15s, background 0.15s;
+}
+
+.sp-me-choice__check::after {
+	content: "";
+	position: absolute;
+	inset: 3px;
+	background: var(--me-on-primary);
+	border-radius: 50%;
+	transform: scale(0);
+	transition: transform 0.15s;
+}
+
+.sp-me .sp-me-choice input:checked + .sp-me-choice__body .sp-me-choice__check {
+	background: var(--me-primary);
+	border-color: var(--me-primary);
+}
+
+.sp-me .sp-me-choice input:checked + .sp-me-choice__body .sp-me-choice__check::after {
+	transform: scale(1);
+}
+
+/* "Published" uses the success colour when selected */
+.sp-me .sp-me-choice--good input:checked + .sp-me-choice__body {
+	background: color-mix(in srgb, var(--me-good) 9%, var(--me-surface));
+	border-color: var(--me-good);
+	box-shadow: 0 0 0 1px var(--me-good);
+}
+
+.sp-me .sp-me-choice--good input:checked + .sp-me-choice__body .sp-me-choice__icon,
+.sp-me .sp-me-choice--good input:checked + .sp-me-choice__body .sp-me-choice__check {
+	background: var(--me-good);
+	border-color: var(--me-good);
+}
+
+.sp-me .sp-me-choice--good input:focus-visible + .sp-me-choice__body {
+	box-shadow: 0 0 0 1px var(--me-good), 0 0 0 4px color-mix(in srgb, var(--me-good) 25%, transparent);
+}
+
+/* ---------- Note / file sections ---------- */
+
+/* Keep these hidden by default, even though .sp-field is a grid. */
+.sp-me .sp-field.sp-kind-note:not(.is-visible),
+.sp-me .sp-field.sp-kind-file:not(.is-visible) {
+	display: none;
+}
+
+.sp-me .sp-field.sp-kind-note.is-visible,
+.sp-me .sp-field.sp-kind-file.is-visible {
+	display: grid;
+}
+
+.sp-me .wp-editor-wrap {
+	min-width: 0;
+}
+
+.sp-me .wp-editor-container {
+	overflow: hidden;
+	border: 1px solid var(--me-border);
+	border-radius: 10px;
+	transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.sp-me .wp-editor-container:focus-within {
+	border-color: var(--me-primary);
+	box-shadow: var(--me-ring);
+}
+
+/* Current stored file */
+.sp-me-current {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin: 0;
+	padding: 10px 12px;
+	background: var(--me-wash);
+	border: 1px solid var(--me-border);
+	border-radius: 10px;
+}
+
+.sp-me-current__icon,
+.sp-me-picked__icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex: none;
+	width: 36px;
+	height: 36px;
+	color: color-mix(in srgb, #ea580c 80%, var(--me-text));
+	background: color-mix(in srgb, #ea580c 13%, var(--me-surface));
+	border-radius: 10px;
+}
+
+.sp-me-current__text,
+.sp-me-picked__text {
+	display: grid;
+	min-width: 0;
+}
+
+.sp-me-current__label {
+	color: var(--me-muted);
+	font-size: 11.5px;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.sp-me-current__name,
+.sp-me-picked__name {
+	overflow: hidden;
+	color: var(--me-text);
+	font-size: 14px;
+	font-weight: 600;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* Drop zone: the real file input covers it, so click and drop both work. */
+.sp-me-drop {
+	position: relative;
+	display: grid;
+	gap: 4px;
+	justify-items: center;
+	padding: 28px 20px;
+	text-align: center;
+	background: var(--me-wash);
+	border: 2px dashed color-mix(in srgb, var(--me-muted) 45%, var(--me-surface));
+	border-radius: 12px;
+	transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+
+.sp-me-drop:hover,
+.sp-me-drop.is-dragover {
+	background: var(--me-tint);
+	border-color: var(--me-primary);
+}
+
+.sp-me-drop.is-dragover {
+	box-shadow: var(--me-ring);
+}
+
+.sp-me-drop:focus-within {
+	border-color: var(--me-primary);
+	box-shadow: var(--me-ring);
+}
+
+.sp-me-drop__icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 48px;
+	height: 48px;
+	margin-bottom: 6px;
+	color: var(--me-primary);
+	background: var(--me-tint-strong);
+	border-radius: 14px;
+	transition: transform 0.15s;
+}
+
+.sp-me-drop:hover .sp-me-drop__icon,
+.sp-me-drop.is-dragover .sp-me-drop__icon {
+	transform: translateY(-2px);
+}
+
+.sp-me-drop__title {
+	color: var(--me-text);
+	font-size: 14px;
+}
+
+.sp-me-drop__title strong {
+	color: var(--me-primary);
+	font-weight: 600;
+}
+
+.sp-me-drop__hint {
+	max-width: 44ch;
+	color: var(--me-muted);
+	font-size: 12.5px;
+}
+
+.sp-me .sp-me-drop input[type="file"] {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	min-height: 0;
+	margin: 0;
+	padding: 0;
+	font-size: 0;
+	cursor: pointer;
+	opacity: 0;
+}
+
+.sp-me-picked {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 10px 12px;
+	background: color-mix(in srgb, var(--me-good) 8%, var(--me-surface));
+	border: 1px solid color-mix(in srgb, var(--me-good) 45%, var(--me-border));
+	border-radius: 10px;
+}
+
+.sp-me-picked__text {
+	flex: 1;
+}
+
+.sp-me-picked__size {
+	color: var(--me-muted);
+	font-size: 12.5px;
+}
+
+.sp-me .sp-me-picked__clear {
+	flex: none;
+	min-height: 32px;
+	margin: 0;
+	padding: 0 12px;
+	color: var(--me-muted);
+	font: inherit;
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1;
+	background: transparent;
+	border: 1px solid transparent;
+	border-radius: 8px;
+	box-shadow: none;
+	cursor: pointer;
+	transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+
+.sp-me .sp-me-picked__clear:hover {
+	color: var(--me-danger);
+	background: color-mix(in srgb, var(--me-danger) 9%, var(--me-surface));
+	border-color: color-mix(in srgb, var(--me-danger) 35%, var(--me-surface));
+}
+
+.sp-me .sp-me-picked__clear:focus-visible {
+	outline: none;
+	box-shadow: var(--me-ring);
+}
+
+.sp-me-error {
+	margin: 0;
+	padding: 10px 12px;
+	color: color-mix(in srgb, var(--me-danger) 85%, var(--me-text));
+	font-size: 13px;
+	font-weight: 500;
+	background: color-mix(in srgb, var(--me-danger) 9%, var(--me-surface));
+	border: 1px solid color-mix(in srgb, var(--me-danger) 35%, var(--me-surface));
+	border-radius: 10px;
+}
+
+/* ---------- Actions ---------- */
+
+.sp-me-actions {
+	display: grid;
+	gap: 10px;
+	padding-top: 20px;
+	border-top: 1px solid var(--me-line-soft);
+}
+
+.sp-me .sp-btn.sp-me-save {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	width: 100%;
+	min-height: 44px;
+	padding: 0 18px;
+	color: var(--me-on-primary);
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1;
+	text-decoration: none;
+	background: var(--me-primary);
+	border: 1px solid var(--me-primary);
+	border-radius: 10px;
+	box-shadow: var(--me-shadow);
+	cursor: pointer;
+	transition: background 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+}
+
+.sp-me .sp-btn.sp-me-save:hover {
+	color: var(--me-on-primary);
+	background: var(--me-primary-dark);
+	border-color: var(--me-primary-dark);
+	box-shadow: 0 6px 14px color-mix(in srgb, var(--me-primary) 30%, transparent);
+	transform: translateY(-1px);
+}
+
+.sp-me .sp-btn.sp-me-save:active {
+	box-shadow: var(--me-shadow);
+	transform: translateY(0);
+}
+
+.sp-me .sp-btn.sp-me-save:focus-visible {
+	outline: none;
+	box-shadow: 0 0 0 2px var(--me-surface), 0 0 0 4px var(--me-primary);
+}
+
+.sp-me .sp-btn.sp-me-save:disabled,
+.sp-me .sp-btn.sp-me-save.is-loading {
+	color: var(--me-on-primary);
+	background: var(--me-primary);
+	box-shadow: none;
+	cursor: progress;
+	opacity: 0.7;
+	transform: none;
+}
+
+.sp-me .sp-btn.sp-me-cancel,
+.sp-me .sp-btn.sp-me-preview {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	min-height: 40px;
+	padding: 0 16px;
+	color: var(--me-text);
+	font-size: 13.5px;
+	font-weight: 600;
+	line-height: 1;
+	text-decoration: none;
+	background: var(--me-surface);
+	border: 1px solid var(--me-border);
+	border-radius: 10px;
+	box-shadow: none;
+	cursor: pointer;
+	transition: background 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+.sp-me .sp-btn.sp-me-cancel:hover,
+.sp-me .sp-btn.sp-me-preview:hover {
+	color: var(--me-primary);
+	background: var(--me-tint);
+	border-color: var(--me-primary);
+}
+
+.sp-me .sp-btn.sp-me-cancel:active,
+.sp-me .sp-btn.sp-me-preview:active {
+	background: var(--me-tint-strong);
+}
+
+.sp-me .sp-btn.sp-me-cancel:focus-visible,
+.sp-me .sp-btn.sp-me-preview:focus-visible {
+	outline: none;
+	border-color: var(--me-primary);
+	box-shadow: var(--me-ring);
+}
+
+/* ---------- Aside note ---------- */
+
+.sp-me-card--aside .sp-me-card__body {
+	gap: 8px;
+}
+
+.sp-me-aside__title {
+	margin: 0;
+	color: var(--me-text);
+	font-size: 14px;
+	font-weight: 700;
+}
+
+.sp-me-aside__text {
+	margin: 0 0 6px;
+	color: var(--me-muted);
+	font-size: 13px;
+}
+
+.sp-me .sp-btn.sp-me-preview {
+	width: 100%;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 960px) {
+	.sp-me-layout {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.sp-me-side {
+		position: static;
+	}
+}
+
+@media (max-width: 640px) {
+	.sp-action-row .sp-btn,
+	.sp-action-row button {
+		flex: 1 1 100%;
+	}
+
+	.sp-me-head h1 {
+		font-size: 1.5rem;
+	}
+
+	.sp-me-card__head {
+		padding: 14px 16px;
+	}
+
+	.sp-me-card__body {
+		padding: 16px;
+	}
+
+	.sp-kind-picker {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.sp-me-drop {
+		padding: 22px 16px;
+	}
+}

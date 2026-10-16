@@ -1,0 +1,157 @@
+/*
+ * admin/student-accounts
+ * Split from admin.css by private/tools/sp-split-css.php.
+ * One stylesheet per template/page; base holds the shared shell and design system.
+ */
+
+.sp-scope > .sp-table,
+.sp-scope > .sp-table-wrap,
+.sp-scope > .widefat,
+.sp-scope > form {
+	margin-top: 20px;
+}
+
+.sp-admin-muted {
+	color: #646970;
+	font-size: 13px;
+}
+
+.sp-search,
+.sp-admin-search {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 14px 0;
+}
+
+.sp-search input[type="search"],
+.sp-admin-search input[type="search"],
+.sp-admin-search input[type="text"] {
+	flex: 1 1 260px;
+	max-width: 380px;
+}
+
+.sp-admin-search label {
+	font-weight: 600;
+	line-height: 1.4;
+}
+
+.sp-admin-search select {
+	min-width: 180px;
+}
+
+.sp-table-wrap {
+	max-width: 100%;
+	overflow-x: auto;
+}
+
+.sp-admin-actions {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.sp-admin-inline {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin: 0 4px 4px 0;
+}
+
+/* Row actions: a three-dot menu keeps one primary action visible per row. */
+.sp-kebab {
+	position: relative;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.sp-kebab-btn {
+	min-width: 2.2em;
+	line-height: 1;
+	font-size: 16px;
+	font-weight: 700;
+}
+
+.sp-kebab-menu {
+	position: absolute;
+	top: calc(100% + 4px);
+	right: 0;
+	z-index: 40;
+	min-width: 180px;
+	padding: 4px;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	background: #fff;
+	box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+.sp-kebab-menu[hidden] {
+	display: none;
+}
+
+.sp-kebab-menu .sp-kebab-item-form {
+	margin: 0;
+}
+
+.sp-kebab-menu a.sp-kebab-item,
+.sp-kebab-menu button.sp-kebab-item {
+	display: block;
+	width: 100%;
+	margin: 0;
+	padding: 6px 10px;
+	border: 0;
+	border-radius: 3px;
+	background: transparent;
+	color: #1d2327;
+	font-size: 13px;
+	line-height: 1.5;
+	text-align: left;
+	text-decoration: none;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.sp-kebab-menu a.sp-kebab-item:hover,
+.sp-kebab-menu button.sp-kebab-item:hover {
+	background: #f0f0f1;
+	color: #2271b1;
+}
+
+.sp-kebab-menu button.sp-kebab-danger {
+	color: #b32d2e;
+}
+
+.sp-kebab-menu button.sp-kebab-danger:hover {
+	background: #fcf0f1;
+	color: #b32d2e;
+}
+
+/* Inline enrol panel opened from a row's Enroll button. */
+tr[data-sp-enroll-row] > td {
+	background: #f6f7f7;
+}
+
+.sp-inline-enroll {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	gap: 10px;
+	margin: 4px 0 6px;
+}
+
+.sp-inline-enroll label {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	font-size: 12px;
+	font-weight: 600;
+	color: #1d2327;
+}
+
+.sp-inline-enroll select,
+.sp-inline-enroll input[type="text"],
+.sp-inline-enroll input[type="date"] {
+	min-width: 150px;
+}
+
