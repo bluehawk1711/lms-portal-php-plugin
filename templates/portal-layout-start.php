@@ -19,6 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $sp_current         = isset( $slug ) ? $slug : 'home';
+$sp_has_rail        = ( 'home' === $sp_current );
 $sp_routes          = sp_portal_routes();
 $sp_nav_current     = isset( $sp_routes[ $sp_current ]['parent'] ) ? $sp_routes[ $sp_current ]['parent'] : $sp_current;
 $sp_user            = wp_get_current_user();
@@ -31,7 +32,7 @@ $sp_contact_email   = trim( (string) sp_setting( 'institute_email', '' ) );
 $sp_contact_visible = ( '' !== $sp_contact_phone || '' !== $sp_contact_email );
 ?>
 <div class="sp-portal sp-student-portal">
-	<div class="sp-portal-shell">
+	<div class="sp-portal-shell<?php echo $sp_has_rail ? ' has-rail' : ' no-rail'; ?>">
 		<aside class="sp-portal-side" id="sp-portal-side">
 			<div class="sp-side-brand">
 				<a class="sp-side-brand-link" href="<?php echo esc_url( sp_portal_url() ); ?>">

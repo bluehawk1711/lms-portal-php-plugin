@@ -61,8 +61,8 @@ $sp_status_class = 'sp-pill-' . sanitize_html_class( $sp_status ? $sp_status : '
 	<div class="sp-avatar" aria-hidden="true"><?php echo esc_html( $sp_initials ); ?></div>
 
 	<div class="sp-hero-body">
-		<div class="sp-hero-name">
-			<h2><?php echo esc_html( $profile->full_name ); ?></h2>
+		<div  class="sp-hero-name">
+			<h2 style="color: #fff;"><?php echo esc_html( $profile->full_name ); ?></h2>
 			<span class="sp-pill <?php echo esc_attr( $sp_status_class ); ?>"><?php echo esc_html( ucfirst( $profile->status ) ); ?></span>
 		</div>
 		<p class="sp-hero-meta">

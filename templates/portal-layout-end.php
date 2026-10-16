@@ -36,6 +36,7 @@ if ( $sp_rail_enrollments ) {
 			</footer>
 		</div>
 
+		<?php if ( $sp_has_rail ) : ?>
 		<aside class="sp-portal-rail" aria-label="Profile, calendar and progress">
 			<section class="sp-rail-card sp-rail-profile">
 				<header class="sp-rail-head">
@@ -139,5 +140,6 @@ if ( $sp_rail_enrollments ) {
 				<?php endif; ?>
 			</section>
 		</aside>
+		<?php endif; ?>
 	</div>
 </div>

@@ -1,71 +1,643 @@
 /*
  * admin/import
- * Split from admin.css by private/tools/sp-split-css.php.
- * One stylesheet per template/page; base holds the shared shell and design system.
+ * Dedicated styles for the shared student/teacher CSV import screen.
+ * Shared shell and design tokens remain in the base admin stylesheet.
  */
 
-.sp-scope > .sp-table,
-.sp-scope > .sp-table-wrap,
-.sp-scope > .widefat,
-.sp-scope > form {
-	margin-top: 20px;
+.sp-import-page {
+    --sp-import-border: #dcdcde;
+    --sp-import-text: #1d2327;
+    --sp-import-muted: #646970;
+    --sp-import-blue: #2271b1;
+    --sp-import-blue-soft: #f0f6fc;
+    color: var(--sp-import-text);
+    max-width: 1600px;
 }
 
-.sp-admin-panel {
-	background: #fff;
-	border: 1px solid #dcdcde;
-	border-radius: 8px;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-	margin-bottom: 20px;
-	padding: 4px 22px 18px;
+.sp-import-heading {
+    align-items: center;
+    display: flex;
+    gap: 24px;
+    justify-content: space-between;
+    margin: 8px 0 24px;
 }
 
-.sp-admin-panel > h2:first-child {
-	color: #1d2327;
-	font-size: 15px;
-	margin-top: 16px;
+.sp-import-heading-copy {
+    max-width: 780px;
 }
 
-.sp-admin-muted {
-	color: #646970;
-	font-size: 13px;
+.sp-import-eyebrow {
+    color: var(--sp-import-blue);
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    margin-bottom: 7px;
 }
 
-.sp-table-wrap {
-	max-width: 100%;
-	overflow-x: auto;
+.sp-import-heading h1 {
+    color: var(--sp-import-text);
+    font-size: clamp(25px, 3vw, 32px);
+    font-weight: 650;
+    letter-spacing: -0.035em;
+    line-height: 1.2;
+    margin: 0 0 9px;
+    padding: 0;
 }
 
-.sp-pill {
-	border-radius: 999px;
-	display: inline-block;
-	font-size: 11px;
-	font-weight: 600;
-	letter-spacing: 0.02em;
-	margin-right: 4px;
-	padding: 3px 10px;
-	white-space: nowrap;
+.sp-import-heading p {
+    color: var(--sp-import-muted);
+    font-size: 14px;
+    line-height: 1.65;
+    margin: 0;
 }
 
-.sp-pill-good {
-	background: #edfaef;
-	color: #00623c;
+.sp-import-heading-help {
+    align-items: center;
+    background: #fff;
+    border: 1px solid var(--sp-import-border);
+    border-radius: 999px;
+    color: #50575e;
+    display: inline-flex;
+    flex: 0 0 auto;
+    font-size: 12px;
+    font-weight: 600;
+    gap: 8px;
+    padding: 9px 13px;
 }
 
-.sp-pill-bad {
-	background: #fcf0f1;
-	color: #8a1f1f;
+.sp-import-heading-help .dashicons {
+    color: var(--sp-import-blue);
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
 }
 
-.sp-pill-muted {
-	background: #f0f0f1;
-	color: #50575e;
+.sp-import-tabs {
+    border-bottom: 1px solid var(--sp-import-border);
+    display: flex;
+    gap: 8px;
+    margin: 0 0 22px;
+    padding: 0 0 12px;
+}
+
+.sp-import-tab {
+    align-items: center;
+    background: #fff;
+    border: 1px solid var(--sp-import-border);
+    border-radius: 9px;
+    color: #2c3338;
+    display: grid;
+    gap: 2px 9px;
+    grid-template-columns: 22px auto;
+    min-width: 215px;
+    padding: 12px 15px;
+    text-decoration: none;
+    transition: border-color 140ms ease, background-color 140ms ease, box-shadow 140ms ease;
+}
+
+.sp-import-tab:hover,
+.sp-import-tab:focus-visible {
+    border-color: #8cadd0;
+    box-shadow: 0 0 0 2px rgba(34, 113, 177, 0.08);
+    color: var(--sp-import-blue);
+}
+
+.sp-import-tab:focus-visible {
+    outline: 2px solid var(--sp-import-blue);
+    outline-offset: 2px;
+}
+
+.sp-import-tab.is-active {
+    background: var(--sp-import-blue-soft);
+    border-color: #72aee6;
+    box-shadow: inset 0 0 0 1px rgba(34, 113, 177, 0.05);
+    color: #135e96;
+}
+
+.sp-import-tab > .dashicons {
+    align-self: center;
+    color: var(--sp-import-blue);
+    font-size: 20px;
+    grid-row: 1 / span 2;
+    height: 20px;
+    width: 20px;
+}
+
+.sp-import-tab > span:nth-child(2) {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.sp-import-tab-description {
+    color: var(--sp-import-muted);
+    font-size: 11px;
+    grid-column: 2;
+    line-height: 1.4;
+}
+
+.sp-import-workspace {
+    align-items: stretch;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+    margin-bottom: 22px;
+}
+
+.sp-import-page .sp-admin-panel {
+    background: #fff;
+    border: 1px solid var(--sp-import-border);
+    border-radius: 12px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.025);
+    margin: 0 0 20px;
+    min-width: 0;
+    padding: 23px;
+}
+
+.sp-import-workspace > .sp-admin-panel {
+    margin-bottom: 0;
+}
+
+.sp-import-section-heading {
+    align-items: flex-start;
+    display: flex;
+    gap: 12px;
+    margin: 0 0 22px;
+}
+
+.sp-import-step {
+    align-items: center;
+    background: var(--sp-import-blue-soft);
+    border: 1px solid #d5e6f7;
+    border-radius: 8px;
+    color: #135e96;
+    display: inline-flex;
+    flex: 0 0 38px;
+    font-size: 12px;
+    font-weight: 700;
+    height: 38px;
+    justify-content: center;
+    letter-spacing: 0.02em;
+}
+
+.sp-import-section-heading h2,
+.sp-import-page .sp-admin-panel .sp-import-section-heading h2 {
+    color: var(--sp-import-text);
+    font-size: 17px;
+    font-weight: 650;
+    line-height: 1.35;
+    margin: 1px 0 5px;
+    padding: 0;
+}
+
+.sp-import-section-description {
+    color: var(--sp-import-muted);
+    font-size: 12px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.sp-import-columns-label {
+    color: #50575e;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.045em;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.sp-import-code-block {
+    background: #f6f7f7;
+    border: 1px solid #e2e4e7;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow-wrap: anywhere;
+    padding: 14px 15px;
+}
+
+.sp-import-code-block code {
+    color: #174f78;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.8;
+    white-space: normal;
+}
+
+.sp-import-requirements {
+    display: grid;
+    gap: 15px;
+}
+
+.sp-import-requirement {
+    align-items: flex-start;
+    display: flex;
+    gap: 11px;
+}
+
+.sp-import-requirement-icon {
+    align-items: center;
+    background: #f0f0f1;
+    border-radius: 7px;
+    color: #50575e;
+    display: inline-flex;
+    flex: 0 0 30px;
+    font-size: 15px;
+    font-weight: 700;
+    height: 30px;
+    justify-content: center;
+}
+
+.sp-import-requirement-icon.is-required {
+    background: #fcf0f1;
+    color: #b32d2e;
+}
+
+.sp-import-requirement-icon .dashicons {
+    font-size: 16px;
+    height: 16px;
+    width: 16px;
+}
+
+.sp-import-requirement strong {
+    color: #2c3338;
+    display: block;
+    font-size: 12px;
+    line-height: 1.4;
+    margin: 1px 0 3px;
+}
+
+.sp-import-requirement p {
+    color: var(--sp-import-muted);
+    font-size: 12px;
+    line-height: 1.65;
+    margin: 0;
+}
+
+.sp-import-requirement code {
+    background: #f0f0f1;
+    border-radius: 3px;
+    font-size: 11px;
+    padding: 1px 4px;
+}
+
+.sp-import-format-footer {
+    align-items: center;
+    border-top: 1px solid #f0f0f1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: space-between;
+    margin-top: 23px;
+    padding-top: 17px;
+}
+
+.sp-import-format-footer .sp-admin-muted {
+    font-size: 11px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.sp-import-format-footer .button {
+    align-items: center;
+    display: inline-flex;
+    gap: 5px;
+}
+
+.sp-import-format-footer .dashicons {
+    font-size: 16px;
+    height: 16px;
+    width: 16px;
+}
+
+.sp-import-upload-panel {
+    display: flex;
+    flex-direction: column;
+}
+
+.sp-import-upload-form {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin: 0;
+}
+
+.sp-import-file-drop {
+    align-items: center;
+    background: #fbfcfe;
+    border: 1px dashed #a7aaad;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 245px;
+    padding: 22px 18px;
+    text-align: center;
+    transition: background-color 140ms ease, border-color 140ms ease;
+}
+
+.sp-import-file-drop:hover,
+.sp-import-file-drop:focus-within {
+    background: #f5f9fd;
+    border-color: var(--sp-import-blue);
+}
+
+.sp-import-file-icon {
+    align-items: center;
+    background: #eaf3fb;
+    border-radius: 13px;
+    color: var(--sp-import-blue);
+    display: inline-flex;
+    height: 58px;
+    justify-content: center;
+    margin-bottom: 15px;
+    width: 58px;
+}
+
+.sp-import-file-icon .dashicons {
+    font-size: 29px;
+    height: 29px;
+    width: 29px;
+}
+
+.sp-import-file-drop > strong {
+    color: var(--sp-import-text);
+    font-size: 14px;
+    margin-bottom: 7px;
+}
+
+.sp-import-file-description {
+    color: var(--sp-import-muted);
+    font-size: 12px;
+    line-height: 1.55;
+    max-width: 280px;
+}
+
+.sp-import-file-types {
+    color: #8c8f94;
+    font-size: 11px;
+    margin-top: 9px;
+}
+
+.sp-import-file-drop input[type="file"] {
+    display: block;
+    font-size: 12px;
+    margin-top: 17px;
+    max-width: 100%;
+    width: 100%;
+}
+
+.sp-import-upload-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: space-between;
+    margin-top: 19px;
+}
+
+.sp-import-upload-actions .button {
+    min-height: 36px;
+    padding: 0 15px;
+}
+
+.sp-import-upload-actions .sp-admin-muted {
+    align-items: center;
+    display: inline-flex;
+    font-size: 11px;
+    gap: 4px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.sp-import-upload-actions .dashicons {
+    color: #008a20;
+    font-size: 15px;
+    height: 15px;
+    width: 15px;
+}
+
+.sp-import-preview-panel {
+    overflow: hidden;
+}
+
+.sp-import-preview-heading {
+    align-items: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 24px;
+    justify-content: space-between;
+}
+
+.sp-import-preview-heading .sp-import-section-heading {
+    margin-bottom: 18px;
+}
+
+.sp-import-preview-counts {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    padding-top: 2px;
+}
+
+.sp-import-page .sp-pill {
+    border-radius: 999px;
+    display: inline-flex;
+    font-size: 11px;
+    font-weight: 650;
+    line-height: 1.5;
+    margin: 0;
+    padding: 5px 10px;
+    white-space: nowrap;
+}
+
+.sp-import-page .sp-pill-good {
+    background: #edfaef;
+    color: #00623c;
+}
+
+.sp-import-page .sp-pill-bad {
+    background: #fcf0f1;
+    color: #8a1f1f;
+}
+
+.sp-import-page .sp-pill-muted {
+    background: #f0f0f1;
+    color: #50575e;
+}
+
+.sp-import-preview-table-wrap {
+    border: 1px solid #e2e4e7;
+    border-radius: 8px;
+    margin-top: 0;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.sp-import-page .sp-import-preview-table.widefat {
+    border: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 0;
+    min-width: 680px;
+    width: 100%;
+}
+
+.sp-import-preview-table thead th {
+    background: #f6f7f7;
+    color: #50575e;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.035em;
+    padding: 12px 14px;
+    text-transform: uppercase;
+}
+
+.sp-import-preview-table tbody td {
+    color: #3c434a;
+    font-size: 12px;
+    line-height: 1.55;
+    padding: 12px 14px;
+    vertical-align: top;
+}
+
+.sp-import-preview-table tbody td:first-child {
+    color: var(--sp-import-muted);
+    font-variant-numeric: tabular-nums;
+    width: 58px;
+}
+
+.sp-import-preview-table tbody td:nth-child(3) {
+    min-width: 130px;
+}
+
+.sp-import-preview-table tbody td:nth-child(4) {
+    overflow-wrap: anywhere;
+    min-width: 180px;
+}
+
+.sp-import-preview-table tbody td:nth-child(5) {
+    min-width: 210px;
+}
+
+.sp-import-confirm-bar {
+    align-items: center;
+    background: #fbfcfe;
+    border: 1px solid #e2eaf2;
+    border-radius: 9px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding: 15px 17px;
+}
+
+.sp-import-confirm-bar > div > strong {
+    color: var(--sp-import-text);
+    display: block;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.sp-import-confirm-bar .sp-admin-muted {
+    font-size: 11px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.sp-import-commit-form {
+    margin: 0;
+}
+
+.sp-import-commit-form .button {
+    min-height: 36px;
+    padding: 0 15px;
+}
+
+@media (max-width: 1100px) {
+    .sp-import-workspace {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .sp-import-file-drop {
+        min-height: 220px;
+    }
 }
 
 @media (max-width: 782px) {
-	.sp-admin-panel {
-		padding: 4px 14px 14px;
-	}
+    .sp-import-heading {
+        align-items: flex-start;
+        margin-bottom: 19px;
+    }
 
+    .sp-import-heading-help {
+        display: none;
+    }
+
+    .sp-import-tabs {
+        gap: 7px;
+    }
+
+    .sp-import-tab {
+        flex: 1 1 0;
+        min-width: 0;
+        padding: 11px 10px;
+    }
+
+    .sp-import-tab-description {
+        display: none;
+    }
+
+    .sp-import-page .sp-admin-panel {
+        border-radius: 10px;
+        padding: 17px 15px;
+    }
+
+    .sp-import-section-heading {
+        gap: 10px;
+        margin-bottom: 18px;
+    }
+
+    .sp-import-step {
+        flex-basis: 33px;
+        height: 33px;
+    }
+
+    .sp-import-format-footer,
+    .sp-import-upload-actions,
+    .sp-import-confirm-bar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .sp-import-format-footer .button,
+    .sp-import-upload-actions > .button,
+    .sp-import-commit-form,
+    .sp-import-commit-form .button {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .sp-import-preview-heading {
+        flex-direction: column;
+    }
+
+    .sp-import-preview-counts {
+        padding: 0 0 14px;
+    }
+
+    .sp-import-confirm-bar {
+        gap: 12px;
+    }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .sp-import-tab,
+    .sp-import-file-drop {
+        transition: none;
+    }
+}

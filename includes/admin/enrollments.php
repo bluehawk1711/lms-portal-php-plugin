@@ -15,7 +15,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return void
  */
 function sp_admin_page_sp_enrollments() {
-    $classes = sp_get_classes( array( 'per_page' => 200 ) );
+    // Approval first: a teacher-created class stays out of every enrolment
+    // dropdown until an admin approves it on the Classes screen.
+    $classes = array_values(
+        array_filter(
+            sp_get_classes( array( 'per_page' => 200 ) ),
+            function ( $sp_row ) {
+                return 'pending' !== (string) $sp_row->status;
+            }
+        )
+    );
 
     if ( empty( $classes ) ) {
         ?>

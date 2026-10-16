@@ -71,15 +71,21 @@
 	margin: 0;
 	max-width: none;
 	min-height: 100vh;
-	padding: 2.75rem 2.5rem 3rem;
+	padding: 1.25rem 1.25rem 1.75rem;
 }
 
 .sp-portal-shell {
 	align-items: start;
 	display: grid;
-	gap: 1.5rem;
+	gap: 1.15rem;
 	grid-template-areas: "side col rail";
 	grid-template-columns: 258px minmax(0, 1fr) 306px;
+}
+
+/* Non-dashboard screens drop the right rail and let the content column fill. */
+.sp-portal-shell.no-rail {
+	grid-template-areas: "side col";
+	grid-template-columns: 258px minmax(0, 1fr);
 }
 
 .sp-portal-side {
@@ -263,7 +269,7 @@
 .sp-portal-col {
 	align-content: start;
 	display: grid;
-	gap: 1.5rem;
+	gap: 1.15rem;
 	min-width: 0;
 }
 
@@ -275,7 +281,7 @@
 	box-shadow: var(--sp-shadow-sm);
 	display: flex;
 	gap: 0.85rem;
-	padding: 1rem 1.25rem;
+	padding: 0.8rem 1.1rem;
 }
 
 .sp-portal-title {
@@ -290,7 +296,7 @@
 	border-radius: var(--sp-radius);
 	box-shadow: var(--sp-shadow-sm);
 	min-width: 0;
-	padding: 1.5rem;
+	padding: 1.15rem;
 }
 
 .sp-portal-col .sp-portal-footer {
@@ -1241,6 +1247,10 @@ body.sp-nav-open .sp-portal-top {
 		grid-template-columns: minmax(0, 1fr);
 	}
 
+	.sp-portal-shell.no-rail {
+		grid-template-areas: "col";
+	}
+
 	.sp-portal-side {
 		background: var(--sp-surface);
 		bottom: 0;
@@ -1335,6 +1345,11 @@ body.sp-nav-open .sp-portal-top {
 @media (max-width: 1180px) and (min-width: 769px) {
 	.sp-portal-shell {
 		grid-template-areas: "side col" "side rail";
+		grid-template-columns: 232px minmax(0, 1fr);
+	}
+
+	.sp-portal-shell.no-rail {
+		grid-template-areas: "side col";
 		grid-template-columns: 232px minmax(0, 1fr);
 	}
 
