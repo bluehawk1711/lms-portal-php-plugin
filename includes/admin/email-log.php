@@ -31,14 +31,66 @@ function sp_admin_page_sp_email_log() {
 	$count_sql = "SELECT COUNT(*) FROM {$table} WHERE {$where}";
 	$total     = (int) ( $args ? $wpdb->get_var( $wpdb->prepare( $count_sql, $args ) ) : $wpdb->get_var( $count_sql ) );
 
+	// Totals per status drive the header counters regardless of the active filter.
+	$sp_status_counts = array( 'sent' => 0, 'failed' => 0 );
+	foreach ( (array) $wpdb->get_results( "SELECT status, COUNT(*) AS c FROM {$table} GROUP BY status" ) as $sp_stat_row ) {
+		$sp_status_counts[ sanitize_key( $sp_stat_row->status ) ] = (int) $sp_stat_row->c;
+	}
+	$sp_sent_total  = (int) ( isset( $sp_status_counts['sent'] ) ? $sp_status_counts['sent'] : 0 );
+	$sp_failed_total = (int) ( isset( $sp_status_counts['failed'] ) ? $sp_status_counts['failed'] : 0 );
+
 	$list_sql    = "SELECT * FROM {$table} WHERE {$where} ORDER BY created_at DESC LIMIT %d OFFSET %d";
 	$list_args   = array_merge( $args, array( $per, ( $page - 1 ) * $per ) );
 	$rows        = $wpdb->get_results( $wpdb->prepare( $list_sql, $list_args ) );
 	$failed_only = ( 'failed' === $filter );
 	?>
-	<form method="get" class="sp-admin-search">
+	<div class="sp-emaillog-ui" id="sp-emaillog-region" data-sp-async-region>
+		<header class="sp-emaillog-page-header">
+			<div class="sp-emaillog-page-heading">
+				<span class="sp-emaillog-eyebrow">STUDENT PORTAL <span aria-hidden="true">/</span> DIAGNOSTICS</span>
+				<h1>Email log</h1>
+				<p>Every message the portal has tried to send, with its recipient, context and delivery status. Failures usually mean WordPress needs an SMTP plugin.</p>
+			</div>
+			<div class="sp-emaillog-header-note">
+				<span class="sp-emaillog-header-mark" aria-hidden="true">✉</span>
+				<span>
+					<strong>Delivery health</strong>
+					<small>Sent, failed and last attempts</small>
+				</span>
+			</div>
+		</header>
+
+		<section class="sp-emaillog-stats" aria-label="Delivery summary">
+			<article class="sp-emaillog-stat-card">
+				<span class="sp-emaillog-stat-icon sp-emaillog-stat-icon-total" aria-hidden="true">✉</span>
+				<div>
+					<span class="sp-emaillog-stat-label">Total messages</span>
+					<strong><?php echo esc_html( number_format_i18n( (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" ) ) ); ?></strong>
+					<small>Ever logged</small>
+				</div>
+			</article>
+			<article class="sp-emaillog-stat-card">
+				<span class="sp-emaillog-stat-icon sp-emaillog-stat-icon-sent" aria-hidden="true">✓</span>
+				<div>
+					<span class="sp-emaillog-stat-label">Accepted</span>
+					<strong><?php echo esc_html( number_format_i18n( $sp_sent_total ) ); ?></strong>
+					<small>Handed to the server</small>
+				</div>
+			</article>
+			<article class="sp-emaillog-stat-card">
+				<span class="sp-emaillog-stat-icon sp-emaillog-stat-icon-failed" aria-hidden="true">✕</span>
+				<div>
+					<span class="sp-emaillog-stat-label">Failed</span>
+					<strong><?php echo esc_html( number_format_i18n( $sp_failed_total ) ); ?></strong>
+					<small>Need attention</small>
+				</div>
+			</article>
+		</section>
+
+	<div class="sp-emaillog-panel">
+	<form method="get" class="sp-admin-search" data-sp-async>
 		<input type="hidden" name="page" value="sp-email-log" />
-		<select name="status">
+		<select name="status" data-sp-async-change>
 			<option value="" <?php selected( $filter, '' ); ?>>All</option>
 			<option value="sent" <?php selected( $filter, 'sent' ); ?>>Accepted</option>
 			<option value="failed" <?php selected( $filter, 'failed' ); ?>>Failed</option>
@@ -102,5 +154,12 @@ function sp_admin_page_sp_email_log() {
 			<?php endfor; ?>
 		</div></div>
 	<?php endif; ?>
+	</div>
+
+		<footer class="sp-emaillog-page-footer">
+			<span><span class="sp-emaillog-footer-dot" aria-hidden="true"></span> Email log</span>
+			<span>WordPress is not delivering mail? Install an SMTP plugin, then send a test from Settings.</span>
+		</footer>
+	</div>
 	<?php
 }

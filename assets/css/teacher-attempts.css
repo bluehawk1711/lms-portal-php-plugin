@@ -1,0 +1,142 @@
+/**
+ * Attempt detail page (/teacher/attempts/<id>).
+ *
+ * The score header is shared with the student's exam review, so those rules
+ * are mirrored here; the sp-ae-* components come from
+ * teacher-assignment-edit.css, which this route loads alongside.
+ */
+
+.sp-quiz-result {
+  margin: 0 0 1rem;
+  border-radius: 14px;
+  background: #f7f9fd;
+  border: 1px solid #e2e8f5;
+}
+
+.sp-quiz-result-score {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0 0 0.85rem;
+  padding: 1rem 1rem 0.75rem;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid #e2e8f5;
+}
+
+.sp-quiz-result-pct {
+  font-size: 2.2rem;
+  font-weight: 850;
+  color: #202c45;
+}
+
+.sp-quiz-result-pct small {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #365bd1;
+}
+
+.sp-quiz-result-score-label {
+  color: #75819a;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.sp-quiz-result-body {
+  padding: 0 1rem 1rem;
+}
+
+.sp-quiz-result-headline {
+  margin: 0 0 0.45rem;
+  font-size: 1rem;
+  font-weight: 750;
+  color: #202c45;
+}
+
+.sp-quiz-result-headline strong {
+  color: #365bd1;
+}
+
+.sp-quiz-result-track {
+  width: 100%;
+  height: 5px;
+  margin: 0 0 0.5rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #dfe7fb;
+}
+
+.sp-quiz-result-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #365bd1, #7c70eb);
+}
+
+.sp-quiz-result-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sp-quiz-result-facts li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 8px;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.sp-quiz-result-facts li.is-good {
+  background: #f5fbf7;
+  color: #16804a;
+}
+
+.sp-quiz-result-facts li.is-bad {
+  background: #fbf0f2;
+  color: #b72739;
+}
+
+.sp-quiz-result-facts li.is-muted {
+  background: #f2f5fa;
+  color: #6c7890;
+}
+
+/* Per-question explanation under the correct answer. */
+.sp-ae-explain {
+  margin: 0.4rem 0 0;
+  padding: 0.45rem 0.6rem;
+  border-left: 3px solid #8fa7f5;
+  border-radius: 0 8px 8px 0;
+  background: #f5f8ff;
+}
+
+.sp-ae-explain-label {
+  display: block;
+  margin-bottom: 0.15rem;
+  color: #365bd1;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sp-ae-explain p {
+  margin: 0;
+  color: #46536d;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+@media (max-width: 760px) {
+  .sp-quiz-result-score {
+    flex-wrap: wrap;
+  }
+}

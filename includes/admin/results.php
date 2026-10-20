@@ -30,7 +30,7 @@ function sp_admin_page_sp_results() {
 
     if ( ! $classes ) {
         ?>
-        <div class="sp-results-ui">
+        <div class="sp-results-ui" id="sp-results-region" data-sp-async-region>
             <header class="sp-results-page-header">
                 <div class="sp-results-page-heading">
                     <span class="sp-results-eyebrow">STUDENT PORTAL <span aria-hidden="true">/</span> ACADEMIC MANAGEMENT</span>
@@ -154,10 +154,10 @@ function sp_admin_page_sp_results() {
                 <strong>Choose a class</strong>
                 <small>Open a class to review marks and certificate status.</small>
             </div>
-            <form method="get" class="sp-results-filter-form">
+            <form method="get" class="sp-results-filter-form" data-sp-async>
                 <input type="hidden" name="page" value="sp-results" />
                 <label class="screen-reader-text" for="sp-results-class">Class</label>
-                <select name="class" id="sp-results-class">
+                <select name="class" id="sp-results-class" data-sp-async-change>
                     <?php foreach ( $classes as $sp_row ) : ?>
                         <option value="<?php echo esc_attr( (int) $sp_row->id ); ?>" <?php selected( (int) $class->id, (int) $sp_row->id ); ?>>
                             <?php echo esc_html( $sp_row->title ); ?>

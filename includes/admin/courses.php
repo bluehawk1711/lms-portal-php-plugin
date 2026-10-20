@@ -41,45 +41,48 @@ function sp_admin_page_sp_courses() {
 
     $sp_status = $editing ? ( 'archived' === $editing->status ? 'archived' : 'active' ) : 'active';
     ?>
-    <div class="sp-scope sp-page-courses">
-
-        <?php
-        /**
-         * Page header. If your admin shell already prints the screen title,
-         * delete this <header> block — everything below stands alone.
-         */
-        ?>
-        <header class="sp-page-head">
-            <div class="sp-page-head-main">
-                <div class="sp-page-icon">
-                    <span class="dashicons dashicons-welcome-learn-more" aria-hidden="true"></span>
-                </div>
-                <div class="sp-page-head-text">
-                    <h1 class="sp-page-title">Courses</h1>
-                    <p class="sp-page-sub">
-                        Portal-owned catalogue: create courses here, archive them when they retire, and give each one
-                        the code that Certificate Manager stamps onto every certificate it issues.
-                    </p>
-                </div>
+    <div class="sp-scope sp-courses-ui sp-page-courses">
+        <header class="sp-courses-page-header">
+            <div class="sp-courses-page-heading">
+                <span class="sp-courses-eyebrow">STUDENT PORTAL <span aria-hidden="true">/</span> COURSE CATALOGUE</span>
+                <h1>Courses</h1>
+                <p>Portal-owned catalogue: create courses here, archive them when they retire, and give each one the code that Certificate Manager stamps onto every certificate it issues.</p>
             </div>
-
-            <?php if ( $sp_total ) : ?>
-                <div class="sp-page-stats">
-                    <div class="sp-stat">
-                        <span class="sp-stat-num"><?php echo esc_html( number_format_i18n( $sp_total ) ); ?></span>
-                        <span class="sp-stat-label">Total</span>
-                    </div>
-                    <div class="sp-stat is-active">
-                        <span class="sp-stat-num"><?php echo esc_html( number_format_i18n( $sp_active ) ); ?></span>
-                        <span class="sp-stat-label">Active</span>
-                    </div>
-                    <div class="sp-stat is-archived">
-                        <span class="sp-stat-num"><?php echo esc_html( number_format_i18n( $sp_archived ) ); ?></span>
-                        <span class="sp-stat-label">Archived</span>
-                    </div>
-                </div>
-            <?php endif; ?>
+            <div class="sp-courses-header-note">
+                <span class="sp-courses-header-mark" aria-hidden="true">▤</span>
+                <span>
+                    <strong>Course catalogue</strong>
+                    <small>Codes stamped on certificates</small>
+                </span>
+            </div>
         </header>
+
+        <section class="sp-courses-stats" aria-label="Course overview">
+            <article class="sp-courses-stat-card">
+                <span class="sp-courses-stat-icon sp-courses-stat-icon-total" aria-hidden="true">▦</span>
+                <div>
+                    <span class="sp-courses-stat-label">Total courses</span>
+                    <strong><?php echo esc_html( number_format_i18n( $sp_total ) ); ?></strong>
+                    <small>In catalogue</small>
+                </div>
+            </article>
+            <article class="sp-courses-stat-card">
+                <span class="sp-courses-stat-icon sp-courses-stat-icon-active" aria-hidden="true">✓</span>
+                <div>
+                    <span class="sp-courses-stat-label">Active</span>
+                    <strong><?php echo esc_html( number_format_i18n( $sp_active ) ); ?></strong>
+                    <small>Open for enrolment</small>
+                </div>
+            </article>
+            <article class="sp-courses-stat-card">
+                <span class="sp-courses-stat-icon sp-courses-stat-icon-archived" aria-hidden="true">▤</span>
+                <div>
+                    <span class="sp-courses-stat-label">Archived</span>
+                    <strong><?php echo esc_html( number_format_i18n( $sp_archived ) ); ?></strong>
+                    <small>Retired</small>
+                </div>
+            </article>
+        </section>
 
         <div class="sp-admin-grid">
 
@@ -435,6 +438,11 @@ function sp_admin_page_sp_courses() {
                 <?php endif; ?>
             </section>
         <?php endif; ?>
+
+        <footer class="sp-courses-page-footer">
+            <span><span class="sp-courses-footer-dot" aria-hidden="true"></span> Course management</span>
+            <span>Course codes feed into generated certificates — keep them unique.</span>
+        </footer>
     </div>
 
     <script>

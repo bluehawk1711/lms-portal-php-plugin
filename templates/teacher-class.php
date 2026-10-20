@@ -65,6 +65,7 @@ if ( ! isset( $sp_tabs[ $sp_tab ] ) ) {
 	</div>
 <?php endif; ?>
 
+<div id="sp-class-tab-region" data-sp-async-region>
 <nav class="sp-tabs" aria-label="Class sections">
 	<?php foreach ( $sp_tabs as $sp_key => $sp_label ) : ?>
 		<a
@@ -140,10 +141,10 @@ if ( ! isset( $sp_tabs[ $sp_tab ] ) ) {
 	?>
 
 	<div class="sp-card">
-		<form class="sp-inline-form" method="get" action="<?php echo esc_url( $sp_base_url ); ?>">
+		<form class="sp-inline-form" method="get" data-sp-async action="<?php echo esc_url( $sp_base_url ); ?>">
 			<input type="hidden" name="tab" value="attendance" />
 			<label class="sp-inline-label" for="sp_date">Session date</label>
-			<input type="date" id="sp_date" name="date" value="<?php echo esc_attr( $sp_date ); ?>" />
+			<input type="date" id="sp_date" name="date" value="<?php echo esc_attr( $sp_date ); ?>" data-sp-date data-sp-off-days="<?php echo esc_attr( implode( ',', sp_off_days() ) ); ?>" />
 			<button type="submit" class="sp-btn sp-btn-ghost">Open register</button>
 		</form>
 	</div>
@@ -181,7 +182,7 @@ if ( ! isset( $sp_tabs[ $sp_tab ] ) ) {
 			</div>
 		<?php endif; ?>
 
-		<form method="post" action="<?php echo esc_url( $sp_base_url ); ?>">
+		<form method="post" action="<?php echo esc_url( $sp_base_url ); ?>" data-sp-register data-sp-async data-sp-date-label="<?php echo esc_attr( date_i18n( get_option( 'date_format' ), strtotime( $sp_date ) ) ); ?>" data-sp-lock-days="<?php echo esc_attr( (int) sp_setting( 'attendance_edit_days', 7 ) ); ?>">
 			<?php
 			sp_teacher_nonce_field( 'save_session' );
 			if ( $sp_session ) {
@@ -230,8 +231,9 @@ if ( ! isset( $sp_tabs[ $sp_tab ] ) ) {
 
 				<?php if ( $sp_editable ) : ?>
 					<p class="sp-card-actions">
+						<span class="sp-attend-count" data-sp-register-count aria-live="polite"></span>
 						<button type="submit" class="sp-btn sp-btn-primary">Save register</button>
-						<button type="submit" name="submit_after" value="1" class="sp-btn sp-btn-ghost">Save and submit</button>
+						<button type="submit" name="submit_after" value="1" class="sp-btn sp-btn-ghost" data-sp-register-submit="1">Save and submit</button>
 					</p>
 				<?php endif; ?>
 			</div>
@@ -248,7 +250,7 @@ if ( ! isset( $sp_tabs[ $sp_tab ] ) ) {
 				<form method="post" action="<?php echo esc_url( $sp_base_url ); ?>">
 					<?php sp_teacher_nonce_field( 'submit_session' ); ?>
 					<input type="hidden" name="session_id" value="<?php echo esc_attr( (int) $sp_session->id ); ?>" />
-					<button type="submit" class="sp-btn sp-btn-primary">Submit and lock</button>
+					<button type="submit" class="sp-btn sp-btn-primary" data-sp-register-submit="1" data-sp-date-label="<?php echo esc_attr( date_i18n( get_option( 'date_format' ), strtotime( $sp_date ) ) ); ?>" data-sp-lock-days="<?php echo esc_attr( (int) sp_setting( 'attendance_edit_days', 7 ) ); ?>">Submit and lock</button>
 				</form>
 			</div>
 		<?php endif; ?>
@@ -321,7 +323,7 @@ if ( ! isset( $sp_tabs[ $sp_tab ] ) ) {
 	<?php if ( ! $sp_results ) : ?>
 		<div class="sp-empty">No students are enrolled in this class.</div>
 	<?php else : ?>
-		<form method="post" action="<?php echo esc_url( $sp_base_url ); ?>">
+		<form method="post" action="<?php echo esc_url( $sp_base_url ); ?>" data-sp-async>
 			<?php sp_teacher_nonce_field( 'save_results' ); ?>
 			<input type="hidden" name="class_id" value="<?php echo esc_attr( (int) $sp_class_id ); ?>" />
 
@@ -550,7 +552,7 @@ if ( ! isset( $sp_tabs[ $sp_tab ] ) ) {
 							<?php endif; ?>
 						</div>
 						<div class="sp-card-actions">
-							<form method="post" action="<?php echo esc_url( $sp_base_url ); ?>">
+							<form method="post" action="<?php echo esc_url( $sp_base_url ); ?>" data-sp-async>
 								<?php sp_teacher_nonce_field( 'toggle_curriculum_item' ); ?>
 								<input type="hidden" name="class_id" value="<?php echo esc_attr( $sp_class_id ); ?>" />
 								<input type="hidden" name="item_id" value="<?php echo esc_attr( (int) $sp_item->id ); ?>" />
@@ -595,7 +597,7 @@ if ( ! isset( $sp_tabs[ $sp_tab ] ) ) {
 						</div>
 						<div class="sp-card-actions">
 							<a class="sp-btn sp-btn-ghost" href="<?php echo esc_url( sp_teacher_url( 'materials/' . (int) $sp_material->id ) ); ?>">Edit</a>
-							<form method="post" action="<?php echo esc_url( $sp_base_url ); ?>" onsubmit="return confirm('Delete this material?');">
+							<form method="post" action="<?php echo esc_url( $sp_base_url ); ?>" data-sp-async onsubmit="return confirm('Delete this material?');">
 								<?php sp_teacher_nonce_field( 'delete_material' ); ?>
 								<input type="hidden" name="material_id" value="<?php echo esc_attr( (int) $sp_material->id ); ?>" />
 								<button type="submit" class="sp-btn sp-btn-danger">Delete</button>
@@ -607,3 +609,4 @@ if ( ! isset( $sp_tabs[ $sp_tab ] ) ) {
 		</div>
 	<?php endif; ?>
 <?php endif; ?>
+</div>

@@ -591,6 +591,7 @@ function sp_save_question( $args ) {
 			'prompt'   => '',
 			'options'  => array(),
 			'answer'   => '',
+			'explanation' => '',
 		)
 	);
 
@@ -680,11 +681,12 @@ function sp_save_question( $args ) {
 	}
 
 	$data = array(
-		'class_id' => $class_id,
-		'type'     => $type,
-		'prompt'   => $prompt,
-		'options'  => $options_json,
-		'answer'   => $answer,
+		'class_id'    => $class_id,
+		'type'        => $type,
+		'prompt'      => $prompt,
+		'options'     => $options_json,
+		'answer'      => $answer,
+		'explanation' => trim( (string) $args['explanation'] ),
 	);
 
 	if ( $id ) {
@@ -692,12 +694,12 @@ function sp_save_question( $args ) {
 			return new WP_Error( 'sp_no_question', 'That question no longer exists.' );
 		}
 
-		$wpdb->update( sp_table( 'questions' ), $data, array( 'id' => $id ), array( '%d', '%s', '%s', '%s', '%s' ), array( '%d' ) );
+		$wpdb->update( sp_table( 'questions' ), $data, array( 'id' => $id ), array( '%d', '%s', '%s', '%s', '%s', '%s' ), array( '%d' ) );
 
 		return $id;
 	}
 
-	$wpdb->insert( sp_table( 'questions' ), $data, array( '%d', '%s', '%s', '%s', '%s' ) );
+	$wpdb->insert( sp_table( 'questions' ), $data, array( '%d', '%s', '%s', '%s', '%s', '%s' ) );
 
 	return (int) $wpdb->insert_id;
 }
@@ -2088,4 +2090,79 @@ function sp_attempt_answer_label( $question, $given ) {
 	}
 
 	return $given;
+}
+
+/**
+ * The correct answer of one question as readable text, for result reviews.
+ *
+ * Every format goes through sp_attempt_answer_label(), so an MCQ reads
+ * "B. Options are graded automatically" and a fill-in-the-blank reads the
+ * text the teacher typed — the student's own answer never hides it.
+ *
+ * @param object $question Question row.
+ * @return string
+ */
+function sp_attempt_correct_label( $question ) {
+	$answer = trim( (string) $question->answer );
+
+	if ( '' === $answer ) {
+		return 'Not set by your teacher';
+	}
+
+	return sp_attempt_answer_label( $question, $answer );
+}
+
+/**
+ * Which option a stored answer value points at.
+ *
+ * MCQ answers are stored as the option letter ("A".."D"), but option lists
+ * come back keyed 0..n-1, so comparing the raw values never matches and
+ * result reviews showed no correct/incorrect option at all. This maps a
+ * letter, an option text or a numeric position onto the option index.
+ *
+ * @param object $question Question row.
+ * @param string $value    Stored answer value (student's or correct one).
+ * @return int|null Option index, or null when it points at nothing.
+ */
+function sp_question_answer_index( $question, $value ) {
+	$value   = trim( (string) $value );
+	$options = sp_question_options( $question );
+
+	if ( '' === $value || ! $options ) {
+		return null;
+	}
+
+	$upper = strtoupper( $value );
+	$count = count( $options );
+
+	// Letter form ("A", "B", ...) — how MCQ answers are stored.
+	if ( 1 === strlen( $upper ) ) {
+		$pos = strpos( 'ABCDEF', $upper );
+
+		if ( false !== $pos && $pos < $count ) {
+			return $pos;
+		}
+	}
+
+	// Literal option text (true/false style), matched without case.
+	foreach ( $options as $sp_index => $sp_option ) {
+		if ( 0 === strcasecmp( $value, (string) $sp_option ) ) {
+			return (int) $sp_index;
+		}
+	}
+
+	// Numeric position: the stored index itself, else 1-based.
+	if ( ctype_digit( $value ) ) {
+		$idx = (int) $value;
+
+		if ( $idx < $count ) {
+			return $idx;
+		}
+
+		if ( $idx >= 1 && $idx <= $count ) {
+			return $idx - 1;
+		}
+	}
+
+	return null;
 }

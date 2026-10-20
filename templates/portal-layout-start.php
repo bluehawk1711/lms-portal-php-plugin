@@ -116,3 +116,5 @@ $sp_contact_visible = ( '' !== $sp_contact_phone || '' !== $sp_contact_email );
 				<?php if ( $sp_portal_notice ) : ?>
 					<div class="sp-notice sp-notice-good"><?php echo esc_html( $sp_portal_notice ); ?></div>
 				<?php endif; ?>
+
+				<?php sp_render_announcements( 'student' ); ?>

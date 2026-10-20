@@ -53,7 +53,7 @@ $sp_tasks = $profile ? sp_get_assignments_for_profile( $profile->id ) : array();
 							&middot; <?php echo esc_html( sp_assignment_type_label( $sp_task->type ) ); ?>
 							<?php if ( ! empty( $sp_task->due_date ) ) : ?>
 								&middot; <?php echo esc_html( $sp_date_label ); ?>:
-								<?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $sp_task->due_date ) ) ); ?>
+								<?php echo esc_html( sp_portal_time( get_option( 'date_format' ), strtotime( $sp_task->due_date ) ) ); ?>
 							<?php endif; ?>
 						</p>
 					</div>

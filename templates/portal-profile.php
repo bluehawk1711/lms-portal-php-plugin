@@ -82,7 +82,7 @@ $sp_status_class = 'sp-pill-' . sanitize_html_class( $sp_status ? $sp_status : '
 			<dd class="sp-stat-small">
 				<?php
 				echo $profile->last_login_at
-					? esc_html( date_i18n( $sp_date_fmt, strtotime( $profile->last_login_at ) ) )
+					? esc_html( sp_portal_time( $sp_date_fmt, strtotime( $profile->last_login_at ) ) )
 					: 'First visit'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static string.
 				?>
 			</dd>
@@ -100,7 +100,7 @@ $sp_status_class = 'sp-pill-' . sanitize_html_class( $sp_status ? $sp_status : '
 				<p class="sp-card-sub">Changes are saved to your student record straight away.</p>
 			</div>
 
-			<form class="sp-form" method="post" action="<?php echo esc_url( sp_portal_url( 'profile' ) ); ?>" data-sp-dirty-form>
+			<form class="sp-form" method="post" action="<?php echo esc_url( sp_portal_url( 'profile' ) ); ?>" data-sp-async data-sp-async-toast data-sp-dirty-form>
 				<?php sp_portal_nonce_field( 'save_profile' ); ?>
 
 				<div class="sp-field">
@@ -112,7 +112,7 @@ $sp_status_class = 'sp-pill-' . sanitize_html_class( $sp_status ? $sp_status : '
 				<div class="sp-field-row">
 					<div class="sp-field">
 						<label for="sp_phone">Phone</label>
-						<input type="tel" id="sp_phone" name="phone" autocomplete="tel" inputmode="tel"
+						<input maxlength="12" type="tel" id="sp_phone" name="phone" autocomplete="tel" inputmode="tel"
 							placeholder="e.g. 98765 43210"
 							value="<?php echo esc_attr( $profile->phone ); ?>" />
 					</div>
@@ -159,7 +159,7 @@ $sp_status_class = 'sp-pill-' . sanitize_html_class( $sp_status ? $sp_status : '
 							<div class="sp-enrol-body">
 								<strong class="sp-enrol-title"><?php echo esc_html( $sp_enrol->class_title ); ?></strong>
 								<?php if ( ! empty( $sp_enrol->admission_date ) ) : ?>
-									<span class="sp-muted">Admitted <?php echo esc_html( date_i18n( $sp_date_fmt, strtotime( $sp_enrol->admission_date ) ) ); ?></span>
+									<span class="sp-muted">Admitted <?php echo esc_html( sp_portal_time( $sp_date_fmt, strtotime( $sp_enrol->admission_date ) ) ); ?></span>
 								<?php endif; ?>
 							</div>
 							<div class="sp-enrol-id">
@@ -209,13 +209,13 @@ $sp_status_class = 'sp-pill-' . sanitize_html_class( $sp_status ? $sp_status : '
 				<dd><?php echo $profile->phone ? esc_html( $profile->phone ) : '<span class="sp-muted">Not recorded</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped ternary. ?></dd>
 
 				<dt>Date of birth</dt>
-				<dd><?php echo '' !== $sp_dob ? esc_html( date_i18n( $sp_date_fmt, strtotime( $sp_dob ) ) ) : '<span class="sp-muted">Not recorded</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped ternary. ?></dd>
+				<dd><?php echo '' !== $sp_dob ? esc_html( sp_portal_time( $sp_date_fmt, strtotime( $sp_dob ) ) ) : '<span class="sp-muted">Not recorded</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped ternary. ?></dd>
 
 				<dt>Last sign-in</dt>
 				<dd>
 					<?php
 					echo $profile->last_login_at
-						? esc_html( date_i18n( $sp_datetime_fmt, strtotime( $profile->last_login_at ) ) )
+						? esc_html( sp_portal_time( $sp_datetime_fmt, strtotime( $profile->last_login_at ) ) )
 						: '<span class="sp-muted">This is your first sign-in</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped ternary.
 					?>
 				</dd>

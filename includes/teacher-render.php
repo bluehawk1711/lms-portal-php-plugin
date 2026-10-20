@@ -45,6 +45,14 @@ function sp_teacher_enqueue_assets() {
 				SP_VERSION
 			);
 		}
+
+		// Announcement banner / bar styles, shared with the student portal.
+		wp_enqueue_style(
+			'sp-announcements',
+			SP_URL . 'assets/css/announcements.css',
+			array( 'student-portal-teacher-base' ),
+			SP_VERSION
+		);
 	}
 
 	if ( 'calendar' === $route ) {
@@ -52,6 +60,23 @@ function sp_teacher_enqueue_assets() {
 			'student-portal-teacher-schedule',
 			SP_URL . 'assets/css/schedule.css',
 			array( 'student-portal-teacher-base' ),
+			SP_VERSION
+		);
+	}
+
+	// The attempt detail page reuses the question-bank components.
+	if ( 'attempts' === $route ) {
+		wp_enqueue_style(
+			'student-portal-teacher-attempt-edit',
+			SP_URL . 'assets/css/teacher-assignment-edit.css',
+			array( 'student-portal-teacher-base' ),
+			SP_VERSION
+		);
+
+		wp_enqueue_style(
+			'student-portal-teacher-attempts',
+			SP_URL . 'assets/css/teacher-attempts.css',
+			array( 'student-portal-teacher-attempt-edit' ),
 			SP_VERSION
 		);
 	}
@@ -64,11 +89,58 @@ function sp_teacher_enqueue_assets() {
 		true
 	);
 
+	// The reusable date & time component on the routes with date/time inputs
+	// (attendance date, class create form, assignment due date).
+	if ( in_array( $route, array( 'class', 'classes', 'assignment-edit' ), true ) ) {
+		sp_datetime_enqueue();
+	}
+
+	// Register live counter + submit confirmation on the class attendance tab.
+	if ( 'class' === $route ) {
+		wp_enqueue_script(
+			'student-portal-attendance',
+			SP_URL . 'assets/js/attendance.js',
+			array(),
+			SP_VERSION,
+			true
+		);
+	}
+
 	// Live search on the class list; other routes never need it.
 	if ( 'classes' === $route ) {
 		wp_enqueue_script(
 			'student-portal-teacher-classes',
 			SP_URL . 'assets/js/teacher-classes.js',
+			array(),
+			SP_VERSION,
+			true
+		);
+	}
+
+	// Async filters & small submits on the routes wired with data-sp-async:
+	// tab switches, register opens and small saves swap the region in place.
+	if ( in_array( $route, array( 'class', 'classes', 'profile' ), true ) ) {
+		wp_enqueue_style(
+			'student-portal-async',
+			SP_URL . 'assets/css/sp-async.css',
+			array(),
+			SP_VERSION
+		);
+
+		wp_enqueue_script(
+			'student-portal-async',
+			SP_URL . 'assets/js/sp-async.js',
+			array(),
+			SP_VERSION,
+			true
+		);
+	}
+
+	// Live search on the assignment question bank and set picker; other routes never need it.
+	if ( 'assignment-edit' === $route ) {
+		wp_enqueue_script(
+			'student-portal-teacher-assignment',
+			SP_URL . 'assets/js/teacher-assignment.js',
 			array(),
 			SP_VERSION,
 			true
@@ -207,9 +279,78 @@ function sp_teacher_handle_post() {
 		case 'allow_retake':
 			sp_teacher_action_allow_retake( $redirect );
 			break;
+		case 'save_profile':
+			sp_teacher_action_save_profile( $redirect );
+			break;
+		case 'dismiss_announcement':
+			sp_teacher_action_dismiss_announcement( $redirect );
+			break;
 		default:
 			wp_die( esc_html__( 'Unknown action.', 'student-portal' ), '', array( 'response' => 400 ) );
 	}
+}
+
+/**
+ * Update the signed-in teacher's own profile details.
+ *
+ * @param string $redirect Destination after the action.
+ */
+function sp_teacher_action_save_profile( $redirect ) {
+	global $wpdb;
+
+	$teacher = sp_get_teacher_by_user_id( get_current_user_id() );
+
+	if ( ! $teacher ) {
+		sp_teacher_redirect( $redirect, '', 'This account has no teacher profile.' );
+	}
+
+	$name  = isset( $_POST['full_name'] ) ? sanitize_text_field( wp_unslash( $_POST['full_name'] ) ) : '';
+	$phone = isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '';
+	$bio   = isset( $_POST['bio'] ) ? sanitize_textarea_field( wp_unslash( $_POST['bio'] ) ) : '';
+
+	if ( '' === $name ) {
+		sp_teacher_redirect( $redirect, '', 'Enter your full name.' );
+	}
+
+	$wpdb->update(
+		sp_table( 'teachers' ),
+		array(
+			'full_name' => $name,
+			'phone'     => '' !== $phone ? $phone : null,
+			'bio'       => '' !== $bio ? $bio : null,
+		),
+		array( 'id' => (int) $teacher->id ),
+		array( '%s', '%s', '%s' ),
+		array( '%d' )
+	);
+
+	// Keep the WordPress display name in step with the portal name.
+	if ( $name !== (string) $teacher->full_name ) {
+		wp_update_user(
+			array(
+				'ID'           => (int) $teacher->user_id,
+				'display_name' => $name,
+				'first_name'   => $name,
+			)
+		);
+	}
+
+	sp_teacher_redirect( $redirect, 'profile_saved' );
+}
+
+/**
+ * Hide an announcement for the current teacher and return to the page.
+ *
+ * @param string $redirect URL to bounce back to.
+ */
+function sp_teacher_action_dismiss_announcement( $redirect ) {
+	$announcement_id = isset( $_POST['announcement_id'] ) ? (int) $_POST['announcement_id'] : 0;
+
+	if ( $announcement_id ) {
+		sp_announcement_dismiss( $announcement_id );
+	}
+
+	sp_teacher_redirect( $redirect );
 }
 
 /**
@@ -284,6 +425,8 @@ function sp_teacher_notice_message( $code ) {
 			return 'Assignment closed. No new attempts can start.';
 		case 'retake_granted':
 			return 'Retake allowed. The student can sit the exam again.';
+		case 'profile_saved':
+			return 'Profile updated.';
 		default:
 			return '';
 	}
@@ -1101,12 +1244,13 @@ function sp_teacher_action_save_question( $redirect ) {
 
 	$saved = sp_save_question(
 		array(
-			'id'       => $question_id,
-			'class_id' => $class_id,
-			'type'     => isset( $_POST['question_type'] ) ? sanitize_key( wp_unslash( $_POST['question_type'] ) ) : '',
-			'prompt'   => isset( $_POST['prompt'] ) ? sanitize_textarea_field( wp_unslash( $_POST['prompt'] ) ) : '',
-			'options'  => $options,
-			'answer'   => isset( $_POST['answer'] ) ? sanitize_text_field( wp_unslash( $_POST['answer'] ) ) : '',
+			'id'          => $question_id,
+			'class_id'    => $class_id,
+			'type'        => isset( $_POST['question_type'] ) ? sanitize_key( wp_unslash( $_POST['question_type'] ) ) : '',
+			'prompt'      => isset( $_POST['prompt'] ) ? sanitize_textarea_field( wp_unslash( $_POST['prompt'] ) ) : '',
+			'options'     => $options,
+			'answer'      => isset( $_POST['answer'] ) ? sanitize_text_field( wp_unslash( $_POST['answer'] ) ) : '',
+			'explanation' => isset( $_POST['explanation'] ) ? sanitize_textarea_field( wp_unslash( $_POST['explanation'] ) ) : '',
 		)
 	);
 

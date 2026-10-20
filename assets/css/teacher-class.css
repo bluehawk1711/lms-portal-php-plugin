@@ -764,3 +764,10 @@
         background: color-mix(in srgb, var(--sp-primary, #8097ff) 9%, var(--sp-surface, #171b25));
     }
 }
+/* Live register counter (attendance.js / G5). */
+.sp-attend-count {
+    color: #667085;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+

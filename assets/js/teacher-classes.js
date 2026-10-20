@@ -26,12 +26,19 @@
 		}
 	}
 
-	ready( function () {
+	function bind() {
 		var search = document.getElementById( 'sp-class-search' );
 
 		if ( ! search ) {
 			return;
 		}
+
+		// After an async swap this is a fresh input; a surviving one is bound.
+		if ( search.getAttribute( 'data-sp-search-bound' ) ) {
+			return;
+		}
+
+		search.setAttribute( 'data-sp-search-bound', '1' );
 
 		var clear   = document.getElementById( 'sp-class-search-clear' );
 		var status  = document.getElementById( 'sp-class-search-status' );
@@ -106,5 +113,10 @@
 		}
 
 		apply();
-	} );
+	}
+
+	ready( bind );
+
+	// The class-create submit swaps the region; rebind the fresh search box.
+	document.addEventListener( 'sp:async-replace', bind );
 } )();

@@ -43,6 +43,7 @@ if ( ! function_exists( 'sp_teacher_nav_icon' ) ) {
 			'assignments' => '<path d="M7 3h10a1 1 0 0 1 1 1v16l-6-3.5L6 20V4a1 1 0 0 1 1-1z" /><path d="M9.5 8.5h5M9.5 12h3" />',
 			'results'     => '<path d="M4 20V10" /><path d="M10 20V4" /><path d="M16 20v-7" /><path d="M22 20H2" />',
 			'calendar'    => '<rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4" />',
+			'profile'     => '<circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5" />',
 		);
 
 		if ( ! isset( $paths[ $name ] ) ) {
@@ -77,6 +78,7 @@ if ( ! function_exists( 'sp_teacher_nav_icon' ) ) {
 						'assignments' => array( 'label' => 'Assignments', 'url' => sp_teacher_url( 'assignments' ) ),
 						'materials'   => array( 'label' => 'Materials', 'url' => sp_teacher_url( 'materials' ) ),
 						'results'     => array( 'label' => 'Results', 'url' => sp_teacher_url( 'results' ) ),
+						'profile'      => array( 'label' => 'Profile', 'url' => sp_teacher_url( 'profile' ) ),
 						'calendar'    => array( 'label' => 'Calendar', 'url' => sp_teacher_url( 'calendar' ) ),
 					);
 					foreach ( $sp_side_items as $sp_side_key => $sp_side_item ) :
@@ -132,3 +134,5 @@ if ( ! function_exists( 'sp_teacher_nav_icon' ) ) {
 				<?php if ( $sp_notice ) : ?>
 					<div class="sp-notice sp-notice-good"><?php echo esc_html( $sp_notice ); ?></div>
 				<?php endif; ?>
+
+				<?php sp_render_announcements( 'teacher' ); ?>

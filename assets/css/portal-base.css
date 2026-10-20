@@ -1350,7 +1350,7 @@ body.sp-nav-open .sp-portal-top {
 
 	.sp-portal-shell.no-rail {
 		grid-template-areas: "side col";
-		grid-template-columns: 232px minmax(0, 1fr);
+		/* grid-template-columns: 232px minmax(0, 1fr); */
 	}
 
 	.sp-portal-rail {

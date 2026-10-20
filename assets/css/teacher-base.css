@@ -116,6 +116,8 @@ body.sp-standalone h4 {
 	color: var(--sp-primary);
 }
 
+
+
 .sp-teacher-portal .wp-editor-container {
 	border: 1px solid var(--sp-border);
 	border-radius: 7px;
@@ -174,7 +176,7 @@ body.sp-standalone h4 {
 
 .sp-teacher-portal.sp-portal {
 	max-width: 1440px;
-	padding: 2.75rem 2.5rem 3rem;
+	padding: 1.75rem 1.5rem 1rem;
 }
 
 .sp-teacher-portal .sp-teacher-shell {

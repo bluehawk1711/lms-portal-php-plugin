@@ -30,16 +30,34 @@ function sp_portal_enqueue_assets() {
 		true
 	);
 
-	// The materials page embeds documents instead of linking downloads. The
-	// .docx preview needs jQuery (the Mammoth bundle uses it) and the script
-	// that drives the conversion; both are printed for that route only.
-	if ( 'materials' === $route && is_user_logged_in() ) {
+	// Materials (list and detail) embed documents inline. The .docx preview
+	// needs jQuery (the Mammoth bundle uses it) and the script that drives the
+	// conversion; both are printed for those routes only.
+	if ( in_array( $route, array( 'materials', 'material' ), true ) && is_user_logged_in() ) {
 		wp_enqueue_script( 'jquery' );
 
 		wp_enqueue_script(
 			'sp-material-embed',
 			SP_URL . 'assets/js/material-embed.js',
 			array( 'jquery' ),
+			SP_VERSION,
+			true
+		);
+	}
+
+	// The profile save posts without a page reload (toast + URL sync only).
+	if ( 'profile' === $route && is_user_logged_in() ) {
+		wp_enqueue_style(
+			'student-portal-async',
+			SP_URL . 'assets/css/sp-async.css',
+			array(),
+			SP_VERSION
+		);
+
+		wp_enqueue_script(
+			'student-portal-async',
+			SP_URL . 'assets/js/sp-async.js',
+			array(),
 			SP_VERSION,
 			true
 		);
@@ -71,9 +89,11 @@ function sp_portal_enqueue_css( $route ) {
 			SP_VERSION
 		);
 	} else {
-		$page = 'portal-' . $route . '.css';
+	$page = 'portal-' . $route . '.css';
 
-		if ( file_exists( SP_PATH . 'assets/css/' . $page ) ) {
+	if ( 'material' === $route ) {
+		$page = 'portal-materials.css';
+	}		if ( file_exists( SP_PATH . 'assets/css/' . $page ) ) {
 			wp_enqueue_style(
 				'student-portal-' . $route,
 				SP_URL . 'assets/css/' . $page,
@@ -81,6 +101,14 @@ function sp_portal_enqueue_css( $route ) {
 				SP_VERSION
 			);
 		}
+
+		// Announcement banner / bar styles, shared with the teacher portal.
+		wp_enqueue_style(
+			'sp-announcements',
+			SP_URL . 'assets/css/announcements.css',
+			array( 'student-portal-base' ),
+			SP_VERSION
+		);
 	}
 
 	if ( 'calendar' === $route ) {
@@ -320,6 +348,20 @@ function sp_portal_notice( $key = 'sp_notice' ) {
 	}
 
 	return sanitize_text_field( wp_unslash( $_GET[ $key ] ) );
+}
+
+/**
+ * Format a moment in Indian Standard Time (Asia/Kolkata).
+ *
+ * Portal clocks and submitted/issued timestamps are shown to students in IST
+ * regardless of the site's configured timezone.
+ *
+ * @param string $format PHP date format.
+ * @param int|null $timestamp Unix timestamp; now when omitted.
+ * @return string
+ */
+function sp_portal_time( $format, $timestamp = null ) {
+	return wp_date( $format, null === $timestamp ? time() : (int) $timestamp, new \DateTimeZone( 'Asia/Kolkata' ) );
 }
 
 /**
@@ -585,6 +627,9 @@ function sp_handle_portal_post() {
 		case 'leave_beacon':
 			sp_portal_action_leave_beacon();
 			break;
+		case 'dismiss_announcement':
+			sp_portal_action_dismiss_announcement();
+			break;
 		default:
 			wp_die( esc_html__( 'Unknown action.', 'student-portal' ), '', array( 'response' => 400 ) );
 	}
@@ -598,6 +643,28 @@ function sp_handle_portal_post() {
 function sp_portal_nonce_field( $action ) {
 	wp_nonce_field( 'sp_portal_action_' . $action, 'sp_portal_nonce' );
 	echo '<input type="hidden" name="sp_action" value="' . esc_attr( $action ) . '" />';
+}
+
+/**
+ * Hide an announcement for the current user and return to the page they were on.
+ */
+function sp_portal_action_dismiss_announcement() {
+	$announcement_id = isset( $_POST['announcement_id'] ) ? (int) $_POST['announcement_id'] : 0;
+
+	if ( $announcement_id ) {
+		sp_announcement_dismiss( $announcement_id );
+	}
+
+	$redirect = wp_get_referer();
+	$redirect = $redirect ? wp_validate_redirect( $redirect, false ) : false;
+
+	// Dismissals must bounce back inside the student portal only.
+	if ( ! $redirect || false === strpos( wp_parse_url( (string) $redirect, PHP_URL_PATH ), '/portal/' ) ) {
+		$redirect = sp_portal_home_url( 'student' );
+	}
+
+	wp_safe_redirect( $redirect );
+	exit;
 }
 
 /**

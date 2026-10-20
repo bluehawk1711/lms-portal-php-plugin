@@ -24,6 +24,57 @@ function sp_admin_page_sp_settings() {
 		}
 	}
 	?>
+	<div class="sp-settings-ui">
+		<header class="sp-settings-page-header">
+			<div class="sp-settings-page-heading">
+				<span class="sp-settings-eyebrow">STUDENT PORTAL <span aria-hidden="true">/</span> CONFIGURATION</span>
+				<h1>Settings</h1>
+				<p>Portal-wide rules for grading, attendance, log retention and automatic certificates. Changes apply across every class, teacher and student.</p>
+			</div>
+			<div class="sp-settings-header-note">
+				<span class="sp-settings-header-mark" aria-hidden="true">⚙</span>
+				<span>
+					<strong>Portal configuration</strong>
+					<small>Grading, attendance &amp; certificates</small>
+				</span>
+			</div>
+		</header>
+
+		<section class="sp-settings-stats" aria-label="Current settings at a glance">
+			<article class="sp-settings-stat-card">
+				<span class="sp-settings-stat-icon sp-settings-stat-icon-pass" aria-hidden="true">✓</span>
+				<div>
+					<span class="sp-settings-stat-label">Pass mark</span>
+					<strong><?php echo esc_html( rtrim( rtrim( (string) $settings['pass_mark'], '0' ), '.' ) ); ?>%</strong>
+					<small>Results below fail</small>
+				</div>
+			</article>
+			<article class="sp-settings-stat-card">
+				<span class="sp-settings-stat-icon sp-settings-stat-icon-edit" aria-hidden="true">◷</span>
+				<div>
+					<span class="sp-settings-stat-label">Edit window</span>
+					<strong><?php echo esc_html( number_format_i18n( (int) $settings['attendance_edit_days'] ) ); ?>d</strong>
+					<small>Teacher reopen window</small>
+				</div>
+			</article>
+			<article class="sp-settings-stat-card">
+				<span class="sp-settings-stat-icon sp-settings-stat-icon-logs" aria-hidden="true">▤</span>
+				<div>
+					<span class="sp-settings-stat-label">Log retention</span>
+					<strong><?php echo (int) $settings['log_retention_days'] ? esc_html( number_format_i18n( (int) $settings['log_retention_days'] ) ) . 'd' : '∞'; ?></strong>
+					<small>Email &amp; activity logs</small>
+				</div>
+			</article>
+			<article class="sp-settings-stat-card">
+				<span class="sp-settings-stat-icon sp-settings-stat-icon-upload" aria-hidden="true">↑</span>
+				<div>
+					<span class="sp-settings-stat-label">Upload limit</span>
+					<strong><?php echo esc_html( number_format_i18n( (int) $settings['max_upload_mb'] ) ); ?>MB</strong>
+					<small>Course materials</small>
+				</div>
+			</article>
+		</section>
+
 	<?php if ( ! $available ) : ?>
 		<div class="notice notice-warning">
 			<p>
@@ -33,6 +84,7 @@ function sp_admin_page_sp_settings() {
 		</div>
 	<?php endif; ?>
 
+	<div class="sp-settings-panel">
 	<form method="post">
 		<?php settings_fields( 'sp_settings_group' ); ?>
 		<?php sp_admin_nonce_field( 'save_settings' ); ?>
@@ -57,43 +109,42 @@ function sp_admin_page_sp_settings() {
 						How long a teacher can reopen a submitted register. After this, only an administrator can.
 						Set to 0 to lock immediately.
 					</p>
-					<tr>
-						<th scope="row"><label for="sp_log_days">Keep logs for (days)</label></th>
-						<td>
-							<input type="number" id="sp_log_days" name="sp_settings[log_retention_days]"
-								min="0" max="3650" step="1"
-								value="<?php echo esc_attr( (int) $settings['log_retention_days'] ); ?>" class="small-text" />
-							<p class="description">
-								Old rows in the email log, grade-sync log and activity log are deleted
-								once a day. Set to 0 to keep them forever. Attendance is
-								<strong>never</strong> deleted, whatever this is set to.
-							</p>
-						</td>
-					</tr>
-					<tr>
-						<th scope="row"><label>Off days</label></th>
-						<td>
-							<fieldset>
-								<legend class="screen-reader-text">Off days</legend>
-								<p class="description" style="margin-top:0;">
-									No class runs on these days, so a teacher cannot open or mark an attendance register for them.
-								</p>
-								<?php
-								$sp_off_selected = sp_off_days();
-								$sp_off_names    = sp_weekday_names();
-								?>
-								<?php foreach ( $sp_off_names as $sp_day_num => $sp_day_name ) : ?>
-									<label style="display:inline-block;min-width:110px;margin:2px 0;">
-										<input type="checkbox" name="sp_settings[off_days][]"
-											value="<?php echo esc_attr( $sp_day_num ); ?>"
-											<?php checked( in_array( (int) $sp_day_num, $sp_off_selected, true ) ); ?> />
-										<?php echo esc_html( $sp_day_name ); ?>
-									</label>
-								<?php endforeach; ?>
-							</fieldset>
-						</td>
-					</tr>
-
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><label for="sp_log_days">Keep logs for (days)</label></th>
+				<td>
+					<input type="number" id="sp_log_days" name="sp_settings[log_retention_days]"
+						min="0" max="3650" step="1"
+						value="<?php echo esc_attr( (int) $settings['log_retention_days'] ); ?>" class="small-text" />
+					<p class="description">
+						Old rows in the email log, grade-sync log and activity log are deleted
+						once a day. Set to 0 to keep them forever. Attendance is
+						<strong>never</strong> deleted, whatever this is set to.
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><label>Off days</label></th>
+				<td>
+					<fieldset>
+						<legend class="screen-reader-text">Off days</legend>
+						<p class="description" style="margin-top:0;">
+							No class runs on these days, so a teacher cannot open or mark an attendance register for them.
+						</p>
+						<?php
+						$sp_off_selected = sp_off_days();
+						$sp_off_names    = sp_weekday_names();
+						?>
+						<?php foreach ( $sp_off_names as $sp_day_num => $sp_day_name ) : ?>
+							<label style="display:inline-block;min-width:110px;margin:2px 0;">
+								<input type="checkbox" name="sp_settings[off_days][]"
+									value="<?php echo esc_attr( $sp_day_num ); ?>"
+									<?php checked( in_array( (int) $sp_day_num, $sp_off_selected, true ) ); ?> />
+								<?php echo esc_html( $sp_day_name ); ?>
+							</label>
+						<?php endforeach; ?>
+					</fieldset>
 				</td>
 			</tr>
 			<tr>
@@ -253,6 +304,13 @@ function sp_admin_page_sp_settings() {
 		<input type="hidden" name="test_email" value="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>" />
 		<?php submit_button( 'Send test email', 'secondary' ); ?>
 	</form>
+	</div>
+
+		<footer class="sp-settings-page-footer">
+			<span><span class="sp-settings-footer-dot" aria-hidden="true"></span> Portal settings</span>
+			<span>Changes apply site-wide — test with a sample result before relying on them.</span>
+		</footer>
+	</div>
 
 	<script>
 	( function () {

@@ -731,7 +731,17 @@ function sp_schedule_render_grid( $view, $range, $events, $blocks, $labels, $edi
 				<div class="sp-sch-day<?php echo $is_today ? ' is-today' : ''; ?><?php echo $weekend ? ' is-weekend' : ''; ?><?php echo $cancelled ? ' is-cancelled' : ''; ?>"
 					style="--sp-sch-hours: <?php echo esc_attr( $axis_hours ); ?>; --sp-sch-axis: <?php echo esc_attr( $axis_min ); ?>;">
 
-					<?php foreach ( $day_rows as $ri => $row ) : ?>
+					<?php
+					// A recurring weekday row is only drawn on days that actually run.
+					// The header above already marks off days with an "Off" badge, but
+					// without this guard the recurring blocks were drawn anyway, which
+					// is why Sunday (the default off day) always showed its classes.
+					//
+					// Cancelled days are deliberately left alone: their blocks are still
+					// drawn and merely styled as cancelled further down.
+					$sp_day_rows = sp_is_off_day( $day ) ? array() : $day_rows;
+					?>
+					<?php foreach ( $sp_day_rows as $ri => $row ) : ?>
 						<?php
 						$colors  = sp_schedule_block_colors( (int) $row->class_id );
 						$mins    = sp_schedule_minutes( $row->start_time );
@@ -1006,7 +1016,7 @@ function sp_schedule_side_html( $date, $event_id = 0, $view = 'week', $focus = '
 
 		<div class="sp-sch-field">
 			<label for="sp_sch_date">Date <span class="sp-required">*</span></label>
-			<input type="date" id="sp_sch_date" name="event_date" required
+			<input type="date" id="sp_sch_date" name="event_date" required data-sp-date
 				value="<?php echo esc_attr( $editing_date ); ?>" />
 		</div>
 

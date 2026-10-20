@@ -1,33 +1,323 @@
 /*
  * admin/certificate-fields
- * Split from admin.css by private/tools/sp-split-css.php.
- * One stylesheet per template/page; base holds the shared shell and design system.
+ * Premium shell matching the other Student Portal admin screens.
+ * Scoped to .sp-certfields-ui so sibling screens stay untouched.
  */
 
-.sp-scope > .sp-table,
-.sp-scope > .sp-table-wrap,
-.sp-scope > .widefat,
-.sp-scope > form {
-	margin-top: 20px;
+.sp-certfields-ui {
+    --sp-cf-ink: #172235;
+    --sp-cf-muted: #6b778b;
+    --sp-cf-border: #e5eaf2;
+    --sp-cf-surface: #ffffff;
+    --sp-cf-soft: #f7f9fc;
+    --sp-cf-accent: #3858d6;
+    --sp-cf-accent-dark: #2947bf;
+    --sp-cf-radius: 16px;
+    box-sizing: border-box;
+    max-width: 1320px;
+    margin: 18px 20px 32px 2px;
+    color: var(--sp-cf-ink);
+    font-size: 13px;
+    line-height: 1.5;
 }
 
-.sp-admin-muted {
-	color: #646970;
-	font-size: 13px;
+.sp-certfields-ui *,
+.sp-certfields-ui *::before,
+.sp-certfields-ui *::after { box-sizing: border-box; }
+
+/* Page header -------------------------------------------------------------- */
+
+.sp-certfields-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 23px 25px;
+    margin: 0 0 17px;
+    border: 1px solid #e6eaf2;
+    border-radius: var(--sp-cf-radius);
+    background: radial-gradient(circle at 96% 0%, rgba(91, 113, 225, 0.11), transparent 31%), linear-gradient(135deg, #fff 0%, #fbfcff 100%);
+    box-shadow: 0 3px 12px rgba(25, 39, 70, 0.035);
 }
 
-.sp-table-wrap {
-	max-width: 100%;
-	overflow-x: auto;
+.sp-certfields-page-heading { min-width: 0; }
+
+.sp-certfields-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #64708a;
+    font-size: 10px;
+    font-weight: 750;
+    letter-spacing: 0.13em;
+    line-height: 1.4;
+    text-transform: uppercase;
+}
+
+.sp-certfields-eyebrow span { color: #a1aabc; }
+
+.sp-certfields-page-header h1 {
+    margin: 8px 0 5px;
+    padding: 0;
+    color: var(--sp-cf-ink);
+    font-size: clamp(25px, 2.2vw, 31px);
+    font-weight: 760;
+    letter-spacing: -0.045em;
+    line-height: 1.15;
+}
+
+.sp-certfields-page-header p {
+    max-width: 720px;
+    margin: 0;
+    color: var(--sp-cf-muted);
+    font-size: 13px;
+    line-height: 1.65;
+}
+
+.sp-certfields-header-note {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    border: 1px solid #e4e9f4;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.82);
+}
+
+.sp-certfields-header-mark {
+    display: inline-grid;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    place-items: center;
+    border-radius: 10px;
+    background: #edf1ff;
+    color: var(--sp-cf-accent);
+    font-size: 18px;
+    font-weight: 750;
+}
+
+.sp-certfields-header-note strong,
+.sp-certfields-header-note small { display: block; }
+
+.sp-certfields-header-note strong {
+    color: #27334a;
+    font-size: 12px;
+    font-weight: 750;
+}
+
+.sp-certfields-header-note small {
+    margin-top: 2px;
+    color: #768197;
+    font-size: 11px;
+}
+/* Stat cards --------------------------------------------------------------- */
+
+.sp-certfields-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0 0 17px;
+}
+
+.sp-certfields-stat-card {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 13px;
+    padding: 16px 17px;
+    border: 1px solid var(--sp-cf-border);
+    border-radius: 14px;
+    background: var(--sp-cf-surface);
+    box-shadow: 0 2px 8px rgba(25, 39, 70, 0.025);
+}
+
+.sp-certfields-stat-icon {
+    display: inline-grid;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    place-items: center;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 750;
+}
+
+.sp-certfields-stat-icon-total { background: #edf1ff; color: #3858d6; }
+.sp-certfields-stat-icon-required { background: #fff5df; color: #a66b0b; }
+.sp-certfields-stat-icon-autofill { background: #e9f8f0; color: #168452; }
+
+.sp-certfields-stat-card > div {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+}
+
+.sp-certfields-stat-label {
+    overflow: hidden;
+    color: #68758a;
+    font-size: 11px;
+    font-weight: 650;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sp-certfields-stat-card strong {
+    margin-top: 1px;
+    color: #182336;
+    font-size: 25px;
+    font-weight: 760;
+    letter-spacing: -0.04em;
+    line-height: 1.25;
+    font-variant-numeric: tabular-nums;
+}
+
+.sp-certfields-stat-card small {
+    margin-top: 2px;
+    color: #8a94a5;
+    font-size: 10px;
+}
+
+/* Content panel ------------------------------------------------------------- */
+
+.sp-certfields-panel {
+    margin: 0 0 16px;
+    padding: 20px 22px;
+    border: 1px solid var(--sp-cf-border);
+    border-radius: var(--sp-cf-radius);
+    background: var(--sp-cf-surface);
+    box-shadow: 0 2px 8px rgba(25, 39, 70, 0.025);
+}
+
+.sp-certfields-panel .sp-admin-muted {
+    margin: 0 0 16px;
+    max-width: 80ch;
+    color: var(--sp-cf-muted);
+    font-size: 12.5px;
+    line-height: 1.6;
+}
+
+.sp-certfields-panel .sp-table-wrap {
+    max-width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--sp-cf-border);
+    border-radius: 10px;
+}
+
+.sp-certfields-panel .widefat thead th {
+    background: var(--sp-cf-soft);
+    border-bottom: 1px solid var(--sp-cf-border);
+    color: #68758a;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 11px 12px;
+    text-transform: uppercase;
+}
+
+.sp-certfields-panel .widefat td {
+    border-bottom: 1px solid #eef1f6;
+    padding: 12px;
+    vertical-align: middle;
+}
+
+.sp-certfields-panel .widefat tbody tr:last-child td { border-bottom: 0; }
+
+.sp-certfields-panel .widefat input[type="text"],
+.sp-certfields-panel .widefat select {
+    border: 1px solid #d7deea;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #202c40;
+    box-shadow: 0 1px 2px rgba(20, 35, 60, 0.025);
+}
+
+.sp-certfields-panel .widefat input:focus,
+.sp-certfields-panel .widefat select:focus {
+    border-color: #8ba1f2;
+    box-shadow: 0 0 0 3px rgba(56, 88, 214, 0.12);
+    outline: none;
 }
 
 .sp-cert-fields-empty td {
-	color: #646970;
-	font-style: italic;
-	padding: 12px;
+    color: var(--sp-cf-muted);
+    font-style: italic;
+    padding: 22px 12px;
+    text-align: center;
 }
 
-.sp-cert-fields-remove {
-	color: #b32d2e !important;
+.sp-certfields-panel p { margin: 16px 0 0; }
+
+.sp-cert-fields-remove { color: #b32d2e !important; }
+
+/* Page footer --------------------------------------------------------------- */
+
+.sp-certfields-page-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 3px 3px 0;
+    color: #929bab;
+    font-size: 10px;
 }
 
+.sp-certfields-page-footer > span:first-child {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #7f8a9e;
+    font-weight: 700;
+}
+
+.sp-certfields-footer-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #6cbf92;
+    box-shadow: 0 0 0 3px #eaf8f0;
+}
+
+/* Responsive ---------------------------------------------------------------- */
+
+@media (max-width: 982px) {
+    .sp-certfields-page-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 16px;
+        padding: 20px 18px;
+    }
+
+    .sp-certfields-header-note { width: 100%; }
+
+    .sp-certfields-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+    }
+
+    .sp-certfields-stat-card { gap: 10px; padding: 12px; }
+
+    .sp-certfields-stat-icon {
+        width: 36px;
+        height: 36px;
+        flex-basis: 36px;
+    }
+
+    .sp-certfields-stat-card strong { font-size: 22px; }
+}
+
+@media (max-width: 782px) {
+    .sp-certfields-ui { margin: 12px 10px 24px 0; }
+
+    .sp-certfields-panel { padding: 15px; }
+
+    .sp-certfields-page-footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .sp-certfields-stats { grid-template-columns: minmax(0, 1fr); }
+}

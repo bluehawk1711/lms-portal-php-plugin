@@ -137,6 +137,18 @@ function sp_handle_admin_action() {
 		case 'import_curriculum':
 			sp_admin_action_import_curriculum();
 			break;
+		case 'save_idcard_settings':
+			sp_admin_action_save_idcard_settings();
+			break;
+		case 'save_announcement':
+			sp_admin_action_save_announcement();
+			break;
+		case 'announcement_status':
+			sp_admin_action_announcement_status();
+			break;
+		case 'delete_announcement':
+			sp_admin_action_delete_announcement();
+			break;
 		case 'save_settings':
 			/*
 			 * The Settings form posts back to admin.php, not wp-admin/options.php,
@@ -224,7 +236,186 @@ function sp_admin_notice() {
  * Create a student account from the Add Student form, or update one when the
  * form carries a profile_id (the Edit mode of the same screen).
  */
+/**
+ * Publish an announcement to one student, all students or the teachers.
+ */
+function sp_admin_action_save_announcement() {
+	global $wpdb;
+
+	$title    = isset( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : '';
+	$body     = isset( $_POST['body'] ) ? wp_kses_post( wp_unslash( $_POST['body'] ) ) : '';
+	$audience = isset( $_POST['audience'] ) ? sanitize_key( wp_unslash( $_POST['audience'] ) ) : 'all_students';
+	$display  = isset( $_POST['display'] ) && 'bar' === $_POST['display'] ? 'bar' : 'banner';
+	$profile  = isset( $_POST['profile_id'] ) ? (int) $_POST['profile_id'] : 0;
+
+	$audience = in_array( $audience, array( 'all_students', 'one_student', 'teachers' ), true ) ? $audience : 'all_students';
+
+	if ( '' === trim( wp_strip_all_tags( $body ) ) ) {
+		sp_admin_redirect( 'sp-announcements', 'Enter the announcement message.', 'error' );
+	}
+
+	if ( 'one_student' === $audience ) {
+		if ( ! $profile ) {
+			sp_admin_redirect( 'sp-announcements', 'Choose the student this announcement is for.', 'error' );
+		}
+
+		if ( ! sp_get_profile_by_id( $profile ) ) {
+			sp_admin_redirect( 'sp-announcements', 'That student no longer exists.', 'error' );
+		}
+	} else {
+		$profile = 0;
+	}
+
+	$wpdb->insert(
+		sp_table( 'announcements' ),
+		array(
+			'title'               => $title,
+			'body'                => $body,
+			'audience'            => $audience,
+			'audience_profile_id' => $profile,
+			'display'             => $display,
+			'status'              => 'active',
+			'created_by'          => get_current_user_id(),
+		),
+		array( '%s', '%s', '%s', '%d', '%s', '%s', '%d' )
+	);
+
+	$announcement_id = (int) $wpdb->insert_id;
+
+	sp_log_activity(
+		'announcement_created',
+		'announcement',
+		$announcement_id,
+		sprintf( 'Announcement published (%s, %s)', $audience, $display )
+	);
+
+	sp_admin_redirect( 'sp-announcements', 'Announcement published.' );
+}
+
+/**
+ * Park an announcement back on active, or archive it.
+ */
+function sp_admin_action_announcement_status() {
+	global $wpdb;
+
+	$announcement_id = isset( $_POST['announcement_id'] ) ? (int) $_POST['announcement_id'] : 0;
+	$row             = $announcement_id ? $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . sp_table( 'announcements' ) . ' WHERE id = %d', $announcement_id ) ) : null; // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from sp_table().
+
+	if ( ! $row ) {
+		sp_admin_redirect( 'sp-announcements', 'That announcement no longer exists.', 'error' );
+	}
+
+	$new_status = 'active' === $row->status ? 'archived' : 'active';
+
+	$wpdb->update(
+		sp_table( 'announcements' ),
+		array( 'status' => $new_status ),
+		array( 'id' => $announcement_id ),
+		array( '%s' ),
+		array( '%d' )
+	);
+
+	sp_log_activity(
+		'announcement_status',
+		'announcement',
+		$announcement_id,
+		'Announcement ' . ( 'active' === $new_status ? 'restored' : 'archived' )
+	);
+
+	sp_admin_redirect( 'sp-announcements', 'active' === $new_status ? 'Announcement restored.' : 'Announcement archived.' );
+}
+
+/**
+ * Delete an announcement outright.
+ */
+function sp_admin_action_delete_announcement() {
+	global $wpdb;
+
+	$announcement_id = isset( $_POST['announcement_id'] ) ? (int) $_POST['announcement_id'] : 0;
+	$row             = $announcement_id ? $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . sp_table( 'announcements' ) . ' WHERE id = %d', $announcement_id ) ) : null; // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from sp_table().
+
+	if ( ! $row ) {
+		sp_admin_redirect( 'sp-announcements', 'That announcement no longer exists.', 'error' );
+	}
+
+	$wpdb->delete( sp_table( 'announcements' ), array( 'id' => $announcement_id ), array( '%d' ) );
+
+	sp_log_activity( 'announcement_deleted', 'announcement', $announcement_id, 'Announcement deleted' );
+
+	sp_admin_redirect( 'sp-announcements', 'Announcement deleted.' );
+}
+
+/**
+ * Upload one student photo for the ID card, if a new file was picked.
+ *
+ * @return int|WP_Error Attachment id, 0 when nothing was sent, or WP_Error.
+ */
+function sp_admin_upload_student_photo() {
+	if ( empty( $_FILES['photo']['name'] ) || '' === (string) $_FILES['photo']['name'] ) {
+		return 0;
+	}
+
+	require_once ABSPATH . 'wp-admin/includes/file.php';
+	require_once ABSPATH . 'wp-admin/includes/image.php';
+	require_once ABSPATH . 'wp-admin/includes/media.php';
+
+	return media_handle_upload( 'photo', 0 );
+}
+
+/**
+ * Save the ID card design: uploaded artwork plus the card text lines.
+ */
+function sp_admin_action_save_idcard_settings() {
+	$settings = sp_idcard_settings();
+	$uploads  = array( 'background_id', 'corner_id', 'logo_id', 'qr_id', 'signature_id' );
+
+	require_once ABSPATH . 'wp-admin/includes/file.php';
+	require_once ABSPATH . 'wp-admin/includes/image.php';
+	require_once ABSPATH . 'wp-admin/includes/media.php';
+
+	foreach ( $uploads as $sp_key ) {
+		$sp_has_file = ! empty( $_FILES[ $sp_key ]['name'] );
+
+		if ( ! $sp_has_file && ! empty( $_POST[ 'clear_' . $sp_key ] ) ) {
+			$settings[ $sp_key ] = 0;
+			continue;
+		}
+
+		if ( ! $sp_has_file ) {
+			continue;
+		}
+
+		$attachment_id = media_handle_upload( $sp_key, 0 );
+
+		if ( is_wp_error( $attachment_id ) ) {
+			sp_admin_redirect( 'sp-id-cards', 'Upload failed: ' . $attachment_id->get_error_message(), 'error' );
+		}
+
+		$settings[ $sp_key ] = (int) $attachment_id;
+	}
+
+	$lines = array( 'institute_name', 'tagline', 'phone_line', 'director_name', 'qr_label' );
+
+	foreach ( $lines as $sp_field ) {
+		if ( isset( $_POST[ $sp_field ] ) ) {
+			$settings[ $sp_field ] = sanitize_text_field( wp_unslash( $_POST[ $sp_field ] ) );
+		}
+	}
+
+	if ( isset( $_POST['bottom_address'] ) ) {
+		$settings['bottom_address'] = sanitize_textarea_field( wp_unslash( $_POST['bottom_address'] ) );
+	}
+
+	update_option( SP_IDCARD_OPTION, $settings );
+
+	sp_log_activity( 'idcard_settings_saved', 'settings', 0, 'ID card design updated' );
+
+	sp_admin_redirect( 'sp-id-cards', 'ID card design saved.' );
+}
+
 function sp_admin_action_save_student() {
+	global $wpdb;
+
 	$profile_id = isset( $_POST['profile_id'] ) ? (int) $_POST['profile_id'] : 0;
 
 	if ( $profile_id > 0 ) {
@@ -256,6 +447,43 @@ function sp_admin_action_save_student() {
 
 	if ( is_wp_error( $result ) ) {
 		sp_admin_redirect( 'sp-student-accounts', $result->get_error_message(), 'error' );
+	}
+
+	// ID card fields: father's name, address and an optional photo.
+	$sp_father  = isset( $_POST['father_name'] ) ? sanitize_text_field( wp_unslash( $_POST['father_name'] ) ) : '';
+	$sp_address = isset( $_POST['address'] ) ? sanitize_textarea_field( wp_unslash( $_POST['address'] ) ) : '';
+	$sp_photo   = sp_admin_upload_student_photo();
+
+	if ( is_wp_error( $sp_photo ) ) {
+		sp_admin_redirect( 'sp-student-accounts', 'Account created, but the photo upload failed: ' . $sp_photo->get_error_message(), 'error' );
+	}
+
+	$sp_extra = array();
+	$sp_extra_formats = array();
+
+	if ( '' !== $sp_father ) {
+		$sp_extra['father_name'] = $sp_father;
+		$sp_extra_formats[]     = '%s';
+	}
+
+	if ( '' !== $sp_address ) {
+		$sp_extra['address'] = $sp_address;
+		$sp_extra_formats[] = '%s';
+	}
+
+	if ( $sp_photo ) {
+		$sp_extra['photo_id'] = (int) $sp_photo;
+		$sp_extra_formats[]   = '%d';
+	}
+
+	if ( $sp_extra ) {
+		$wpdb->update(
+			sp_table( 'student_profiles' ),
+			$sp_extra,
+			array( 'id' => (int) $result['record_id'] ),
+			$sp_extra_formats,
+			array( '%d' )
+		);
 	}
 
 	if ( $class_id > 0 ) {
@@ -301,6 +529,15 @@ function sp_admin_action_update_student( $profile_id ) {
 	$name    = isset( $_POST['full_name'] ) ? sanitize_text_field( wp_unslash( $_POST['full_name'] ) ) : '';
 	$phone   = isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '';
 	$dob_raw = isset( $_POST['dob'] ) ? sanitize_text_field( wp_unslash( $_POST['dob'] ) ) : '';
+
+	// ID card fields: father's name, address and an optional new photo.
+	$sp_father  = isset( $_POST['father_name'] ) ? sanitize_text_field( wp_unslash( $_POST['father_name'] ) ) : '';
+	$sp_address = isset( $_POST['address'] ) ? sanitize_textarea_field( wp_unslash( $_POST['address'] ) ) : '';
+	$sp_photo   = sp_admin_upload_student_photo();
+
+	if ( is_wp_error( $sp_photo ) ) {
+		sp_admin_redirect( 'sp-student-accounts', 'The photo upload failed: ' . $sp_photo->get_error_message(), 'error', $back );
+	}
 
 	// Blank keeps the current password; anything else replaces it immediately.
 	$password = isset( $_POST['password'] ) ? trim( (string) wp_unslash( $_POST['password'] ) ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitised -- hashed by wp_update_user.
@@ -359,16 +596,27 @@ function sp_admin_action_update_student( $profile_id ) {
 		sp_admin_redirect( 'sp-student-accounts', $saved_user->get_error_message(), 'error', $back );
 	}
 
+	$sp_profile_data = array(
+		'email'       => $email,
+		'full_name'   => $name,
+		'phone'       => '' !== $phone ? $phone : null,
+		'dob'         => '' !== $dob ? $dob : null,
+		'father_name' => '' !== $sp_father ? $sp_father : null,
+		'address'     => '' !== $sp_address ? $sp_address : null,
+	);
+
+	$sp_profile_formats = array( '%s', '%s', '%s', '%s', '%s', '%s' );
+
+	if ( $sp_photo ) {
+		$sp_profile_data['photo_id'] = (int) $sp_photo;
+		$sp_profile_formats[]        = '%d';
+	}
+
 	$updated = $wpdb->update(
 		sp_table( 'student_profiles' ),
-		array(
-			'email'     => $email,
-			'full_name' => $name,
-			'phone'     => '' !== $phone ? $phone : null,
-			'dob'       => '' !== $dob ? $dob : null,
-		),
+		$sp_profile_data,
 		array( 'id' => $profile_id ),
-		array( '%s', '%s', '%s', '%s' ),
+		$sp_profile_formats,
 		array( '%d' )
 	);
 

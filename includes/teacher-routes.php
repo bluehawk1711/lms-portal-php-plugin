@@ -22,9 +22,11 @@ function sp_teacher_routes() {
 		'materials'     => array( 'label' => 'Materials', 'template' => 'teacher-materials.php', 'public' => false ),
 		'material-edit' => array( 'label' => 'Edit material', 'template' => 'teacher-material-edit.php', 'public' => false ),
 		'assignments'     => array( 'label' => 'Assignments', 'template' => 'teacher-assignments.php', 'public' => false ),
+		'attempts'        => array( 'label' => 'Attempts', 'template' => 'teacher-attempt.php', 'public' => false ),
 		'assignment-edit' => array( 'label' => 'Assignment', 'template' => 'teacher-assignment-edit.php', 'public' => false ),
 		'results'       => array( 'label' => 'Results', 'template' => 'teacher-results.php', 'public' => false ),
 		'calendar'      => array( 'label' => 'Calendar', 'template' => 'teacher-calendar.php', 'public' => false ),
+		'profile'       => array( 'label' => 'Profile', 'template' => 'teacher-profile.php', 'public' => false ),
 	);
 }
 
@@ -33,11 +35,12 @@ function sp_teacher_routes() {
  */
 function sp_teacher_rewrite_rules() {
 	add_rewrite_rule( '^teacher/?$', 'index.php?pagename=teacher&sp_teacher_route=home', 'top' );
-	add_rewrite_rule( '^teacher/(classes|materials|results|assignments|calendar)/?$', 'index.php?pagename=teacher&sp_teacher_route=$matches[1]', 'top' );
+	add_rewrite_rule( '^teacher/(classes|materials|results|assignments|calendar|profile)/?$', 'index.php?pagename=teacher&sp_teacher_route=$matches[1]', 'top' );
 	add_rewrite_rule( '^teacher/materials/new/?$', 'index.php?pagename=teacher&sp_teacher_route=material-edit', 'top' );
 	add_rewrite_rule( '^teacher/materials/(\d+)/?$', 'index.php?pagename=teacher&sp_teacher_route=material-edit&sp_material_id=$matches[1]', 'top' );
 	add_rewrite_rule( '^teacher/assignments/new/?$', 'index.php?pagename=teacher&sp_teacher_route=assignment-edit', 'top' );
 	add_rewrite_rule( '^teacher/assignments/(\d+)/?$', 'index.php?pagename=teacher&sp_teacher_route=assignment-edit&sp_assignment_id=$matches[1]', 'top' );
+	add_rewrite_rule( '^teacher/attempts/(\d+)/?$', 'index.php?pagename=teacher&sp_teacher_route=attempts&sp_attempt_id=$matches[1]', 'top' );
 	add_rewrite_rule( '^teacher/classes/(\d+)/?$', 'index.php?pagename=teacher&sp_teacher_route=class&sp_teacher_id=$matches[1]', 'top' );
 }
 

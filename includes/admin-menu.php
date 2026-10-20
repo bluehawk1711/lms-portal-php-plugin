@@ -75,6 +75,16 @@ function sp_admin_pages() {
 			'capability' => 'manage_certificates',
 			'file'       => 'calendar.php',
 		),
+		'sp-announcements'     => array(
+			'label'      => 'Announcements',
+			'capability' => 'manage_certificates',
+			'file'       => 'announcements.php',
+		),
+		'sp-id-cards'          => array(
+			'label'      => 'ID cards',
+			'capability' => 'manage_certificates',
+			'file'       => 'id-cards.php',
+		),
 		'sp-results'           => array(
 			'label'      => 'Results',
 			'capability' => 'manage_certificates',
@@ -259,6 +269,42 @@ function sp_admin_enqueue_assets( $hook ) {
 		);
 	}
 
+	// ID card screen: html2canvas + jsPDF drive the JPG/PDF downloads.
+	if ( 'sp-id-cards' === $slug ) {
+		wp_enqueue_script(
+			'sp-idcard-html2canvas',
+			SP_URL . 'assets/js/html2canvas.min.js',
+			array(),
+			SP_VERSION,
+			true
+		);
+
+		wp_enqueue_script(
+			'sp-idcard-jspdf',
+			SP_URL . 'assets/js/jspdf.umd.min.js',
+			array(),
+			SP_VERSION,
+			true
+		);
+
+		wp_enqueue_script(
+			'sp-idcard-screen',
+			SP_URL . 'assets/js/id-card.js',
+			array( 'sp-idcard-html2canvas', 'sp-idcard-jspdf' ),
+			SP_VERSION,
+			true
+		);
+
+		wp_localize_script(
+			'sp-idcard-screen',
+			'SpIdCard',
+			array(
+				'ajax'  => admin_url( 'admin-ajax.php' ),
+				'nonce' => wp_create_nonce( 'sp_idcard' ),
+			)
+		);
+	}
+
 	if ( 'sp-calendar' === $slug ) {
 		wp_enqueue_style(
 			'student-portal-schedule',
@@ -282,6 +328,42 @@ function sp_admin_enqueue_assets( $hook ) {
 				'ajax'  => admin_url( 'admin-ajax.php' ),
 				'nonce' => wp_create_nonce( 'sp_schedule_side' ),
 			)
+		);
+	}
+
+	// The reusable date & time component on the screens that render those
+	// inputs (attendance date, class start/end, DOB, calendar sidebar date).
+	if ( in_array( $slug, array( 'sp-attendance', 'sp-classes', 'sp-student-accounts', 'sp-calendar' ), true ) ) {
+		sp_datetime_enqueue();
+	}
+
+	// Register live counter + submit confirmation on the attendance screen.
+	if ( 'sp-attendance' === $slug ) {
+		wp_enqueue_script(
+			'student-portal-attendance',
+			SP_URL . 'assets/js/attendance.js',
+			array(),
+			SP_VERSION,
+			true
+		);
+	}
+
+	// Async filters & small submits on the screens wired with data-sp-async:
+	// the region swaps in place instead of reloading the whole admin page.
+	if ( in_array( $slug, array( 'sp-student-accounts', 'sp-results', 'sp-email-log', 'sp-enrollments', 'sp-attendance' ), true ) ) {
+		wp_enqueue_style(
+			'student-portal-async',
+			SP_URL . 'assets/css/sp-async.css',
+			array(),
+			SP_VERSION
+		);
+
+		wp_enqueue_script(
+			'student-portal-async',
+			SP_URL . 'assets/js/sp-async.js',
+			array(),
+			SP_VERSION,
+			true
 		);
 	}
 

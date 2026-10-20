@@ -36,6 +36,9 @@
 	 * Prevent accidental navigation away from a half-entered result grid by
 	 * confirming once, not on every keystroke.
 	 */
+	var resultGuardDirty = false;
+	var resultGuardWindowBound = false;
+
 	function initResultGuard() {
 		var form = document.querySelector( '.sp-table-form' );
 		var wrapper = form ? form.closest( 'form' ) : null;
@@ -44,18 +47,29 @@
 			return;
 		}
 
-		var dirty = false;
+		// Fresh nodes after an async swap rebind here; never twice on one node.
+		if ( wrapper.getAttribute( 'data-sp-guard-bound' ) ) {
+			return;
+		}
+
+		wrapper.setAttribute( 'data-sp-guard-bound', '1' );
 
 		wrapper.addEventListener( 'change', function () {
-			dirty = true;
+			resultGuardDirty = true;
 		} );
 
 		wrapper.addEventListener( 'submit', function () {
-			dirty = false;
+			resultGuardDirty = false;
 		} );
 
+		if ( resultGuardWindowBound ) {
+			return;
+		}
+
+		resultGuardWindowBound = true;
+
 		window.addEventListener( 'beforeunload', function ( event ) {
-			if ( ! dirty ) {
+			if ( ! resultGuardDirty ) {
 				return;
 			}
 
@@ -80,6 +94,14 @@
 		if ( ! shell || ! side || ! toggle ) {
 			return;
 		}
+
+		// The sidebar lives outside every async region; bind it exactly once
+		// even when sp:async-replace re-runs the initialisers.
+		if ( side.getAttribute( 'data-sp-side-bound' ) ) {
+			return;
+		}
+
+		side.setAttribute( 'data-sp-side-bound', '1' );
 
 		var desktop = window.matchMedia( '(min-width: 1025px)' );
 		var storageKey = 'sp-teacher-side';
@@ -289,6 +311,13 @@
 		initAssignmentType();
 		initQuestionType();
 		initDistribution();
+
+		// Async region swaps hand over fresh attendance rows and result forms;
+		// the sidebar toggle guards itself against rebinding.
+		document.addEventListener( 'sp:async-replace', function () {
+			initMarkAllShortcut();
+			initResultGuard();
+		} );
 	}
 
 	if ( 'loading' === document.readyState ) {

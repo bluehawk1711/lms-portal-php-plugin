@@ -258,7 +258,7 @@
 		}
 
 		document.addEventListener( 'keydown', function ( event ) {
-			if ( 27 === event.key && drawer.classList.contains( 'is-open' ) ) {
+			if ( 'Escape' === event.key && drawer.classList.contains( 'is-open' ) ) {
 				close();
 				toggle.focus();
 			}
@@ -282,9 +282,13 @@
 	 * form (its own nonce) posted by navigator.sendBeacon() when the page is
 	 * closed mid-attempt. The server ignores a beacon that races a real
 	 * submit, so the submitted flag here is only an optimisation.
+	 *
+	 * Only a real form element is bound: the submitted review screen wraps
+	 * its questions in a div that shares the .sp-quiz-form class, and that
+	 * graded result screen must never inherit this countdown or beacon.
 	 */
 	function initExamRunner() {
-		var form = document.querySelector( '.sp-quiz-form, .sp-exam-form' );
+		var form = document.querySelector( 'form[data-sp-exam], form.sp-quiz-form, form.sp-exam-form' );
 
 		if ( ! form ) {
 			return;
@@ -462,6 +466,143 @@
 		show( 0 );
 	}
 
+	/**
+	 * Off-canvas question navigator for the quiz on small screens.
+	 *
+	 * The .sp-quiz side panel becomes a fixed right drawer below the mobile
+	 * breakpoint. A toggle button in the quiz head opens/closes it, a backdrop
+	 * dismisses it on tap, and ESC closes it.
+	 */
+	function initQuizDrawer() {
+		var root = document.querySelector( '[data-sp-quiz]' );
+
+		if ( ! root ) {
+			return;
+		}
+
+		var toggle = root.querySelector( '[data-sp-drawer-toggle]' );
+		var backdrop = root.querySelector( '[data-sp-drawer-backdrop]' );
+
+		if ( ! toggle || ! backdrop ) {
+			return;
+		}
+
+		function open() {
+			root.classList.add( 'is-drawer-open' );
+			toggle.setAttribute( 'aria-expanded', 'true' );
+			backdrop.hidden = false;
+		}
+
+		function close() {
+			root.classList.remove( 'is-drawer-open' );
+			toggle.setAttribute( 'aria-expanded', 'false' );
+			backdrop.hidden = true;
+		}
+
+		toggle.addEventListener( 'click', function ( event ) {
+			event.preventDefault();
+
+			if ( root.classList.contains( 'is-drawer-open' ) ) {
+				close();
+			} else {
+				open();
+			}
+		} );
+
+		backdrop.addEventListener( 'click', close );
+
+		document.addEventListener( 'keydown', function ( event ) {
+			if ( 'Escape' === event.key && root.classList.contains( 'is-drawer-open' ) ) {
+				close();
+			}
+		} );
+
+		// Leaving the mobile breakpoint must not leave the drawer stuck open.
+		window.addEventListener( 'resize', function () {
+			if ( window.innerWidth > 760 && root.classList.contains( 'is-drawer-open' ) ) {
+				close();
+			}
+		} );
+	}
+
+	/**
+	 * Class selection filter on the attendance and curriculum pages.
+	 *
+	 * Every class pane is server-rendered; the select swaps them in place and
+	 * keeps ?class= in the URL. Without JavaScript the same form falls back to
+	 * a plain reload, so the filter always works.
+	 */
+	function initClassFilter() {
+		var form = document.querySelector( '[data-sp-class-filter]' );
+
+		if ( ! form ) {
+			return;
+		}
+
+		var select = form.querySelector( '[data-sp-class-select]' );
+		var panes = document.querySelectorAll( '[data-sp-class-pane]' );
+
+		if ( ! select || ! panes.length ) {
+			return;
+		}
+
+		function apply( id, push ) {
+			var wanted = String( id );
+			var matched = false;
+
+			Array.prototype.forEach.call( panes, function ( pane ) {
+				var on = pane.getAttribute( 'data-sp-class-pane' ) === wanted;
+
+				pane.hidden = ! on;
+
+				if ( on ) {
+					matched = true;
+					pane.classList.add( 'is-active' );
+				} else {
+					pane.classList.remove( 'is-active' );
+				}
+			} );
+
+			if ( ! matched ) {
+				return;
+			}
+
+			select.value = wanted;
+
+			if ( push ) {
+				history.pushState(
+					{ spClass: wanted },
+					'',
+					window.location.pathname + '?class=' + encodeURIComponent( wanted )
+				);
+			}
+		}
+
+		function currentFromUrl() {
+			var match = window.location.search.match( /[?&]class=(\d+)/ );
+
+			return match ? match[1] : '';
+		}
+
+		select.addEventListener( 'change', function () {
+			apply( select.value, true );
+		} );
+
+		// Without JS this submits ?class= and the server picks the pane.
+		form.addEventListener( 'submit', function ( event ) {
+			event.preventDefault();
+			apply( select.value, false );
+		} );
+
+		window.addEventListener( 'popstate', function ( event ) {
+			var id = event.state && event.state.spClass ? event.state.spClass : currentFromUrl();
+
+			if ( id ) {
+				apply( id, false );
+			}
+		} );
+	}
+
 	function run() {
 		initKindToggle();
 		initAttendanceOptions();
@@ -470,6 +611,8 @@
 		initAuthSubmit();
 		initMobileNav();
 		initQuizNav();
+		initQuizDrawer();
+		initClassFilter();
 		initExamRunner();
 	}
 } )();

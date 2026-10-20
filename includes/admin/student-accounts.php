@@ -56,7 +56,7 @@ function sp_admin_page_sp_student_accounts() {
     $showing_start = $total > 0 ? ( ( $page - 1 ) * $per ) + 1 : 0;
     $showing_end   = min( $page * $per, $total );
     ?>
-    <div class="sp-student-accounts">
+    <div class="sp-student-accounts" id="sp-student-accounts-region" data-sp-async-region>
         <?php sp_admin_cert_notice(); ?>
 
         <header class="sp-student-page-header">
@@ -120,7 +120,7 @@ function sp_admin_page_sp_student_accounts() {
             </div>
 
             <div class="sp-student-toolbar">
-                <form method="get" class="sp-admin-search sp-student-search-form" role="search">
+                <form method="get" class="sp-admin-search sp-student-search-form" role="search" data-sp-async>
                     <input type="hidden" name="page" value="sp-student-accounts" />
                     <label class="screen-reader-text" for="sp-student-search">Search students</label>
                     <span class="sp-student-search-icon" aria-hidden="true">
@@ -145,13 +145,14 @@ function sp_admin_page_sp_student_accounts() {
                             <th scope="col" class="sp-student-col-student">Student</th>
                             <th scope="col" class="sp-student-col-status">Account status</th>
                             <th scope="col" class="sp-student-col-login">Last sign-in</th>
+                            <th scope="col" class="sp-student-col-idcard">ID card</th>
                             <th scope="col" class="sp-student-col-actions"><span class="screen-reader-text">Actions</span>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if ( ! $rows ) : ?>
                             <tr>
-                                <td colspan="4" class="sp-student-empty-cell">
+                                <td colspan="5" class="sp-student-empty-cell">
                                     <div class="sp-student-empty-state">
                                         <span class="sp-student-empty-icon" aria-hidden="true">
                                             <svg viewBox="0 0 24 24" width="26" height="26" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -209,6 +210,14 @@ function sp_admin_page_sp_student_accounts() {
                                             <span class="sp-student-never-login"><span aria-hidden="true"></span><?php esc_html_e( 'Never signed in', 'student-portal' ); ?></span>
                                         <?php endif; ?>
                                     </td>
+                                    <td class="sp-student-idcard-cell">
+                                        <?php if ( ! empty( $sp_row->idcard_generated_at ) ) : ?>
+                                            <span class="sp-student-idcard sp-student-idcard-done">Generated</span>
+                                            <span class="sp-student-idcard-date"><?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $sp_row->idcard_generated_at ) ) ); ?></span>
+                                        <?php else : ?>
+                                            <span class="sp-student-idcard">Not generated</span>
+                                        <?php endif; ?>
+                                    </td>
                                     <td class="sp-student-actions-cell">
                                         <div class="sp-admin-actions sp-student-row-actions">
                                             <button type="button"
@@ -231,18 +240,14 @@ function sp_admin_page_sp_student_accounts() {
                                                 <div class="sp-kebab-menu" id="sp-student-menu-<?php echo esc_attr( $profile_id ); ?>" hidden>
                                                     <a class="sp-kebab-item" href="<?php echo esc_url( add_query_arg( array( 'page' => 'sp-student-accounts', 'edit' => $profile_id ), admin_url( 'admin.php' ) ) ); ?>">
                                                         <span class="sp-student-menu-icon" aria-hidden="true">✎</span> Edit profile
-                                                    </a>
-
-                                                    <form method="post" class="sp-kebab-item-form">
-                                                        <?php sp_admin_nonce_field( 'resend_credentials' ); ?>
+                                                    </a>                            <form method="post" class="sp-kebab-item-form" data-sp-async>
+                                <?php sp_admin_nonce_field( 'resend_credentials' ); ?>
                                                         <input type="hidden" name="user_id" value="<?php echo esc_attr( $user_id ); ?>" />
                                                         <button type="submit" class="sp-kebab-item">
                                                             <span class="sp-student-menu-icon" aria-hidden="true">↗</span> Resend credentials
                                                         </button>
-                                                    </form>
-
-                                                    <form method="post" class="sp-kebab-item-form">
-                                                        <?php sp_admin_nonce_field( 'toggle_status' ); ?>
+                                                    </form>                            <form method="post" class="sp-kebab-item-form" data-sp-async>
+                                <?php sp_admin_nonce_field( 'toggle_status' ); ?>
                                                         <input type="hidden" name="record" value="student" />
                                                         <input type="hidden" name="record_id" value="<?php echo esc_attr( $profile_id ); ?>" />
                                                         <input type="hidden" name="status" value="<?php echo esc_attr( 'active' === $status ? 'disabled' : 'active' ); ?>" />
@@ -253,7 +258,7 @@ function sp_admin_page_sp_student_accounts() {
                                                     </form>
 
                                                     <div class="sp-kebab-divider" aria-hidden="true"></div>
-                                                    <form method="post" class="sp-kebab-item-form sp-kebab-delete-form" onsubmit="return confirm('<?php echo esc_js( __( 'Delete this student completely — profile, enrolments, results, attendance marks, exam attempts and their login? This cannot be undone.', 'student-portal' ) ); ?>');">
+                                                    <form method="post" class="sp-kebab-item-form sp-kebab-delete-form" data-sp-async onsubmit="return confirm('<?php echo esc_js( __( 'Delete this student completely — profile, enrolments, results, attendance marks, exam attempts and their login? This cannot be undone.', 'student-portal' ) ); ?>');">
                                                         <?php sp_admin_nonce_field( 'delete_student' ); ?>
                                                         <input type="hidden" name="profile_id" value="<?php echo esc_attr( $profile_id ); ?>" />
                                                         <button type="submit" class="sp-kebab-item sp-kebab-danger">
@@ -267,14 +272,14 @@ function sp_admin_page_sp_student_accounts() {
                                 </tr>
 
                                 <tr class="sp-student-enroll-row" data-sp-enroll-row="<?php echo esc_attr( $profile_id ); ?>" hidden>
-                                    <td colspan="4">
+                                    <td colspan="5">
                                         <div class="sp-student-enroll-panel" id="<?php echo esc_attr( $enroll_id ); ?>">
                                             <div class="sp-student-enroll-panel-heading">
                                                 <span class="sp-student-enroll-panel-icon" aria-hidden="true">＋</span>
                                                 <span><strong>Enroll <?php echo esc_html( $full_name ? $full_name : __( 'student', 'student-portal' ) ); ?></strong><small>Assign this student to a class and set their admission details.</small></span>
                                             </div>
                                             <?php if ( $sp_classes ) : ?>
-                                                <form method="post" class="sp-inline-enroll">
+                                                <form method="post" class="sp-inline-enroll" data-sp-async>
                                                     <?php sp_admin_nonce_field( 'enroll_student' ); ?>
                                                     <input type="hidden" name="profile_id" value="<?php echo esc_attr( $profile_id ); ?>" />
 

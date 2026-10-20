@@ -136,11 +136,11 @@ function sp_admin_page_sp_classes() {
                     <div class="sp-classes-form-row">
                         <div class="sp-classes-field">
                             <label for="sp_o_start">Start date</label>
-                            <input type="date" id="sp_o_start" name="start_date" value="<?php echo esc_attr( $editing ? $editing->start_date : '' ); ?>" />
+                            <input type="date" id="sp_o_start" name="start_date" value="<?php echo esc_attr( $editing ? $editing->start_date : '' ); ?>" data-sp-date data-sp-off-days="<?php echo esc_attr( implode( ',', sp_off_days() ) ); ?>" />
                         </div>
                         <div class="sp-classes-field">
                             <label for="sp_o_end">End date</label>
-                            <input type="date" id="sp_o_end" name="end_date" value="<?php echo esc_attr( $editing ? $editing->end_date : '' ); ?>" />
+                            <input type="date" id="sp_o_end" name="end_date" value="<?php echo esc_attr( $editing ? $editing->end_date : '' ); ?>" data-sp-date />
                         </div>
                     </div>
 

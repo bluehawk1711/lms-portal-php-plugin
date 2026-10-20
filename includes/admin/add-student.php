@@ -43,7 +43,7 @@ function sp_admin_render_student_form() {
 			</p>
 		<?php endif; ?>
 
-		<form method="post">
+		<form method="post" enctype="multipart/form-data">
 			<?php sp_admin_nonce_field( 'save_student' ); ?>
 			<?php if ( $editing ) : ?>
 				<input type="hidden" name="profile_id" value="<?php echo esc_attr( (int) $editing->id ); ?>" />
@@ -68,9 +68,41 @@ function sp_admin_render_student_form() {
 						value="<?php echo esc_attr( $editing && $editing->phone ? $editing->phone : '' ); ?>" /></td>
 				</tr>
 				<tr>
+					<th scope="row"><label for="sp_father_name">Father's name</label></th>
+					<td>
+						<input type="text" id="sp_father_name" name="father_name" class="regular-text"
+							value="<?php echo esc_attr( $editing && ! empty( $editing->father_name ) ? $editing->father_name : '' ); ?>" />
+						<p class="description">Printed on the student's ID card.</p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="sp_address">Address</label></th>
+					<td>
+						<textarea id="sp_address" name="address" rows="2" class="large-text"><?php echo esc_textarea( $editing && ! empty( $editing->address ) ? $editing->address : '' ); ?></textarea>
+						<p class="description">Printed on the ID card's bottom strip.</p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="sp_photo">Photo</label></th>
+					<td>
+						<input type="file" id="sp_photo" name="photo" accept="image/*" />
+						<?php
+						$sp_photo_url = ( $editing && ! empty( $editing->photo_id ) ) ? wp_get_attachment_image_url( (int) $editing->photo_id, 'thumbnail' ) : '';
+						?>
+						<?php if ( $sp_photo_url ) : ?>
+							<p class="description">
+								Current photo:
+								<img src="<?php echo esc_url( $sp_photo_url ); ?>" alt=""
+									style="width:44px;height:44px;object-fit:cover;border-radius:50%;vertical-align:middle;margin-left:6px;" />
+							</p>
+						<?php endif; ?>
+						<p class="description">Shown inside the student's ID card. Leave empty to keep the current photo.</p>
+					</td>
+				</tr>
+				<tr>
 					<th scope="row"><label for="sp_dob">Date of birth</label></th>
 					<td>
-						<input type="date" id="sp_dob" name="dob" max="<?php echo esc_attr( current_time( 'Y-m-d' ) ); ?>"
+						<input type="date" id="sp_dob" name="dob" data-sp-date max="<?php echo esc_attr( current_time( 'Y-m-d' ) ); ?>"
 							value="<?php echo esc_attr( $dob_value ); ?>" />
 						<p class="description">Optional. Shown on the student's profile.</p>
 					</td>

@@ -1,0 +1,106 @@
+/*
+ * Student Portal — async request feedback (sp-async.js).
+ *
+ * Busy states dim the region while it loads; notices surface as stacked
+ * floating toasts so a swapped page never loses its confirmation banner.
+ */
+
+[data-sp-async-busy],
+.sp-async-busy {
+	opacity: 0.6;
+	pointer-events: none;
+	transition: opacity 0.12s ease;
+}
+
+.sp-async-toasts {
+	display: flex;
+	flex-direction: column;
+	gap: 0.55rem;
+	position: fixed;
+	bottom: 1.1rem;
+	right: 1.1rem;
+	z-index: 100001;
+	max-width: min(430px, calc(100vw - 2rem));
+	pointer-events: none;
+}
+
+.sp-async-toast {
+	align-items: flex-start;
+	background: #0f172a;
+	border-radius: 10px;
+	box-shadow: 0 12px 34px rgba(15, 23, 42, 0.32);
+	color: #fff;
+	display: flex;
+	font-size: 14px;
+	gap: 0.65rem;
+	line-height: 1.45;
+	padding: 0.72rem 0.85rem;
+	pointer-events: auto;
+	animation: sp-async-toast-in 0.18s ease;
+}
+
+.sp-async-toast span {
+	flex: 1 1 auto;
+	overflow-wrap: anywhere;
+}
+
+.sp-async-toast.is-good {
+	background: #067647;
+}
+
+.sp-async-toast.is-warn {
+	background: #b54708;
+}
+
+.sp-async-toast.is-error {
+	background: #b42318;
+}
+
+.sp-async-toast button {
+	background: transparent;
+	border: 0;
+	color: inherit;
+	cursor: pointer;
+	flex: 0 0 auto;
+	font-size: 18px;
+	line-height: 1;
+	opacity: 0.75;
+	padding: 0 0.15rem;
+}
+
+.sp-async-toast button:hover,
+.sp-async-toast button:focus-visible {
+	opacity: 1;
+}
+
+@keyframes sp-async-toast-in {
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.sp-async-toast {
+		animation: none;
+	}
+
+	[data-sp-async-busy],
+	.sp-async-busy {
+		transition: none;
+	}
+}
+
+@media (max-width: 600px) {
+	.sp-async-toasts {
+		bottom: 0.75rem;
+		left: 0.75rem;
+		right: 0.75rem;
+		max-width: none;
+	}
+}

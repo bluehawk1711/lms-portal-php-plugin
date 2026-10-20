@@ -1,18 +1,350 @@
 /*
  * admin/settings
- * Split from admin.css by private/tools/sp-split-css.php.
- * One stylesheet per template/page; base holds the shared shell and design system.
+ * Premium shell matching the other Student Portal admin screens.
+ * Scoped to .sp-settings-ui so sibling screens stay untouched.
  */
 
-.sp-scope > .sp-table,
-.sp-scope > .sp-table-wrap,
-.sp-scope > .widefat,
-.sp-scope > form {
-	margin-top: 20px;
+.sp-settings-ui {
+    --sp-set-ink: #172235;
+    --sp-set-muted: #6b778b;
+    --sp-set-border: #e5eaf2;
+    --sp-set-surface: #ffffff;
+    --sp-set-soft: #f7f9fc;
+    --sp-set-accent: #3858d6;
+    --sp-set-accent-dark: #2947bf;
+    --sp-set-radius: 16px;
+    box-sizing: border-box;
+    max-width: 1180px;
+    margin: 18px 20px 32px 2px;
+    color: var(--sp-set-ink);
+    font-size: 13px;
+    line-height: 1.5;
 }
 
-.sp-table-wrap {
-	max-width: 100%;
-	overflow-x: auto;
+.sp-settings-ui *,
+.sp-settings-ui *::before,
+.sp-settings-ui *::after {
+    box-sizing: border-box;
 }
 
+/* Page header -------------------------------------------------------------- */
+
+.sp-settings-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 23px 25px;
+    margin: 0 0 17px;
+    border: 1px solid #e6eaf2;
+    border-radius: var(--sp-set-radius);
+    background: radial-gradient(circle at 96% 0%, rgba(91, 113, 225, 0.11), transparent 31%), linear-gradient(135deg, #fff 0%, #fbfcff 100%);
+    box-shadow: 0 3px 12px rgba(25, 39, 70, 0.035);
+}
+
+.sp-settings-page-heading { min-width: 0; }
+
+.sp-settings-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #64708a;
+    font-size: 10px;
+    font-weight: 750;
+    letter-spacing: 0.13em;
+    line-height: 1.4;
+    text-transform: uppercase;
+}
+
+.sp-settings-eyebrow span { color: #a1aabc; }
+
+.sp-settings-page-header h1 {
+    margin: 8px 0 5px;
+    padding: 0;
+    color: var(--sp-set-ink);
+    font-size: clamp(25px, 2.2vw, 31px);
+    font-weight: 760;
+    letter-spacing: -0.045em;
+    line-height: 1.15;
+}
+
+.sp-settings-page-header p {
+    max-width: 720px;
+    margin: 0;
+    color: var(--sp-set-muted);
+    font-size: 13px;
+    line-height: 1.65;
+}
+
+.sp-settings-header-note {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    border: 1px solid #e4e9f4;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.82);
+}
+
+.sp-settings-header-mark {
+    display: inline-grid;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    place-items: center;
+    border-radius: 10px;
+    background: #edf1ff;
+    color: var(--sp-set-accent);
+    font-size: 18px;
+    font-weight: 750;
+}
+
+.sp-settings-header-note strong,
+.sp-settings-header-note small { display: block; }
+
+.sp-settings-header-note strong {
+    color: #27334a;
+    font-size: 12px;
+    font-weight: 750;
+}
+
+.sp-settings-header-note small {
+    margin-top: 2px;
+    color: #768197;
+    font-size: 11px;
+}
+/* Stat cards --------------------------------------------------------------- */
+
+.sp-settings-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0 0 17px;
+}
+
+.sp-settings-stat-card {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 13px;
+    padding: 16px 17px;
+    border: 1px solid var(--sp-set-border);
+    border-radius: 14px;
+    background: var(--sp-set-surface);
+    box-shadow: 0 2px 8px rgba(25, 39, 70, 0.025);
+}
+
+.sp-settings-stat-icon {
+    display: inline-grid;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    place-items: center;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 750;
+}
+
+.sp-settings-stat-icon-pass { background: #e9f8f0; color: #168452; }
+.sp-settings-stat-icon-edit { background: #edf1ff; color: #3858d6; }
+.sp-settings-stat-icon-logs { background: #f3ebff; color: #7a45bd; }
+.sp-settings-stat-icon-upload { background: #fff5df; color: #a66b0b; }
+
+.sp-settings-stat-card > div {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+}
+
+.sp-settings-stat-label {
+    overflow: hidden;
+    color: #68758a;
+    font-size: 11px;
+    font-weight: 650;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sp-settings-stat-card strong {
+    margin-top: 1px;
+    color: #182336;
+    font-size: 25px;
+    font-weight: 760;
+    letter-spacing: -0.04em;
+    line-height: 1.25;
+    font-variant-numeric: tabular-nums;
+}
+
+.sp-settings-stat-card small {
+    margin-top: 2px;
+    color: #8a94a5;
+    font-size: 10px;
+}
+
+/* Content panel ------------------------------------------------------------- */
+
+.sp-settings-panel {
+    margin: 0 0 16px;
+    padding: 20px 22px;
+    border: 1px solid var(--sp-set-border);
+    border-radius: var(--sp-set-radius);
+    background: var(--sp-set-surface);
+    box-shadow: 0 2px 8px rgba(25, 39, 70, 0.025);
+}
+
+.sp-settings-panel .form-table th {
+    width: 260px;
+    padding: 16px 14px 16px 0;
+    border-color: #eef1f6;
+    font-weight: 650;
+    vertical-align: top;
+}
+
+.sp-settings-panel .form-table td {
+    padding: 16px 0;
+    border-color: #eef1f6;
+    vertical-align: top;
+}
+
+.sp-settings-panel .form-table tr:first-child th,
+.sp-settings-panel .form-table tr:first-child td { border-top: 0; }
+
+.sp-settings-panel .form-table code {
+    background: var(--sp-set-soft);
+    border-radius: 4px;
+    padding: 1px 5px;
+}
+
+.sp-settings-panel h2 {
+    margin: 26px 0 6px;
+    padding-top: 20px;
+    border-top: 1px solid #eef1f6;
+    color: var(--sp-set-ink);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.sp-settings-panel h2:first-of-type {
+    margin-top: 4px;
+    padding-top: 0;
+    border-top: 0;
+}
+
+.sp-settings-panel .description { max-width: 66ch; }
+
+.sp-settings-panel input[type="number"],
+.sp-settings-panel input[type="email"],
+.sp-settings-panel input[type="text"],
+.sp-settings-panel select {
+    border: 1px solid #d7deea;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #202c40;
+    box-shadow: 0 1px 2px rgba(20, 35, 60, 0.025);
+}
+
+.sp-settings-panel input:focus,
+.sp-settings-panel select:focus {
+    border-color: #8ba1f2;
+    box-shadow: 0 0 0 3px rgba(56, 88, 214, 0.12);
+    outline: none;
+}
+
+.sp-settings-panel fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.sp-settings-panel .sp-table-wrap {
+    max-width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--sp-set-border);
+    border-radius: 10px;
+}
+
+/* Page footer --------------------------------------------------------------- */
+
+.sp-settings-page-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 3px 3px 0;
+    color: #929bab;
+    font-size: 10px;
+}
+
+.sp-settings-page-footer > span:first-child {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #7f8a9e;
+    font-weight: 700;
+}
+
+.sp-settings-footer-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #6cbf92;
+    box-shadow: 0 0 0 3px #eaf8f0;
+}
+
+/* Responsive ---------------------------------------------------------------- */
+
+@media (max-width: 982px) {
+    .sp-settings-page-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 16px;
+        padding: 20px 18px;
+    }
+
+    .sp-settings-header-note { width: 100%; }
+
+    .sp-settings-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+    }
+
+    .sp-settings-stat-card { gap: 10px; padding: 12px; }
+
+    .sp-settings-stat-icon {
+        width: 36px;
+        height: 36px;
+        flex-basis: 36px;
+    }
+
+    .sp-settings-stat-card strong { font-size: 22px; }
+}
+
+@media (max-width: 782px) {
+    .sp-settings-ui { margin: 12px 10px 24px 0; }
+
+    .sp-settings-panel { padding: 15px; }
+
+    .sp-settings-panel .form-table th {
+        display: block;
+        width: auto;
+        padding: 14px 0 4px;
+        border: 0;
+    }
+
+    .sp-settings-panel .form-table td {
+        display: block;
+        padding: 0 0 14px;
+        border: 0;
+    }
+
+    .sp-settings-page-footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .sp-settings-stats { grid-template-columns: minmax(0, 1fr); }
+}

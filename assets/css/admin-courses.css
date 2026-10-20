@@ -36,99 +36,179 @@
 }
 
 /* --------------------------------------------------------------------------
- * Page header + stat cards
+ * Shell: page header + stat cards (matches the other premium admin screens)
  * ------------------------------------------------------------------------ */
 
-.sp-page-head {
-    align-items: flex-start;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px 24px;
-    justify-content: space-between;
-    margin: 24px 0 0;
-}
-
-.sp-page-head-main {
-    align-items: center;
-    display: flex;
-    gap: 14px;
-}
-
-.sp-page-icon {
-    align-items: center;
-    background: var(--sp-accent);
-    border-radius: 12px;
-    box-shadow: 0 6px 16px -6px rgba(0, 0, 0, 0.35);
-    color: #fff;
-    display: flex;
-    flex-shrink: 0;
-    height: 50px;
-    justify-content: center;
-    width: 50px;
-}
-
-.sp-page-icon .dashicons {
-    font-size: 26px;
-    height: 26px;
-    width: 26px;
-}
-
-.sp-page-title {
+.sp-courses-ui {
+    box-sizing: border-box;
+    max-width: 1740px;
+    margin: 18px 20px 32px 2px;
     color: var(--sp-ink);
-    font-size: 20px;
-    font-weight: 600;
-    line-height: 1.3;
-    margin: 0;
-    padding: 0;
-}
-
-.sp-page-sub {
-    color: var(--sp-muted);
     font-size: 13px;
     line-height: 1.5;
-    margin: 2px 0 0;
-    max-width: 64ch;
 }
 
-.sp-page-stats {
+.sp-courses-ui *,
+.sp-courses-ui *::before,
+.sp-courses-ui *::after {
+    box-sizing: border-box;
+}
+
+.sp-courses-page-header {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 23px 25px;
+    margin: 0 0 17px;
+    border: 1px solid #e6eaf2;
+    border-radius: var(--sp-radius);
+    background: radial-gradient(circle at 96% 0%, rgba(91, 113, 225, 0.11), transparent 31%), linear-gradient(135deg, #fff 0%, #fbfcff 100%);
+    box-shadow: 0 3px 12px rgba(25, 39, 70, 0.035);
 }
 
-.sp-stat {
-    background: var(--sp-surface);
-    border: 1px solid var(--sp-line);
-    border-radius: var(--sp-radius-sm);
-    box-shadow: var(--sp-shadow-1);
-    min-width: 88px;
-    padding: 8px 16px 7px;
-    text-align: center;
+.sp-courses-page-heading {
+    min-width: 0;
 }
 
-.sp-stat-num {
-    color: var(--sp-ink);
-    display: block;
-    font-size: 20px;
-    font-weight: 600;
-    line-height: 1.2;
-}
-
-.sp-stat-label {
-    color: var(--sp-muted);
-    display: block;
-    font-size: 11px;
-    letter-spacing: 0.06em;
+.sp-courses-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #64708a;
+    font-size: 10px;
+    font-weight: 750;
+    letter-spacing: 0.13em;
     line-height: 1.4;
     text-transform: uppercase;
 }
 
-.sp-stat.is-active .sp-stat-num {
-    color: var(--sp-success);
+.sp-courses-eyebrow span {
+    color: #a1aabc;
 }
 
-.sp-stat.is-archived .sp-stat-num {
-    color: var(--sp-warning);
+.sp-courses-page-header h1 {
+    margin: 8px 0 5px;
+    padding: 0;
+    color: var(--sp-ink);
+    font-size: clamp(25px, 2.2vw, 31px);
+    font-weight: 760;
+    letter-spacing: -0.045em;
+    line-height: 1.15;
+}
+
+.sp-courses-page-header p {
+    max-width: 720px;
+    margin: 0;
+    color: var(--sp-muted);
+    font-size: 13px;
+    line-height: 1.65;
+}
+
+.sp-courses-header-note {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    border: 1px solid #e4e9f4;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.82);
+}
+
+.sp-courses-header-mark {
+    display: inline-grid;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    place-items: center;
+    border-radius: 10px;
+    background: #edf1ff;
+    color: var(--sp-accent);
+    font-size: 18px;
+    font-weight: 750;
+}
+
+.sp-courses-header-note strong,
+.sp-courses-header-note small {
+    display: block;
+}
+
+.sp-courses-header-note strong {
+    color: #27334a;
+    font-size: 12px;
+    font-weight: 750;
+}
+
+.sp-courses-header-note small {
+    margin-top: 2px;
+    color: #768197;
+    font-size: 11px;
+}
+
+.sp-courses-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0 0 17px;
+}
+
+.sp-courses-stat-card {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 13px;
+    padding: 16px 17px;
+    border: 1px solid var(--sp-line);
+    border-radius: 14px;
+    background: var(--sp-surface);
+    box-shadow: 0 2px 8px rgba(25, 39, 70, 0.025);
+}
+
+.sp-courses-stat-icon {
+    display: inline-grid;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    place-items: center;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 750;
+}
+
+.sp-courses-stat-icon-total { background: #edf1ff; color: #3858d6; }
+.sp-courses-stat-icon-active { background: #e9f8f0; color: #168452; }
+.sp-courses-stat-icon-archived { background: #fff5df; color: #a66b0b; }
+
+.sp-courses-stat-card > div {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+}
+
+.sp-courses-stat-label {
+    overflow: hidden;
+    color: #68758a;
+    font-size: 11px;
+    font-weight: 650;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sp-courses-stat-card strong {
+    margin-top: 1px;
+    color: #182336;
+    font-size: 25px;
+    font-weight: 760;
+    letter-spacing: -0.04em;
+    line-height: 1.25;
+    font-variant-numeric: tabular-nums;
+}
+
+.sp-courses-stat-card small {
+    margin-top: 2px;
+    color: #8a94a5;
+    font-size: 10px;
 }
 
 /* --------------------------------------------------------------------------
@@ -1027,6 +1107,40 @@
  * Responsive
  * ------------------------------------------------------------------------ */
 
+/* --------------------------------------------------------------------------
+ * Page footer
+ * ------------------------------------------------------------------------ */
+
+.sp-courses-page-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 3px 3px 0;
+    color: #929bab;
+    font-size: 10px;
+}
+
+.sp-courses-page-footer > span:first-child {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #7f8a9e;
+    font-weight: 700;
+}
+
+.sp-courses-footer-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #6cbf92;
+    box-shadow: 0 0 0 3px #eaf8f0;
+}
+
+/* --------------------------------------------------------------------------
+ * Responsive
+ * ------------------------------------------------------------------------ */
+
 @media (min-width: 1100px) {
     /* The table column gets a little more room than the form column. */
     .sp-admin-grid {
@@ -1039,24 +1153,44 @@
 }
 
 @media (max-width: 782px) {
-    .sp-page-head {
-        margin-top: 16px;
+    .sp-courses-ui {
+        margin: 12px 10px 24px 0;
     }
 
-    .sp-page-icon {
-        border-radius: 10px;
-        height: 42px;
-        width: 42px;
+    .sp-courses-page-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 16px;
+        padding: 20px 18px;
     }
 
-    .sp-page-icon .dashicons {
+    .sp-courses-header-note {
+        width: 100%;
+    }
+
+    .sp-courses-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+    }
+
+    .sp-courses-stat-card {
+        gap: 10px;
+        padding: 12px;
+    }
+
+    .sp-courses-stat-icon {
+        width: 36px;
+        height: 36px;
+        flex-basis: 36px;
+    }
+
+    .sp-courses-stat-card strong {
         font-size: 22px;
-        height: 22px;
-        width: 22px;
     }
 
-    .sp-page-title {
-        font-size: 18px;
+    .sp-courses-page-footer {
+        align-items: flex-start;
+        flex-direction: column;
     }
 
     .sp-admin-grid {

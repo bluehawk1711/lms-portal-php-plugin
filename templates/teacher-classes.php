@@ -59,6 +59,7 @@ if ( ! $sp_classes && ! $sp_archived && current_user_can( 'manage_options' ) ) {
     <p class="sp-page-sub">Every class you teach, with attendance, materials and results in one place.</p>
 </div>
 
+<div id="sp-classes-region" data-sp-async-region>
 <div class="sp-class-overview" aria-label="Class overview">
     <div class="sp-class-stat">
         <span class="sp-class-stat-icon" aria-hidden="true">▦</span>
@@ -85,7 +86,7 @@ if ( ! $sp_classes && ! $sp_archived && current_user_can( 'manage_options' ) ) {
         </div>
     </div>
 
-    <form class="sp-class-create-form" method="post" action="<?php echo esc_url( sp_teacher_url( 'classes' ) ); ?>">
+    <form class="sp-class-create-form" method="post" action="<?php echo esc_url( sp_teacher_url( 'classes' ) ); ?>" data-sp-async>
         <?php sp_teacher_nonce_field( 'create_class' ); ?>
 
         <div class="sp-field">
@@ -119,11 +120,11 @@ if ( ! $sp_classes && ! $sp_archived && current_user_can( 'manage_options' ) ) {
         <div class="sp-field-row">
             <div class="sp-field">
                 <label for="sp_class_timing_start">Daily start time</label>
-                <input type="time" id="sp_class_timing_start" name="timing_all[start]" />
+                <input type="time" id="sp_class_timing_start" name="timing_all[start]" data-sp-time />
             </div>
             <div class="sp-field">
                 <label for="sp_class_timing_end">Daily end time</label>
-                <input type="time" id="sp_class_timing_end" name="timing_all[end]" />
+                <input type="time" id="sp_class_timing_end" name="timing_all[end]" data-sp-time />
             </div>
         </div>
         <p class="sp-muted">The class meets at this same time every day of the week — set it once and it applies to all seven days.</p>
@@ -131,11 +132,11 @@ if ( ! $sp_classes && ! $sp_archived && current_user_can( 'manage_options' ) ) {
         <div class="sp-field-row">
             <div class="sp-field">
                 <label for="sp_class_start">Start date</label>
-                <input type="date" id="sp_class_start" name="start_date" />
+                <input type="date" id="sp_class_start" name="start_date" data-sp-date data-sp-off-days="<?php echo esc_attr( implode( ',', sp_off_days() ) ); ?>" />
             </div>
             <div class="sp-field">
                 <label for="sp_class_end">End date</label>
-                <input type="date" id="sp_class_end" name="end_date" />
+                <input type="date" id="sp_class_end" name="end_date" data-sp-date />
             </div>
         </div>
 
@@ -257,3 +258,4 @@ if ( ! $sp_classes && ! $sp_archived && current_user_can( 'manage_options' ) ) {
         Try another title or class code, or clear your search to see all classes.
     </div>
 <?php endif; ?>
+</div>

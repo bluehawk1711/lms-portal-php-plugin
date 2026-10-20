@@ -1,0 +1,87 @@
+/*
+ * Student Portal — reusable date & time input component (G3).
+ *
+ * Neutral, token-aware styles that render correctly in wp-admin, the teacher
+ * portal and the student portal alike.
+ */
+
+.sp-dt {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.sp-dt-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.sp-dt-chip {
+  align-items: center;
+  display: inline-flex;
+  min-height: 26px;
+  padding: 0.15rem 0.6rem;
+  border: 1px solid #d7deeb;
+  border-radius: 999px;
+  background: #f8faff;
+  color: #39465c;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.sp-dt-chip:hover:not(:disabled) {
+  border-color: #bccaf5;
+  background: #eef3ff;
+}
+
+.sp-dt-chip:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.sp-dt-chip-clear {
+  color: #8590a5;
+}
+
+.sp-dt-hint {
+  color: #667085;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.sp-dt-hint.is-offday {
+  color: #b54708;
+  font-weight: 600;
+}
+
+.sp-dt-time-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.sp-dt-step {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 30px;
+  padding: 0 0.45rem;
+  border: 1px solid #d7deeb;
+  border-radius: 8px;
+  background: #f8faff;
+  color: #39465c;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.sp-dt-step:hover {
+  border-color: #bccaf5;
+  background: #eef3ff;
+}

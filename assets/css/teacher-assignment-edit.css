@@ -1320,3 +1320,27 @@
 		transition: none;
 	}
 }
+/* Question-bank + set-picker live search (teacher-assignment.js) */
+.sp-ae-search {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin-top: 0.9rem;
+}
+
+.sp-ae-search-input {
+		flex: 1 1 0;
+		min-width: 0;
+}
+
+.sp-ae-search-status {
+		font-size: 0.82rem;
+		color: var(--sp-muted);
+		margin-top: 0.45rem;
+}
+
+.sp-ae-search-status[hidden] { display: none; }
+
+[data-sp-qbank-table][hidden] { display: none !important; }
+[data-sp-set-picker] > [data-sp-qitem][hidden] { display: none !important; }
+

@@ -28,7 +28,7 @@ function sp_admin_page_sp_enrollments() {
 
     if ( empty( $classes ) ) {
         ?>
-        <div class="sp-scope sp-enrollments-page">
+        <div class="sp-scope sp-enrollments-page" id="sp-enrollments-region" data-sp-async-region>
             <div class="sp-enrollments-header">
                 <div>
                     <p class="sp-eyebrow">Student management</p>
@@ -63,7 +63,7 @@ function sp_admin_page_sp_enrollments() {
     $roster     = is_array( $roster ) ? $roster : array();
     $candidates = is_array( $candidates ) ? $candidates : array();
     ?>
-    <div class="sp-scope sp-enrollments-page">
+    <div class="sp-scope sp-enrollments-page" id="sp-enrollments-region" data-sp-async-region>
         <header class="sp-enrollments-header">
             <div class="sp-enrollments-heading-copy">
                 <p class="sp-eyebrow">Student management</p>
@@ -71,11 +71,11 @@ function sp_admin_page_sp_enrollments() {
                 <p class="sp-page-description">View class rosters, update enrolment details, and add students to a class.</p>
             </div>
 
-            <form method="get" class="sp-enrollments-class-filter" action="<?php echo esc_url( admin_url( 'admin.php' ) ); ?>">
+            <form method="get" class="sp-enrollments-class-filter" action="<?php echo esc_url( admin_url( 'admin.php' ) ); ?>" data-sp-async>
                 <input type="hidden" name="page" value="sp-enrollments" />
                 <label for="sp-enrollments-class">Manage class</label>
                 <div class="sp-filter-controls">
-                    <select name="class" id="sp-enrollments-class">
+                    <select name="class" id="sp-enrollments-class" data-sp-async-change>
                         <?php foreach ( $classes as $sp_class_option ) : ?>
                             <option value="<?php echo esc_attr( absint( $sp_class_option->id ) ); ?>" <?php selected( $class_id, absint( $sp_class_option->id ) ); ?>>
                                 <?php echo esc_html( $sp_class_option->title . ( ! empty( $sp_class_option->code ) ? ' (' . $sp_class_option->code . ')' : '' ) ); ?>
@@ -152,7 +152,7 @@ function sp_admin_page_sp_enrollments() {
                                         <td><?php echo wp_kses_post( sp_admin_status_badge( $sp_row->status ) ); ?></td>
                                         <td class="sp-actions-cell">
                                             <div class="sp-admin-actions">
-                                                <form id="<?php echo esc_attr( $save_form_id ); ?>" method="post" class="sp-admin-inline sp-save-enrollment-form">
+                                                <form id="<?php echo esc_attr( $save_form_id ); ?>" method="post" class="sp-admin-inline sp-save-enrollment-form" data-sp-async>
                                                     <?php sp_admin_nonce_field( 'save_enrollment_id' ); ?>
                                                     <input type="hidden" name="enrollment_id" value="<?php echo esc_attr( absint( $sp_row->enrollment_id ) ); ?>" />
                                                     <input type="hidden" name="class_id" value="<?php echo esc_attr( $class_id ); ?>" />
@@ -160,7 +160,7 @@ function sp_admin_page_sp_enrollments() {
                                                 </form>
 
                                                 <?php if ( 'dropped' !== $sp_row->status ) : ?>
-                                                    <form method="post" class="sp-admin-inline">
+                                                    <form method="post" class="sp-admin-inline" data-sp-async>
                                                         <?php sp_admin_nonce_field( 'enrollment_status' ); ?>
                                                         <input type="hidden" name="enrollment_id" value="<?php echo esc_attr( absint( $sp_row->enrollment_id ) ); ?>" />
                                                         <input type="hidden" name="class_id" value="<?php echo esc_attr( $class_id ); ?>" />
@@ -169,7 +169,7 @@ function sp_admin_page_sp_enrollments() {
                                                             <?php echo 'active' === $sp_row->status ? 'Drop' : 'Reactivate'; ?>
                                                         </button>
                                                     </form>
-                                                    <form method="post" class="sp-admin-inline">
+                                                    <form method="post" class="sp-admin-inline" data-sp-async>
                                                         <?php sp_admin_nonce_field( 'enrollment_status' ); ?>
                                                         <input type="hidden" name="enrollment_id" value="<?php echo esc_attr( absint( $sp_row->enrollment_id ) ); ?>" />
                                                         <input type="hidden" name="class_id" value="<?php echo esc_attr( $class_id ); ?>" />
@@ -196,7 +196,7 @@ function sp_admin_page_sp_enrollments() {
                     </div>
                 </div>
 
-                <form method="get" class="sp-admin-search sp-student-search" action="<?php echo esc_url( admin_url( 'admin.php' ) ); ?>">
+                <form method="get" class="sp-admin-search sp-student-search" action="<?php echo esc_url( admin_url( 'admin.php' ) ); ?>" data-sp-async>
                     <input type="hidden" name="page" value="sp-enrollments" />
                     <input type="hidden" name="class" value="<?php echo esc_attr( $class_id ); ?>" />
                     <label class="screen-reader-text" for="sp-enrollment-student-search">Search students by name or email</label>
@@ -226,7 +226,7 @@ function sp_admin_page_sp_enrollments() {
                 <?php endif; ?>
 
                 <?php if ( ! empty( $candidates ) ) : ?>
-                    <form id="sp-enroll-students-form" method="post" class="sp-enrol-students-form">
+                    <form id="sp-enroll-students-form" method="post" class="sp-enrol-students-form" data-sp-async>
                         <?php sp_admin_nonce_field( 'enroll_student' ); ?>
                         <input type="hidden" name="class_id" value="<?php echo esc_attr( $class_id ); ?>" />
 
@@ -280,10 +280,17 @@ function sp_admin_page_sp_enrollments() {
 
                     <script>
                     (function () {
+                        function init() {
                         var form = document.getElementById('sp-enroll-students-form');
                         if (!form) {
                             return;
                         }
+
+                        // The async region swap replaces this form; bind once per form node.
+                        if (form.getAttribute('data-sp-enrol-bound')) {
+                            return;
+                        }
+                        form.setAttribute('data-sp-enrol-bound', '1');
 
                         var master = form.querySelector('#sp-enroll-all');
                         var boxes = Array.prototype.slice.call(form.querySelectorAll('input[name="profile_id[]"]'));
@@ -318,6 +325,10 @@ function sp_admin_page_sp_enrollments() {
                         });
 
                         updateSelectionState();
+                        }
+
+                        init();
+                        document.addEventListener('sp:async-replace', init);
                     }());
                     </script>
                 <?php endif; ?>

@@ -28,6 +28,9 @@ function sp_portal_routes() {
 		// The single-task page: reachable by URL, but the nav shows the list.
 		// Fullscreen: exams get a distraction-free shell with no sidebar or rail.
 		'task'         => array( 'label' => 'Task', 'template' => 'portal-task.php', 'public' => false, 'hidden' => true, 'parent' => 'tasks', 'fullscreen' => true ),
+		// The single-material page, likewise: /portal/materials/{id}/ renders
+		// the document, while the sidebar keeps pointing at the list.
+		'material'     => array( 'label' => 'Material', 'template' => 'portal-material.php', 'public' => false, 'hidden' => true, 'parent' => 'materials' ),
 	);
 }
 
@@ -51,6 +54,7 @@ function sp_register_rewrite_rules() {
 function sp_portal_rewrite_rules() {
 	add_rewrite_rule( '^portal/?$', 'index.php?pagename=portal&sp_route=home', 'top' );
 	add_rewrite_rule( '^portal/(certificates|attendance|curriculum|results|materials|tasks|profile|calendar)/?$', 'index.php?pagename=portal&sp_route=$matches[1]', 'top' );
+	add_rewrite_rule( '^portal/materials/(\d+)/?$', 'index.php?pagename=portal&sp_route=material&sp_material_id=$matches[1]', 'top' );
 	add_rewrite_rule( '^portal/tasks/(\d+)/?$', 'index.php?pagename=portal&sp_route=task&sp_assignment_id=$matches[1]', 'top' );
 
 	/*
@@ -112,6 +116,7 @@ function sp_portal_query_vars( $vars ) {
 	$vars[] = 'sp_teacher_id';
 	$vars[] = 'sp_material_id';
 	$vars[] = 'sp_assignment_id';
+	$vars[] = 'sp_attempt_id';
 	$vars[] = 'sp_certificate_page';
 
 	return $vars;

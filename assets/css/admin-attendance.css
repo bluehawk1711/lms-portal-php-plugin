@@ -957,3 +957,9 @@
 		padding-right: 10px;
 	}
 }
+/* Live register counter (attendance.js / G5). */
+.sp-attendance-footer-hint [data-sp-register-count] {
+	color: #344054;
+	font-weight: 600;
+}
+

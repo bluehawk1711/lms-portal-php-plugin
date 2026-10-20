@@ -97,6 +97,7 @@ if ( $sp_assignment && $sp_assignment->due_date ) {
 $sp_class_obj   = $sp_class_id ? sp_get_class( $sp_class_id ) : null;
 $sp_class_title = $sp_class_obj ? $sp_class_obj->title : '';
 $sp_is_exam     = 'exam' === $sp_type;
+$sp_question    = null;
 
 // Shortens long question prompts for lists.
 $sp_snip = static function ( $text, $limit ) {
@@ -226,7 +227,7 @@ $sp_dash = '<span class="sp-muted" aria-hidden="true">&mdash;</span><span class=
 				<div class="sp-ae-grid">
 					<div class="sp-field">
 						<label for="sp_a_due">Due date / exam day <span class="sp-req">*</span></label>
-						<input type="date" id="sp_a_due" name="due_date" value="<?php echo esc_attr( $sp_due ); ?>" required />
+						<input type="date" id="sp_a_due" name="due_date" value="<?php echo esc_attr( $sp_due ); ?>" required data-sp-date />
 						<p class="sp-help">
 							Papers are due at the end of that day. An exam opens for the whole day it is scheduled on.
 						</p>
@@ -391,6 +392,12 @@ $sp_dash = '<span class="sp-muted" aria-hidden="true">&mdash;</span><span class=
 				<p class="sp-help sp-qtype-fill" hidden>The expected wording. Separate alternatives with a pipe, e.g. color|colour.</p>
 			</div>
 
+			<div class="sp-field">
+				<label for="sp_q_explain">Explanation <span class="sp-help" style="font-weight:400;">(optional)</span></label>
+				<textarea id="sp_q_explain" name="explanation" rows="2" placeholder="Why is that the right answer? Shown to students after they submit."></textarea>
+				<p class="sp-help">Students see this below the correct answer once they finish the exam.</p>
+			</div>
+
 			<div class="sp-ae-inline-actions">
 				<button type="submit" class="sp-btn sp-btn-primary">Add question</button>
 			</div>
@@ -430,7 +437,7 @@ $sp_dash = '<span class="sp-muted" aria-hidden="true">&mdash;</span><span class=
 		</div>
 	</details>
 
-	<section class="sp-ae-card" aria-labelledby="sp-ae-bank">
+	<section class="sp-ae-card" aria-labelledby="sp-ae-bank" data-sp-qbank>
 		<div class="sp-ae-card-head is-row">
 			<div>
 				<h2 class="sp-ae-card-title" id="sp-ae-bank">
@@ -439,7 +446,13 @@ $sp_dash = '<span class="sp-muted" aria-hidden="true">&mdash;</span><span class=
 				</h2>
 				<p class="sp-ae-card-sub">Shared by every exam in this class.</p>
 			</div>
+			<div class="sp-ae-search" role="search">
+				<label class="sp-ae-sr" for="sp-qbank-search">Search the question bank</label>
+				<input type="search" id="sp-qbank-search" class="sp-ae-search-input" data-sp-qbank-search placeholder="Search questions, formats or answers&#8230;" autocomplete="off" />
+				<button type="button" class="sp-btn sp-btn-ghost sp-btn-sm sp-ae-search-clear" data-sp-qbank-clear hidden aria-label="Clear search">&#10005;</button>
+			</div>
 		</div>
+		<p class="sp-ae-search-status" data-sp-qbank-status aria-live="polite" hidden></p>
 
 		<?php if ( ! $sp_questions ) : ?>
 			<div class="sp-empty sp-ae-empty">
@@ -448,10 +461,10 @@ $sp_dash = '<span class="sp-muted" aria-hidden="true">&mdash;</span><span class=
 			</div>
 		<?php else : ?>
 			<div class="sp-ae-tablewrap">
-				<table class="sp-ae-table">
+				<table class="sp-ae-table" data-sp-qbank-table>
 					<caption class="sp-ae-sr">Questions in the class bank</caption>
 					<thead>
-						<tr>
+						<tr data-sp-qitem data-sp-qsearch="<?php echo esc_attr( implode( chr(31), array( (string) $sp_question->prompt, (string) sp_question_type_label( $sp_question->type ), (string) $sp_question->answer ) ) ); ?>">
 							<th scope="col">#</th>
 							<th scope="col">Format</th>
 							<th scope="col">Question</th>
@@ -461,7 +474,7 @@ $sp_dash = '<span class="sp-muted" aria-hidden="true">&mdash;</span><span class=
 					</thead>
 					<tbody>
 						<?php foreach ( $sp_questions as $sp_index => $sp_question ) : ?>
-							<tr>
+							<tr data-sp-qitem data-sp-qsearch="<?php echo esc_attr( implode( chr(31), array( (string) $sp_question->prompt, (string) sp_question_type_label( $sp_question->type ), (string) $sp_question->answer ) ) ); ?>">
 								<td class="sp-ae-cell-num"><?php echo esc_html( (string) ( $sp_index + 1 ) ); ?></td>
 								<td data-label="Format"><span class="sp-ae-pill"><?php echo esc_html( sp_question_type_label( $sp_question->type ) ); ?></span></td>
 								<td class="sp-ae-cell-q" title="<?php echo esc_attr( $sp_question->prompt ); ?>"><?php echo esc_html( $sp_snip( $sp_question->prompt, 120 ) ); ?></td>
@@ -508,6 +521,13 @@ $sp_dash = '<span class="sp-muted" aria-hidden="true">&mdash;</span><span class=
 				<div class="sp-ae-banner is-warn" role="status">Students have already started — the sets are locked.</div>
 			<?php endif; ?>
 
+			<div class="sp-ae-search" role="search">
+				<label class="sp-ae-sr" for="sp-set-search">Search questions in the bank</label>
+				<input type="search" id="sp-set-search" class="sp-ae-search-input" data-sp-qbank-search placeholder="Search questions in the bank…" autocomplete="off" />
+				<button type="button" class="sp-btn sp-btn-ghost sp-btn-sm sp-ae-search-clear" data-sp-qbank-clear hidden aria-label="Clear search">&#10005;</button>
+			</div>
+			<p class="sp-ae-search-status" data-sp-qbank-status aria-live="polite" hidden></p>
+
 			<div class="sp-set-list">
 				<?php
 				$sp_set_blocks = $sp_sets ? $sp_sets : array( (object) array( 'label' => 'A' ) );
@@ -544,9 +564,9 @@ $sp_dash = '<span class="sp-muted" aria-hidden="true">&mdash;</span><span class=
 							<span class="sp-ae-set-tools"></span>
 						</div>
 
-						<div class="sp-set-questions">
+						<div class="sp-set-questions" data-sp-set-picker>
 							<?php foreach ( $sp_bank as $sp_qi => $sp_question ) : ?>
-								<label class="sp-set-option">
+								<label class="sp-set-option" data-sp-qitem data-sp-qsearch="<?php echo esc_attr( $sp_snip( $sp_question->prompt, 200 ) ); ?>">
 									<input type="checkbox"
 										name="sets[<?php echo esc_attr( (int) $sp_i ); ?>][question_ids][]"
 										value="<?php echo esc_attr( (int) $sp_question->id ); ?>"
@@ -699,14 +719,14 @@ $sp_dash = '<span class="sp-muted" aria-hidden="true">&mdash;</span><span class=
 									<table class="sp-ae-table sp-table-form">
 										<caption class="sp-ae-sr">Set for each student</caption>
 										<thead>
-											<tr>
+											<tr data-sp-qitem data-sp-qsearch="<?php echo esc_attr( implode( chr(31), array( (string) $sp_question->prompt, (string) sp_question_type_label( $sp_question->type ), (string) $sp_question->answer ) ) ); ?>">
 												<th scope="col">Student</th>
 												<th scope="col">Set</th>
 											</tr>
 										</thead>
 										<tbody>
 											<?php foreach ( $sp_roster as $sp_student ) : ?>
-												<tr>
+												<tr data-sp-qitem data-sp-qsearch="<?php echo esc_attr( implode( chr(31), array( (string) $sp_question->prompt, (string) sp_question_type_label( $sp_question->type ), (string) $sp_question->answer ) ) ); ?>">
 													<td class="sp-ae-cell-name">
 														<strong><?php echo esc_html( $sp_student->full_name ); ?></strong>
 													</td>
@@ -800,10 +820,10 @@ $sp_dash = '<span class="sp-muted" aria-hidden="true">&mdash;</span><span class=
 				</div>
 
 				<div class="sp-ae-tablewrap">
-					<table class="sp-ae-table">
+					<table class="sp-ae-table" data-sp-qbank-table>
 						<caption class="sp-ae-sr">Student attempts</caption>
 						<thead>
-							<tr>
+							<tr data-sp-qitem data-sp-qsearch="<?php echo esc_attr( implode( chr(31), array( (string) $sp_question->prompt, (string) sp_question_type_label( $sp_question->type ), (string) $sp_question->answer ) ) ); ?>">
 								<th scope="col">Student</th>
 								<th scope="col">Set</th>
 								<th scope="col">Status</th>
@@ -823,7 +843,7 @@ $sp_dash = '<span class="sp-muted" aria-hidden="true">&mdash;</span><span class=
 								$sp_started   = $sp_attempt->started_at ? strtotime( $sp_attempt->started_at ) : 0;
 								$sp_finished  = $sp_attempt->submitted_at ? strtotime( $sp_attempt->submitted_at ) : 0;
 								?>
-								<tr>
+								<tr data-sp-qitem data-sp-qsearch="<?php echo esc_attr( implode( chr(31), array( (string) $sp_question->prompt, (string) sp_question_type_label( $sp_question->type ), (string) $sp_question->answer ) ) ); ?>">
 									<td class="sp-ae-cell-name">
 										<strong><?php echo esc_html( $sp_attempt->full_name ); ?></strong>
 										<span class="sp-kv-note"><?php echo esc_html( $sp_attempt->email ); ?></span>
@@ -864,6 +884,7 @@ $sp_dash = '<span class="sp-muted" aria-hidden="true">&mdash;</span><span class=
 									</td>
 									<td class="sp-ae-cell-action">
 										<?php if ( in_array( $sp_attempt->status, array( 'submitted', 'failed' ), true ) ) : ?>
+											<a class="sp-btn sp-btn-ghost sp-btn-sm" href="<?php echo esc_url( sp_teacher_url( 'attempts/' . (int) $sp_attempt->id ) ); ?>" aria-label="<?php echo esc_attr( 'View detail: ' . $sp_attempt->full_name ); ?>">View detail</a>
 											<form method="post" action="<?php echo esc_url( $sp_base_url ); ?>"
 												onsubmit="return confirm('Allow this student to sit the exam again? Their current attempt is cleared.');">
 												<?php sp_teacher_nonce_field( 'allow_retake' ); ?>

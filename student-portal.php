@@ -26,6 +26,7 @@ require_once SP_PATH . 'includes/roles.php';
 require_once SP_PATH . 'includes/repository.php';
 require_once SP_PATH . 'includes/grading.php';
 require_once SP_PATH . 'includes/settings.php';
+require_once SP_PATH . 'includes/datetime.php';
 require_once SP_PATH . 'includes/mailer.php';
 require_once SP_PATH . 'includes/accounts.php';
 require_once SP_PATH . 'includes/classes.php';
@@ -44,6 +45,8 @@ require_once SP_PATH . 'includes/schedule.php';
 require_once SP_PATH . 'includes/teacher-attendance.php';
 require_once SP_PATH . 'includes/auto-absent.php';
 require_once SP_PATH . 'includes/import.php';
+require_once SP_PATH . 'includes/announcements.php';
+require_once SP_PATH . 'includes/id-cards.php';
 require_once SP_PATH . 'includes/portal-routes.php';
 require_once SP_PATH . 'includes/portal-render.php';
 require_once SP_PATH . 'includes/teacher-routes.php';
@@ -94,7 +97,7 @@ function sp_deactivate() {
  * Settings -> Permalinks. Comparing a stored version against this constant makes
  * the plugin repair itself on the next request instead.
  */
-define( 'SP_REWRITE_VERSION', '6' );
+define( 'SP_REWRITE_VERSION', '7' );
 
 /**
  * Re-flush the stored rewrite rules when our route definitions have changed.
@@ -117,6 +120,27 @@ function sp_maybe_flush_rewrite_rules() {
 
 	update_option( 'sp_rewrite_version', SP_REWRITE_VERSION );
 }
+
+/**
+ * Force a one-time rewrite flush so newly added material/task routes register
+ * immediately even when an object cache serves a stale rewrite_rules option.
+ */
+function sp_force_flush_rewrite_rules() {
+	static $done = false;
+	if ( $done ) {
+		return;
+	}
+	$done = true;
+
+	if ( ! function_exists( 'flush_rewrite_rules' ) ) {
+		return;
+	}
+
+	sp_register_rewrite_rules();
+	flush_rewrite_rules( false );
+	update_option( 'sp_rewrite_version', SP_REWRITE_VERSION );
+}
+add_action( 'init', 'sp_force_flush_rewrite_rules', 19 );
 
 /**
  * Create the anchor pages backing the portal and teacher portal slugs.

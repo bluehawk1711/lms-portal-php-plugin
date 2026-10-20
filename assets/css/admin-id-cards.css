@@ -1,0 +1,646 @@
+/**
+ * ID Cards screen — premium admin UI + the card artwork itself.
+ * Load this stylesheet only on Student Portal > ID cards.
+ */
+
+/* ---------- Screen shell ---------- */
+.sp-idcu-ui {
+    --sp-idc-ink: #17212f;
+    --sp-idc-muted: #697586;
+    --sp-idc-border: #e5eaf0;
+    --sp-idc-surface: #ffffff;
+    --sp-idc-soft: #f7f9fc;
+    --sp-idc-accent: #3858d6;
+    --sp-idc-radius: 16px;
+    box-sizing: border-box;
+    max-width: 1700px;
+    margin: 18px 20px 32px 2px;
+    color: var(--sp-idc-ink);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.sp-idcu-ui *,
+.sp-idcu-ui *::before,
+.sp-idcu-ui *::after {
+    box-sizing: border-box;
+}
+
+.sp-idcu-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 23px 25px;
+    margin: 0 0 17px;
+    border: 1px solid #e6eaf2;
+    border-radius: var(--sp-idc-radius);
+    background: radial-gradient(circle at 96% 0%, rgba(91, 113, 225, 0.11), transparent 31%), linear-gradient(135deg, #fff 0%, #fbfcff 100%);
+    box-shadow: 0 3px 12px rgba(25, 39, 70, 0.035);
+}
+
+.sp-idcu-page-heading {
+    min-width: 0;
+}
+
+.sp-idcu-eyebrow,
+.sp-idcu-section-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #64708a;
+    font-size: 10px;
+    font-weight: 750;
+    letter-spacing: 0.13em;
+    line-height: 1.4;
+    text-transform: uppercase;
+}
+
+.sp-idcu-page-heading h1 {
+    margin: 6px 0 4px;
+    font-size: 24px;
+    line-height: 1.2;
+    color: var(--sp-idc-ink);
+}
+
+.sp-idcu-page-heading p {
+    margin: 0;
+    max-width: 640px;
+    color: var(--sp-idc-muted);
+    font-size: 12.5px;
+}
+
+.sp-idcu-header-note {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 14px;
+    border: 1px solid var(--sp-idc-border);
+    border-radius: 12px;
+    background: #fff;
+}
+
+.sp-idcu-header-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    background: #eef2ff;
+    color: #4b5fd1;
+    font-size: 14px;
+}
+
+.sp-idcu-header-note strong,
+.sp-idcu-header-note small {
+    display: block;
+}
+
+.sp-idcu-header-note small {
+    color: var(--sp-idc-muted);
+    font-size: 11px;
+}
+
+.sp-idcu-layout {
+    display: grid;
+    grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+    gap: 17px;
+    align-items: start;
+}
+
+.sp-idcu-panel {
+    border: 1px solid var(--sp-idc-border);
+    border-radius: var(--sp-idc-radius);
+    background: var(--sp-idc-surface);
+    box-shadow: 0 3px 12px rgba(25, 39, 70, 0.035);
+    padding: 20px 21px;
+}
+
+.sp-idcu-panel-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 15px;
+}
+
+.sp-idcu-panel-heading h2 {
+    margin: 5px 0 3px;
+    font-size: 16px;
+    color: var(--sp-idc-ink);
+}
+
+.sp-idcu-panel-heading p {
+    margin: 0;
+    color: var(--sp-idc-muted);
+    font-size: 12px;
+}
+
+.sp-idcu-heading-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 auto;
+    border-radius: 10px;
+    background: var(--sp-idc-soft);
+    border: 1px solid var(--sp-idc-border);
+    color: #4b5fd1;
+    font-size: 15px;
+}
+
+/* ---------- Settings form ---------- */
+.sp-idcu-field {
+    margin: 0 0 13px;
+}
+
+.sp-idcu-field > label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--sp-idc-ink);
+}
+
+.sp-idcu-field input[type='text'],
+.sp-idcu-field input[type='url'],
+.sp-idcu-field textarea,
+.sp-idcu-field select {
+    width: 100%;
+    max-width: none;
+    padding: 8px 10px;
+    border: 1px solid var(--sp-idc-border);
+    border-radius: 10px;
+    background: #fff;
+    font-size: 13px;
+}
+
+.sp-idcu-field textarea {
+    resize: vertical;
+}
+
+.sp-idcu-field .description {
+    margin: 5px 0 0;
+    color: var(--sp-idc-muted);
+    font-size: 11.5px;
+}
+
+.sp-idcu-upload-row {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.sp-idcu-thumb {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 54px;
+    height: 54px;
+    border: 1px dashed #c3ccdc;
+    border-radius: 10px;
+    background: var(--sp-idc-soft);
+    overflow: hidden;
+    color: #93a0b8;
+    font-size: 17px;
+}
+
+.sp-idcu-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.sp-idcu-clear {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: 8px;
+    color: #a03646;
+    font-size: 11.5px;
+}
+
+.sp-idcu-divider {
+    height: 1px;
+    margin: 17px 0;
+    background: var(--sp-idc-border);
+}
+
+.sp-idcu-form-section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 13px;
+}
+
+.sp-idcu-form-section-title > span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    background: #eef2ff;
+    color: #4b5fd1;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.sp-idcu-form-section-title strong,
+.sp-idcu-form-section-title small {
+    display: block;
+}
+
+.sp-idcu-form-section-title small {
+    color: var(--sp-idc-muted);
+    font-size: 11px;
+}
+
+.sp-idcu-submit {
+    margin-top: 4px;
+}
+
+/* ---------- Preview panel ---------- */
+.sp-idcu-toolbar {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+
+.sp-idcu-student-field {
+    flex: 1 1 320px;
+    margin: 0;
+}
+
+.sp-idcu-status {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #f1f3f7;
+    color: #697586;
+    font-size: 11.5px;
+    font-weight: 750;
+}
+
+.sp-idcu-status::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #aab4c8;
+}
+
+.sp-idcu-status.is-done {
+    background: #f0fbf4;
+    color: #16804a;
+}
+
+.sp-idcu-status.is-done::before {
+    background: #2fb26a;
+}
+
+.sp-idcu-stage {
+    display: flex;
+    justify-content: center;
+    padding: 26px 18px;
+    border: 1px dashed #cdd6e6;
+    border-radius: 12px;
+    background: #eef1f7;
+    overflow: auto;
+    transition: opacity 0.15s ease;
+}
+
+.sp-idcu-empty {
+    margin: 0;
+    color: var(--sp-idc-muted);
+    font-size: 13px;
+}
+
+.sp-idcu-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+}
+
+.sp-idcu-hint {
+    color: var(--sp-idc-muted);
+    font-size: 11.5px;
+}
+
+.sp-idcu-page-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 17px;
+    padding: 12px 18px;
+    border: 1px solid var(--sp-idc-border);
+    border-radius: var(--sp-idc-radius);
+    background: var(--sp-idc-soft);
+    color: var(--sp-idc-muted);
+    font-size: 11.5px;
+}
+
+.sp-idcu-footer-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin-right: 6px;
+    border-radius: 50%;
+    background: #3858d6;
+}
+
+/* ---------- The ID card itself ---------- */
+.sp-idc {
+    position: relative;
+    width: 420px;
+    min-height: 588px;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+    border: 7px solid #f7941d;
+    border-radius: 8px;
+    background: #fff;
+    color: #14315c;
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    box-shadow: 0 18px 40px -22px rgba(20, 49, 92, 0.55);
+    -webkit-font-smoothing: antialiased;
+}
+
+.sp-idc-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.14;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.sp-idc-corner {
+    position: absolute;
+    width: 62px;
+    height: 62px;
+    background-size: cover;
+    background-position: center;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.sp-idc-corner-tl { top: 0; left: 0; }
+.sp-idc-corner-tr { top: 0; right: 0; transform: scaleX(-1); }
+.sp-idc-corner-bl { bottom: 0; left: 0; transform: scaleY(-1); }
+.sp-idc-corner-br { bottom: 0; right: 0; transform: scale(-1, -1); }
+
+.sp-idc-wedge {
+    position: absolute;
+    width: 58px;
+    height: 58px;
+    background: #14315c;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.sp-idc-wedge-tl { top: -30px; left: -30px; transform: rotate(45deg); }
+.sp-idc-wedge-tr { top: -30px; right: -30px; transform: rotate(45deg); }
+.sp-idc-wedge-bl { bottom: -30px; left: -30px; transform: rotate(45deg); }
+.sp-idc-wedge-br { bottom: -30px; right: -30px; transform: rotate(45deg); }
+
+.sp-idc-head {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 16px 20px 0;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #f7941d;
+}
+
+.sp-idc-logo {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    flex: 0 0 auto;
+}
+
+.sp-idc-brand {
+    min-width: 0;
+}
+
+.sp-idc-name {
+    margin: 0;
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    line-height: 1.15;
+    color: #14315c;
+}
+
+.sp-idc-tagline {
+    margin: 2px 0 0;
+    font-size: 11.5px;
+    font-style: italic;
+    color: #5b6b86;
+}
+
+.sp-idc-photo-wrap {
+    position: relative;
+    z-index: 2;
+    margin: 20px 0 14px;
+    text-align: center;
+}
+
+.sp-idc-photo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 152px;
+    height: 152px;
+    margin: 0 auto;
+    border: 3px solid #f7941d;
+    border-radius: 50%;
+    background: #f1f3f7;
+    overflow: hidden;
+    box-shadow: 0 0 0 4px #fff, 0 0 0 6px rgba(247, 148, 29, 0.4);
+}
+
+.sp-idc-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.sp-idc-initials {
+    font-size: 54px;
+    font-weight: 800;
+    color: #b9c2d4;
+    line-height: 1;
+}
+
+.sp-idc-fields {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin: 0 24px;
+}
+
+.sp-idc-row {
+    display: grid;
+    grid-template-columns: 158px minmax(0, 1fr);
+    align-items: baseline;
+    gap: 4px;
+}
+
+.sp-idc-row dt {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13.5px;
+    font-weight: 800;
+    color: #14315c;
+}
+
+.sp-idc-row dt::before {
+    content: '';
+    flex: 0 0 auto;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #f7941d;
+}
+
+.sp-idc-row dd {
+    margin: 0;
+    font-size: 13px;
+    color: #3c4a66;
+    line-height: 1.45;
+    word-break: break-word;
+}
+
+.sp-idc-row dd::before {
+    content: ': ';
+    font-weight: 800;
+    color: #14315c;
+}
+
+.sp-idc-sign-area {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: auto;
+    padding: 20px 24px 16px;
+}
+
+.sp-idc-qr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.sp-idc-qr img {
+    width: 88px;
+    height: 88px;
+    object-fit: contain;
+    background: #fff;
+    border: 1px solid #e3e8f2;
+    border-radius: 6px;
+    padding: 3px;
+}
+
+.sp-idc-qr-blank {
+    width: 88px;
+    height: 88px;
+    border: 2px dashed #c3ccdc;
+    border-radius: 6px;
+    background: #f7f9fc;
+}
+
+.sp-idc-qr-label {
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    color: #14315c;
+}
+
+.sp-idc-sign {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 168px;
+}
+
+.sp-idc-sign-art {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    height: 52px;
+}
+
+.sp-idc-sign-art img {
+    max-height: 52px;
+    max-width: 160px;
+    object-fit: contain;
+}
+
+.sp-idc-sign-rule {
+    display: block;
+    width: 158px;
+    margin: 3px 0 4px;
+    border-top: 1.6px solid #14315c;
+}
+
+.sp-idc-sign-label {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    color: #14315c;
+}
+
+.sp-idc-strip {
+    position: relative;
+    z-index: 2;
+    padding: 9px 16px;
+    background: #f7941d;
+    color: #fff;
+    text-align: center;
+}
+
+.sp-idc-strip-addr {
+    margin: 0;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.45;
+}
+
+.sp-idc-strip-phone {
+    margin: 3px 0 0;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+@media (max-width: 1200px) {
+    .sp-idcu-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

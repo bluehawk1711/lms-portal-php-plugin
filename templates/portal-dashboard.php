@@ -130,7 +130,7 @@ $sp_welcome      = $profile->full_name ? $profile->full_name : $profile->email;
 						</th>
 						<td data-label="Start">
 							<?php if ( $sp_enrollment->class_start ) : ?>
-								<?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $sp_enrollment->class_start ) ) ); ?>
+								<?php echo esc_html( sp_portal_time( get_option( 'date_format' ), strtotime( $sp_enrollment->class_start ) ) ); ?>
 							<?php else : ?>
 								<span class="sp-muted">&mdash;</span>
 							<?php endif; ?>

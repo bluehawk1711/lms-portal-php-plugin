@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function sp_admin_page_sp_attendance() {
 	$classes = sp_get_classes( array( 'per_page' => 200 ) );
 	?>
-	<div class="sp-attendance-page">
+	<div class="sp-attendance-page" id="sp-attendance-region" data-sp-async-region>
 	<?php if ( ! $classes ) : ?>
 		<section class="sp-attendance-empty sp-admin-panel">
 			<span class="sp-attendance-empty-icon" aria-hidden="true">▦</span>
@@ -73,7 +73,7 @@ function sp_admin_page_sp_attendance() {
 		</div>
 	</header>
 
-	<form method="get" class="sp-attendance-filter">
+	<form method="get" class="sp-attendance-filter" data-sp-async>
 		<input type="hidden" name="page" value="sp-attendance" />
 		<div class="sp-attendance-filter-heading">
 			<span class="sp-attendance-filter-icon" aria-hidden="true">⌕</span>
@@ -84,8 +84,7 @@ function sp_admin_page_sp_attendance() {
 		</div>
 		<div class="sp-attendance-filter-fields">
 			<label class="sp-attendance-field" for="sp-attendance-class">
-				<span>Class</span>
-				<select name="class" id="sp-attendance-class">
+				<span>Class</span>				<select name="class" id="sp-attendance-class" data-sp-async-change>
 					<?php foreach ( $classes as $sp_row ) : ?>
 						<option value="<?php echo esc_attr( (int) $sp_row->id ); ?>" <?php selected( (int) $class->id, (int) $sp_row->id ); ?>>
 							<?php echo esc_html( $sp_row->title ); ?>
@@ -95,7 +94,7 @@ function sp_admin_page_sp_attendance() {
 			</label>
 			<label class="sp-attendance-field" for="sp-attendance-date">
 				<span>Attendance date</span>
-				<input type="date" id="sp-attendance-date" name="date" value="<?php echo esc_attr( $date ); ?>" />
+				<input type="date" id="sp-attendance-date" name="date" value="<?php echo esc_attr( $date ); ?>" data-sp-date data-sp-off-days="<?php echo esc_attr( implode( ',', sp_off_days() ) ); ?>" />
 			</label>
 			<button type="submit" class="button button-primary sp-attendance-open-button">Open register <span aria-hidden="true">→</span></button>
 		</div>
@@ -155,7 +154,7 @@ function sp_admin_page_sp_attendance() {
 					<a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=sp-enrollments&class=' . (int) $class->id ) ); ?>">View enrolments</a>
 				</div>
 			<?php else : ?>
-				<form method="post" class="sp-attendance-save-form">
+				<form method="post" class="sp-attendance-save-form" data-sp-register data-sp-async data-sp-date-label="<?php echo esc_attr( $date_label ); ?>" data-sp-lock-days="<?php echo esc_attr( (int) sp_setting( 'attendance_edit_days', 7 ) ); ?>">
 					<?php sp_admin_nonce_field( 'save_session' ); ?>
 					<?php if ( $session ) : ?>
 						<input type="hidden" name="session_id" value="<?php echo esc_attr( (int) $session->id ); ?>" />
@@ -208,10 +207,10 @@ function sp_admin_page_sp_attendance() {
 
 					<?php if ( $editable ) : ?>
 						<div class="sp-attendance-form-footer">
-							<p class="sp-attendance-footer-hint">Your changes are saved when you choose an action.</p>
+							<p class="sp-attendance-footer-hint"><span data-sp-register-count aria-live="polite"></span> — your changes are saved when you choose an action.</p>
 							<div class="sp-attendance-form-actions">
 								<?php submit_button( 'Save register', 'secondary', 'submit', false ); ?>
-								<button type="submit" name="submit_after" value="1" class="button button-primary">Save and submit <span aria-hidden="true">→</span></button>
+								<button type="submit" name="submit_after" value="1" class="button button-primary" data-sp-register-submit="1">Save and submit <span aria-hidden="true">→</span></button>
 							</div>
 						</div>
 					<?php endif; ?>
