@@ -9,8 +9,8 @@
 .sp-quiz-result {
   margin: 0 0 1rem;
   border-radius: 14px;
-  background: #f7f9fd;
-  border: 1px solid #e2e8f5;
+  background: var(--sp-theme-surface-tint);
+  border: 1px solid var(--sp-theme-border);
 }
 
 .sp-quiz-result-score {
@@ -20,24 +20,24 @@
   margin: 0 0 0.85rem;
   padding: 1rem 1rem 0.75rem;
   border-radius: 10px;
-  background: #fff;
-  border: 1px solid #e2e8f5;
+  background: var(--sp-theme-surface);
+  border: 1px solid var(--sp-theme-border);
 }
 
 .sp-quiz-result-pct {
   font-size: 2.2rem;
   font-weight: 850;
-  color: #202c45;
+  color: var(--sp-theme-ink);
 }
 
 .sp-quiz-result-pct small {
   font-size: 1.1rem;
   font-weight: 800;
-  color: #365bd1;
+  color: var(--sp-theme-brand);
 }
 
 .sp-quiz-result-score-label {
-  color: #75819a;
+  color: var(--sp-theme-muted);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -51,11 +51,11 @@
   margin: 0 0 0.45rem;
   font-size: 1rem;
   font-weight: 750;
-  color: #202c45;
+  color: var(--sp-theme-ink);
 }
 
 .sp-quiz-result-headline strong {
-  color: #365bd1;
+  color: var(--sp-theme-brand);
 }
 
 .sp-quiz-result-track {
@@ -64,14 +64,14 @@
   margin: 0 0 0.5rem;
   overflow: hidden;
   border-radius: 999px;
-  background: #dfe7fb;
+  background: var(--sp-theme-brand-soft);
 }
 
 .sp-quiz-result-track span {
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #365bd1, #7c70eb);
+  background: linear-gradient(90deg, var(--sp-theme-brand), var(--sp-theme-brand));
 }
 
 .sp-quiz-result-facts {
@@ -94,33 +94,33 @@
 }
 
 .sp-quiz-result-facts li.is-good {
-  background: #f5fbf7;
-  color: #16804a;
+  background: var(--sp-theme-success-soft);
+  color: var(--sp-theme-success);
 }
 
 .sp-quiz-result-facts li.is-bad {
-  background: #fbf0f2;
-  color: #b72739;
+  background: var(--sp-theme-danger-soft);
+  color: var(--sp-theme-danger);
 }
 
 .sp-quiz-result-facts li.is-muted {
-  background: #f2f5fa;
-  color: #6c7890;
+  background: var(--sp-theme-surface-soft);
+  color: var(--sp-theme-muted);
 }
 
 /* Per-question explanation under the correct answer. */
 .sp-ae-explain {
   margin: 0.4rem 0 0;
   padding: 0.45rem 0.6rem;
-  border-left: 3px solid #8fa7f5;
+  border-left: 3px solid var(--sp-theme-brand-line);
   border-radius: 0 8px 8px 0;
-  background: #f5f8ff;
+  background: var(--sp-theme-brand-wash);
 }
 
 .sp-ae-explain-label {
   display: block;
   margin-bottom: 0.15rem;
-  color: #365bd1;
+  color: var(--sp-theme-brand);
   font-size: 0.66rem;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -129,7 +129,7 @@
 
 .sp-ae-explain p {
   margin: 0;
-  color: #46536d;
+  color: var(--sp-theme-ink-2);
   font-size: 0.82rem;
   line-height: 1.5;
   white-space: pre-wrap;

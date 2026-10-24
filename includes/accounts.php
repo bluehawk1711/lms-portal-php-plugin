@@ -42,6 +42,7 @@ function sp_email_portal( $email ) {
  *     @type string $full_name       Required.
  *     @type string $phone           Optional.
  *     @type string $bio             Teacher only.
+ *     @type string $address         Student only; printed on the ID card.
  *     @type bool   $send_email      Defaults to true.
  *     @type string $password        Optional; generated when omitted.
  * }
@@ -62,6 +63,7 @@ function sp_create_account( $args ) {
 			'full_name'       => '',
 			'phone'           => '',
 			'dob'             => '',
+			'address'         => '',
 			'bio'             => '',
 			'send_email'      => true,
 			'password'        => '',
@@ -73,6 +75,8 @@ function sp_create_account( $args ) {
 	$full_name = sanitize_text_field( $args['full_name'] );
 	$phone     = sanitize_text_field( $args['phone'] );
 	$dob       = sp_sanitize_date( $args['dob'] );
+	$address   = trim( sanitize_textarea_field( (string) $args['address'] ) );
+	$address   = function_exists( 'mb_substr' ) ? mb_substr( $address, 0, 100 ) : substr( $address, 0, 100 );
 
 	if ( '' === $email || ! is_email( $email ) ) {
 		return new WP_Error( 'sp_bad_email', 'Enter a valid email address.' );
@@ -136,9 +140,10 @@ function sp_create_account( $args ) {
 				'phone'           => $phone ? $phone : null,
 				'dob'             => $dob ? $dob : null,
 				'full_name'       => $full_name,
+				'address'         => '' !== $address ? $address : null,
 				'status'          => 'active',
 			),
-			array( '%d', '%s', '%s', '%s', '%s', '%s' )
+			array( '%d', '%s', '%s', '%s', '%s', '%s', '%s' )
 		);
 	}
 
@@ -159,7 +164,7 @@ function sp_create_account( $args ) {
 		'account.created',
 		'account',
 		$record_id,
-		sprintf( '%s account created for %s', 'teacher' === $role ? 'Teacher' : 'Student', $email )
+		sprintf( '%s account created for %s', SP_ROLE_TEACHER === $role ? 'Teacher' : 'Student', $email )
 	);
 
 	if ( $args['send_email'] ) {

@@ -25,6 +25,7 @@ function sp_portal_routes() {
 		'tasks'        => array( 'label' => 'Tasks', 'template' => 'portal-tasks.php', 'public' => false ),
 		'calendar'     => array( 'label' => 'Calendar', 'template' => 'portal-calendar.php', 'public' => false ),
 		'profile'      => array( 'label' => 'Profile', 'template' => 'portal-profile.php', 'public' => false ),
+		'notifications' => array( 'label' => 'Announcements', 'template' => 'portal-notifications.php', 'public' => false, 'hidden' => true ),
 		// The single-task page: reachable by URL, but the nav shows the list.
 		// Fullscreen: exams get a distraction-free shell with no sidebar or rail.
 		'task'         => array( 'label' => 'Task', 'template' => 'portal-task.php', 'public' => false, 'hidden' => true, 'parent' => 'tasks', 'fullscreen' => true ),
@@ -54,6 +55,7 @@ function sp_register_rewrite_rules() {
 function sp_portal_rewrite_rules() {
 	add_rewrite_rule( '^portal/?$', 'index.php?pagename=portal&sp_route=home', 'top' );
 	add_rewrite_rule( '^portal/(certificates|attendance|curriculum|results|materials|tasks|profile|calendar)/?$', 'index.php?pagename=portal&sp_route=$matches[1]', 'top' );
+	add_rewrite_rule( '^portal/notifications/?$', 'index.php?pagename=portal&sp_route=notifications', 'top' );
 	add_rewrite_rule( '^portal/materials/(\d+)/?$', 'index.php?pagename=portal&sp_route=material&sp_material_id=$matches[1]', 'top' );
 	add_rewrite_rule( '^portal/tasks/(\d+)/?$', 'index.php?pagename=portal&sp_route=task&sp_assignment_id=$matches[1]', 'top' );
 

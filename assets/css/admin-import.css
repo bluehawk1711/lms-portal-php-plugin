@@ -5,11 +5,11 @@
  */
 
 .sp-import-page {
-    --sp-import-border: #dcdcde;
-    --sp-import-text: #1d2327;
-    --sp-import-muted: #646970;
-    --sp-import-blue: #2271b1;
-    --sp-import-blue-soft: #f0f6fc;
+    --sp-import-border: var(--sp-theme-border-strong);
+    --sp-import-text: var(--sp-theme-ink);
+    --sp-import-muted: var(--sp-theme-muted);
+    --sp-import-blue: var(--sp-theme-brand);
+    --sp-import-blue-soft: var(--sp-theme-brand-wash);
     color: var(--sp-import-text);
     max-width: 1600px;
 }
@@ -54,10 +54,10 @@
 
 .sp-import-heading-help {
     align-items: center;
-    background: #fff;
+    background: var(--sp-theme-surface);
     border: 1px solid var(--sp-import-border);
     border-radius: 999px;
-    color: #50575e;
+    color: var(--sp-theme-ink-2);
     display: inline-flex;
     flex: 0 0 auto;
     font-size: 12px;
@@ -83,10 +83,10 @@
 
 .sp-import-tab {
     align-items: center;
-    background: #fff;
+    background: var(--sp-theme-surface);
     border: 1px solid var(--sp-import-border);
     border-radius: 9px;
-    color: #2c3338;
+    color: var(--sp-theme-ink-2);
     display: grid;
     gap: 2px 9px;
     grid-template-columns: 22px auto;
@@ -98,8 +98,8 @@
 
 .sp-import-tab:hover,
 .sp-import-tab:focus-visible {
-    border-color: #8cadd0;
-    box-shadow: 0 0 0 2px rgba(34, 113, 177, 0.08);
+    border-color: var(--sp-theme-brand);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--sp-theme-brand) 8%, transparent);
     color: var(--sp-import-blue);
 }
 
@@ -110,9 +110,9 @@
 
 .sp-import-tab.is-active {
     background: var(--sp-import-blue-soft);
-    border-color: #72aee6;
-    box-shadow: inset 0 0 0 1px rgba(34, 113, 177, 0.05);
-    color: #135e96;
+    border-color: var(--sp-theme-brand);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--sp-theme-brand) 5%, transparent);
+    color: var(--sp-theme-brand-deep);
 }
 
 .sp-import-tab > .dashicons {
@@ -146,7 +146,7 @@
 }
 
 .sp-import-page .sp-admin-panel {
-    background: #fff;
+    background: var(--sp-theme-surface);
     border: 1px solid var(--sp-import-border);
     border-radius: 12px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.025);
@@ -169,9 +169,9 @@
 .sp-import-step {
     align-items: center;
     background: var(--sp-import-blue-soft);
-    border: 1px solid #d5e6f7;
+    border: 1px solid var(--sp-theme-brand-line);
     border-radius: 8px;
-    color: #135e96;
+    color: var(--sp-theme-brand-deep);
     display: inline-flex;
     flex: 0 0 38px;
     font-size: 12px;
@@ -199,7 +199,7 @@
 }
 
 .sp-import-columns-label {
-    color: #50575e;
+    color: var(--sp-theme-ink-2);
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.045em;
@@ -208,8 +208,8 @@
 }
 
 .sp-import-code-block {
-    background: #f6f7f7;
-    border: 1px solid #e2e4e7;
+    background: var(--sp-theme-surface-alt);
+    border: 1px solid var(--sp-theme-border);
     border-radius: 8px;
     margin-bottom: 20px;
     overflow-wrap: anywhere;
@@ -217,7 +217,7 @@
 }
 
 .sp-import-code-block code {
-    color: #174f78;
+    color: var(--sp-theme-brand-deep);
     font-size: 12px;
     font-weight: 600;
     line-height: 1.8;
@@ -237,9 +237,9 @@
 
 .sp-import-requirement-icon {
     align-items: center;
-    background: #f0f0f1;
+    background: var(--sp-theme-surface-alt);
     border-radius: 7px;
-    color: #50575e;
+    color: var(--sp-theme-ink-2);
     display: inline-flex;
     flex: 0 0 30px;
     font-size: 15px;
@@ -249,8 +249,8 @@
 }
 
 .sp-import-requirement-icon.is-required {
-    background: #fcf0f1;
-    color: #b32d2e;
+    background: var(--sp-theme-danger-soft);
+    color: var(--sp-theme-danger);
 }
 
 .sp-import-requirement-icon .dashicons {
@@ -260,7 +260,7 @@
 }
 
 .sp-import-requirement strong {
-    color: #2c3338;
+    color: var(--sp-theme-ink-2);
     display: block;
     font-size: 12px;
     line-height: 1.4;
@@ -275,7 +275,7 @@
 }
 
 .sp-import-requirement code {
-    background: #f0f0f1;
+    background: var(--sp-theme-surface-alt);
     border-radius: 3px;
     font-size: 11px;
     padding: 1px 4px;
@@ -283,7 +283,7 @@
 
 .sp-import-format-footer {
     align-items: center;
-    border-top: 1px solid #f0f0f1;
+    border-top: 1px solid var(--sp-theme-surface-alt);
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
@@ -324,8 +324,8 @@
 
 .sp-import-file-drop {
     align-items: center;
-    background: #fbfcfe;
-    border: 1px dashed #a7aaad;
+    background: var(--sp-theme-surface-hover);
+    border: 1px dashed var(--sp-theme-faint);
     border-radius: 10px;
     cursor: pointer;
     display: flex;
@@ -340,13 +340,13 @@
 
 .sp-import-file-drop:hover,
 .sp-import-file-drop:focus-within {
-    background: #f5f9fd;
+    background: var(--sp-theme-surface-tint);
     border-color: var(--sp-import-blue);
 }
 
 .sp-import-file-icon {
     align-items: center;
-    background: #eaf3fb;
+    background: var(--sp-theme-brand-soft);
     border-radius: 13px;
     color: var(--sp-import-blue);
     display: inline-flex;
@@ -376,7 +376,7 @@
 }
 
 .sp-import-file-types {
-    color: #8c8f94;
+    color: var(--sp-theme-faint);
     font-size: 11px;
     margin-top: 9px;
 }
@@ -413,7 +413,7 @@
 }
 
 .sp-import-upload-actions .dashicons {
-    color: #008a20;
+    color: var(--sp-theme-success);
     font-size: 15px;
     height: 15px;
     width: 15px;
@@ -455,22 +455,22 @@
 }
 
 .sp-import-page .sp-pill-good {
-    background: #edfaef;
-    color: #00623c;
+    background: var(--sp-theme-success-soft);
+    color: var(--sp-theme-success-ink);
 }
 
 .sp-import-page .sp-pill-bad {
-    background: #fcf0f1;
-    color: #8a1f1f;
+    background: var(--sp-theme-danger-soft);
+    color: var(--sp-theme-danger-strong);
 }
 
 .sp-import-page .sp-pill-muted {
-    background: #f0f0f1;
-    color: #50575e;
+    background: var(--sp-theme-surface-alt);
+    color: var(--sp-theme-ink-2);
 }
 
 .sp-import-preview-table-wrap {
-    border: 1px solid #e2e4e7;
+    border: 1px solid var(--sp-theme-border);
     border-radius: 8px;
     margin-top: 0;
     max-width: 100%;
@@ -487,8 +487,8 @@
 }
 
 .sp-import-preview-table thead th {
-    background: #f6f7f7;
-    color: #50575e;
+    background: var(--sp-theme-surface-alt);
+    color: var(--sp-theme-ink-2);
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.035em;
@@ -497,7 +497,7 @@
 }
 
 .sp-import-preview-table tbody td {
-    color: #3c434a;
+    color: var(--sp-theme-ink-2);
     font-size: 12px;
     line-height: 1.55;
     padding: 12px 14px;
@@ -525,8 +525,8 @@
 
 .sp-import-confirm-bar {
     align-items: center;
-    background: #fbfcfe;
-    border: 1px solid #e2eaf2;
+    background: var(--sp-theme-surface-hover);
+    border: 1px solid var(--sp-theme-brand-line);
     border-radius: 9px;
     display: flex;
     flex-wrap: wrap;

@@ -143,7 +143,7 @@
 }
 
 .sp-meter-bar span {
-	background: linear-gradient(90deg, var(--sp-primary) 0%, #3b82f6 100%);
+	background: linear-gradient(90deg, var(--sp-primary) 0%, var(--sp-theme-brand) 100%);
 	border-radius: 999px;
 	display: block;
 	height: 100%;
@@ -167,7 +167,7 @@
 }
 
 .sp-card:hover {
-	border-color: #d6dcea;
+	border-color: var(--sp-theme-brand-line);
 	box-shadow: var(--sp-shadow);
 	transform: translateY(-2px);
 }
@@ -193,7 +193,7 @@
 .sp-notice-warn {
 	background: var(--sp-warn-bg);
 	border-color: var(--sp-warn);
-	color: #78350f;
+	color: var(--sp-theme-warn-ink);
 }
 
 .sp-badge,
@@ -207,17 +207,17 @@
 .sp-badge-good,
 .sp-chip-good {
 	background: var(--sp-good-bg);
-	color: #14532d;
+	color: var(--sp-theme-success-ink);
 }
 
 .sp-badge-muted {
-	background: #eef1f5;
-	color: #475569;
+	background: var(--sp-theme-border-subtle);
+	color: var(--sp-theme-brand-deep);
 }
 
 .sp-empty {
 	background: var(--sp-surface);
-	border: 1px dashed #cdd5e0;
+	border: 1px dashed var(--sp-theme-border-strong);
 	border-radius: var(--sp-radius);
 	color: var(--sp-muted);
 	padding: 2.25rem 1.5rem;
@@ -289,3 +289,398 @@
 
 }
 
+/* =========================================================================
+ * Teacher Curriculum — heading + topic card UI
+ * Driven entirely by the real --sp-theme-* tokens from tokens.css.
+ * ====================================================================== */
+
+.sp-curriculum {
+  margin-top: 1.25rem;
+}
+
+/* ── Header card ────────────────────────────────────────────────────────── */
+.sp-curriculum-header {
+  background: var(--sp-surface, #fff);
+  border: 1px solid var(--sp-border, #e2e8f0);
+  border-radius: var(--sp-radius, 16px);
+  box-shadow: var(--sp-shadow-sm, 0 1px 3px rgba(15, 23, 42, 0.06));
+  margin-bottom: 1.25rem;
+  padding: 1.15rem 1.35rem;
+}
+
+.sp-curriculum-title-row {
+  align-items: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+
+.sp-curriculum-course-title {
+  color: var(--sp-text, #0a192f);
+  font-size: clamp(1.3rem, 2.2vw, 1.65rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.sp-curriculum-completion {
+  margin-left: auto;
+}
+
+.sp-curriculum-percent-badge {
+  background: var(--sp-theme-warn-soft, #fffbeb);
+  border: 1px solid var(--sp-theme-warn-line, #fde68a);
+  border-radius: var(--sp-theme-radius-pill, 9999px);
+  color: var(--sp-theme-warn-ink, #92400e);
+  display: inline-flex;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.35rem 0.8rem;
+  white-space: nowrap;
+}
+
+.sp-curriculum-percent-badge.is-done {
+  background: var(--sp-theme-success-soft, #ecfdf5);
+  border-color: var(--sp-theme-success-line, #a7f3d0);
+  color: var(--sp-theme-success-ink, #065f46);
+}
+
+.sp-curriculum-subtitle {
+  color: var(--sp-muted, #64748b);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  margin: 0 0 0.85rem;
+  padding-left: 0.1rem;
+}
+
+.sp-curriculum-stats {
+  margin-bottom: 0.8rem;
+}
+
+.sp-curriculum-stat {
+  align-items: baseline;
+  color: var(--sp-muted, #64748b);
+  display: inline-flex;
+  font-size: 0.85rem;
+  gap: 0.35rem;
+}
+
+.sp-curriculum-stat-num {
+  color: var(--sp-text, #0a192f);
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+/* ── Progress meter ─────────────────────────────────────────────────────── */
+.sp-curriculum-meter {
+  align-items: center;
+  display: flex;
+  gap: 0.8rem;
+}
+
+.sp-curriculum-meter-bar {
+  background: var(--sp-theme-surface-soft, #f1f5f9);
+  border-radius: var(--sp-theme-radius-pill, 9999px);
+  flex: 1;
+  height: 9px;
+  overflow: hidden;
+}
+
+.sp-curriculum-meter-bar span {
+  background: var(--sp-theme-success, #059669);
+  border-radius: inherit;
+  display: block;
+  height: 100%;
+  transition: width 300ms ease;
+}
+
+.sp-curriculum-meter-value {
+  color: var(--sp-muted, #64748b);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ── Group cards ────────────────────────────────────────────────────────── */
+.sp-curriculum-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sp-curriculum-group {
+  background: var(--sp-surface, #fff);
+  border: 1px solid var(--sp-border, #e2e8f0);
+  border-radius: var(--sp-radius, 16px);
+  box-shadow: var(--sp-shadow-sm, 0 1px 3px rgba(15, 23, 42, 0.06));
+  overflow: hidden;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sp-curriculum-group:hover {
+  border-color: var(--sp-theme-border-strong, #cbd5e1);
+  box-shadow: var(--sp-theme-shadow-card, 0 2px 10px -2px rgba(15, 23, 42, 0.06));
+}
+
+.sp-curriculum-group.is-done {
+  border-color: var(--sp-theme-success-line, #a7f3d0);
+}
+
+/* ── Group header ───────────────────────────────────────────────────────── */
+.sp-curriculum-group-header {
+  border-bottom: 1px solid var(--sp-theme-border-subtle, #f1f5f9);
+  padding: 0.95rem 1.2rem;
+}
+
+.sp-curriculum-group.is-done .sp-curriculum-group-header {
+  background: var(--sp-theme-success-soft, #ecfdf5);
+  border-bottom-color: var(--sp-theme-success-line, #a7f3d0);
+}
+
+.sp-curriculum-group-badge-row {
+  align-items: center;
+  display: flex;
+  gap: 0.8rem;
+  margin-bottom: 0.35rem;
+}
+
+.sp-curriculum-badge {
+  align-items: center;
+  border-radius: 10px;
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-weight: 800;
+  height: 2.3rem;
+  justify-content: center;
+  width: 2.3rem;
+}
+
+.sp-curriculum-badge-heading {
+  background: var(--sp-theme-brand, #e67300);
+  box-shadow: 0 2px 8px rgba(230, 115, 0, 0.25);
+  color: var(--sp-theme-on-brand, #fff);
+}
+
+.sp-curriculum-badge-heading.is-done {
+  background: var(--sp-theme-success, #059669);
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.25);
+}
+
+.sp-curriculum-badge-topic {
+  background: var(--sp-theme-surface-soft, #f1f5f9);
+  border: 1px solid var(--sp-border, #e2e8f0);
+  color: var(--sp-theme-ink-2, #334155);
+  font-size: 0.85rem;
+}
+
+.sp-curriculum-badge-topic.is-done {
+  background: var(--sp-theme-success, #059669);
+  border-color: var(--sp-theme-success, #059669);
+  color: var(--sp-theme-on-brand, #fff);
+}
+
+.sp-curriculum-group-title {
+  color: var(--sp-text, #0a192f);
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.sp-curriculum-group-meta {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  justify-content: space-between;
+  margin-top: 0.4rem;
+}
+
+.sp-curriculum-group-subtitle {
+  color: var(--sp-muted, #64748b);
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.sp-curriculum-group-completion {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.sp-curriculum-status-badge {
+  align-items: center;
+  background: var(--sp-theme-surface-soft, #f1f5f9);
+  border: 1px solid var(--sp-border, #e2e8f0);
+  border-radius: var(--sp-theme-radius-pill, 9999px);
+  color: var(--sp-muted, #64748b);
+  display: inline-flex;
+  font-size: 0.76rem;
+  font-weight: 700;
+  gap: 0.35rem;
+  padding: 0.28rem 0.65rem;
+  white-space: nowrap;
+}
+
+.sp-curriculum-status-done {
+  background: var(--sp-theme-success-soft, #ecfdf5);
+  border-color: var(--sp-theme-success-line, #a7f3d0);
+  color: var(--sp-theme-success-ink, #065f46);
+}
+
+.sp-curriculum-status-done .sp-curriculum-check-icon {
+  color: var(--sp-theme-success, #059669);
+}
+
+.sp-curriculum-status-progress {
+  background: var(--sp-theme-warn-soft, #fffbeb);
+  border-color: var(--sp-theme-warn-line, #fde68a);
+  color: var(--sp-theme-warn-ink, #92400e);
+}
+
+.sp-curriculum-status-not-started {
+  background: var(--sp-theme-surface-soft, #f1f5f9);
+  border-color: var(--sp-border, #e2e8f0);
+  color: var(--sp-theme-faint, #94a3b8);
+}
+
+.sp-curriculum-group-stats {
+  border-top: 1px dashed var(--sp-theme-border-subtle, #f1f5f9);
+  margin-top: 0.55rem;
+  padding-top: 0.5rem;
+}
+
+.sp-curriculum-group-stat {
+  color: var(--sp-muted, #64748b);
+  font-size: 0.8rem;
+}
+
+/* ── Topics list ────────────────────────────────────────────────────────── */
+.sp-curriculum-topics {
+  padding: 0.5rem 1.2rem 1.1rem;
+}
+
+.sp-curriculum-empty-topics {
+  color: var(--sp-muted, #64748b);
+  font-size: 0.86rem;
+  padding: 1rem 0;
+  text-align: center;
+}
+
+.sp-curriculum-topic {
+  align-items: flex-start;
+  border-bottom: 1px dashed var(--sp-theme-border-subtle, #f1f5f9);
+  display: flex;
+  gap: 1rem;
+  padding: 0.8rem 0;
+}
+
+.sp-curriculum-topic:last-child {
+  border-bottom: 0;
+  padding-bottom: 0.25rem;
+}
+
+.sp-curriculum-topic.is-marked .sp-curriculum-topic-title {
+  color: var(--sp-theme-success-ink, #065f46);
+}
+
+.sp-curriculum-topic-row {
+  align-items: flex-start;
+  display: flex;
+  flex: 1;
+  gap: 0.85rem;
+  min-width: 0;
+}
+
+.sp-curriculum-topic-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.sp-curriculum-topic-title {
+  color: var(--sp-text, #0a192f);
+  font-size: 0.94rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0 0 0.2rem;
+  overflow-wrap: anywhere;
+}
+
+.sp-curriculum-topic-detail {
+  color: var(--sp-muted, #64748b);
+  font-size: 0.83rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.sp-curriculum-topic-status {
+  align-items: flex-end;
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.sp-curriculum-date {
+  color: var(--sp-theme-success-strong, #047857);
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+
+.sp-curriculum-topic-actions {
+  flex: 0 0 auto;
+}
+
+.sp-curriculum-toggle-btn {
+  white-space: nowrap;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .sp-curriculum-header {
+    padding: 1rem;
+  }
+
+  .sp-curriculum-title-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .sp-curriculum-completion {
+    margin-left: 0;
+  }
+
+  .sp-curriculum-percent-badge {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .sp-curriculum-group-header {
+    padding: 0.85rem 1rem;
+  }
+
+  .sp-curriculum-group-meta {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .sp-curriculum-topics {
+    padding: 0.4rem 1rem 1rem;
+  }
+
+  .sp-curriculum-topic {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .sp-curriculum-topic-status {
+    align-items: flex-start;
+    flex-direction: row;
+    width: 100%;
+  }
+}

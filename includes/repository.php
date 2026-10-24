@@ -718,6 +718,62 @@ function sp_get_attendance_stats( $profile_id, $class_id ) {
 }
 
 /**
+ * How many of a student's most recent sessions in a class were `present`.
+ *
+ * Counts back from the newest marked session and stops at the first session
+ * that is not present, giving the "consecutive presents" streak shown beside
+ * each student on the teacher register. Cancelled dates are skipped the same
+ * way sp_get_attendance_stats() skips them, so a holiday never breaks a streak.
+ *
+ * @param int $profile_id Student profile id.
+ * @param int $class_id   Class id.
+ * @return int
+ */
+function sp_attendance_consecutive_present( $profile_id, $class_id ) {
+	global $wpdb;
+
+	$profile_id = (int) $profile_id;
+	$class_id   = (int) $class_id;
+
+	if ( $profile_id <= 0 || $class_id <= 0 ) {
+		return 0;
+	}
+
+	$records  = sp_table( 'attendance_records' );
+	$sessions = sp_table( 'attendance_sessions' );
+
+	$cancelled = sp_cancelled_class_dates( $class_id );
+
+	$sql    = "SELECT r.status
+			 FROM {$records} r
+			 INNER JOIN {$sessions} s ON s.id = r.session_id
+			 WHERE r.profile_id = %d AND s.class_id = %d";
+	$params = array( $profile_id, $class_id );
+
+	if ( $cancelled ) {
+		$placeholders = implode( ', ', array_fill( 0, count( $cancelled ), '%s' ) );
+		$sql         .= " AND s.session_date NOT IN ( {$placeholders} )";
+		$params       = array_merge( $params, $cancelled );
+	}
+
+	$sql .= ' ORDER BY s.session_date DESC LIMIT 90';
+
+	$rows = $wpdb->get_results( $wpdb->prepare( $sql, $params ) );
+
+	$streak = 0;
+
+	foreach ( (array) $rows as $row ) {
+		if ( 'present' !== (string) $row->status ) {
+			break;
+		}
+
+		++$streak;
+	}
+
+	return $streak;
+}
+
+/**
  * Per-date attendance history for one student in one class.
  *
  * @param int $profile_id  Student profile id.

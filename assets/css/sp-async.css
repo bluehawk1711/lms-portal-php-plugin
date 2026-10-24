@@ -26,10 +26,10 @@
 
 .sp-async-toast {
 	align-items: flex-start;
-	background: #0f172a;
+	background: var(--sp-theme-ink);
 	border-radius: 10px;
 	box-shadow: 0 12px 34px rgba(15, 23, 42, 0.32);
-	color: #fff;
+	color: var(--sp-theme-on-brand);
 	display: flex;
 	font-size: 14px;
 	gap: 0.65rem;
@@ -45,15 +45,15 @@
 }
 
 .sp-async-toast.is-good {
-	background: #067647;
+	background: var(--sp-theme-success);
 }
 
 .sp-async-toast.is-warn {
-	background: #b54708;
+	background: var(--sp-theme-warn);
 }
 
 .sp-async-toast.is-error {
-	background: #b42318;
+	background: var(--sp-theme-danger);
 }
 
 .sp-async-toast button {

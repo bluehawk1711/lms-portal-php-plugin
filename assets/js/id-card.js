@@ -17,6 +17,41 @@
 		var jpgBtn = document.querySelector( '[data-sp-idc-jpg]' );
 		var pdfBtn = document.querySelector( '[data-sp-idc-pdf]' );
 
+		/*
+		 * Everything that only means something in one background style follows
+		 * the radio: the artwork layout controls and the note about the hidden
+		 * uploads are artwork-only, while the corner, logo and QR uploads and
+		 * the card text lines are frame-only because a complete artwork prints
+		 * its own. The signature is in both modes: a hand-written sign is one
+		 * thing no artwork can print, so artwork mode lays it over the design.
+		 * Each group starts hidden server-side whenever it does not apply,
+		 * which keeps the form sensible with JavaScript switched off.
+		 */
+		var modeRadios = document.querySelectorAll( '[data-sp-idc-mode]' );
+		var artOnly = document.querySelectorAll( '[data-sp-idc-artwork-only]' );
+		var frameOnly = document.querySelectorAll( '[data-sp-idc-frame-only]' );
+
+		if ( modeRadios.length && ( artOnly.length || frameOnly.length ) ) {
+			var syncArtworkMode = function () {
+				var checked = document.querySelector( '[data-sp-idc-mode]:checked' );
+				var isArtwork = !! checked && 'artwork' === checked.value;
+
+				Array.prototype.forEach.call( artOnly, function ( el ) {
+					el.hidden = ! isArtwork;
+				} );
+
+				Array.prototype.forEach.call( frameOnly, function ( el ) {
+					el.hidden = isArtwork;
+				} );
+			};
+
+			Array.prototype.forEach.call( modeRadios, function ( radio ) {
+				radio.addEventListener( 'change', syncArtworkMode );
+			} );
+
+			syncArtworkMode();
+		}
+
 		if ( ! select || ! stage ) {
 			return;
 		}

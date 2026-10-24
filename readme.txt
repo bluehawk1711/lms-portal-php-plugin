@@ -155,7 +155,7 @@ Set the option `sp_delete_data_on_uninstall` to 1 before deleting the plugin. Ot
   moved from the dashboard to the Classes screen where it belongs.
 
 = 0.1.2 =
-* Login illustration ships as assets/images/login.webp (used by both auth
+* Login illustration ships as assets/images/login.png (used by both auth
   screens), and the hero welcome heading keeps its white title styling
   regardless of the shell heading reset.
 

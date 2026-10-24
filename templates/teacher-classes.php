@@ -62,17 +62,21 @@ if ( ! $sp_classes && ! $sp_archived && current_user_can( 'manage_options' ) ) {
 <div id="sp-classes-region" data-sp-async-region>
 <div class="sp-class-overview" aria-label="Class overview">
     <div class="sp-class-stat">
-        <span class="sp-class-stat-icon" aria-hidden="true">▦</span>
         <span class="sp-class-stat-copy">
             <span class="sp-class-stat-value"><?php echo esc_html( number_format_i18n( count( $sp_classes ) ) ); ?></span>
             <span class="sp-class-stat-label">Active classes</span>
         </span>
+        <span class="sp-class-stat-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 11H5m14 0a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2m14 0V9a2 2 0 0 0-2-2M5 11V9a2 2 0 0 1 2-2m0 0V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2M7 7h10" /></svg>
+        </span>
     </div>
     <div class="sp-class-stat is-archived">
-        <span class="sp-class-stat-icon" aria-hidden="true">▤</span>
         <span class="sp-class-stat-copy">
             <span class="sp-class-stat-value"><?php echo esc_html( number_format_i18n( count( $sp_archived ) ) ); ?></span>
             <span class="sp-class-stat-label">Archived classes</span>
+        </span>
+        <span class="sp-class-stat-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14M5 8a2 2 0 1 1 0-4h14a2 2 0 1 1 0 4M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8m-9 4h4" /></svg>
         </span>
     </div>
 </div>
@@ -192,8 +196,11 @@ if ( ! $sp_classes && ! $sp_archived && current_user_can( 'manage_options' ) ) {
                         <h3 class="sp-card-title">
                             <a href="<?php echo esc_url( sp_teacher_url( 'classes/' . (int) $sp_class->id ) ); ?>"><?php echo esc_html( $sp_class->title ); ?></a>
                         </h3>
+                        <?php if ( 'active' === (string) $sp_class->status ) : ?>
+                            <span class="sp-class-live" title="This class is live">Live</span>
+                        <?php endif; ?>
                         <?php if ( $sp_class->code ) : ?>
-                            <span style="color: #000000; font-weight: bold; background-color: transparent; padding: 0.25em 0.5em; border-radius: 0.25em; border: 1px solid transparent;" class="sp-class-code" title="Class code"><?php echo esc_html( $sp_class->code ); ?></span>
+                            <span class="sp-class-code" title="Class code"><?php echo esc_html( $sp_class->code ); ?></span>
                         <?php endif; ?>
                         <?php if ( 'pending' === (string) $sp_class->status ) : ?>
                             <span class="sp-class-pending" title="An administrator must approve this class before it goes live">Awaiting approval</span>
@@ -201,9 +208,15 @@ if ( ! $sp_classes && ! $sp_archived && current_user_can( 'manage_options' ) ) {
                     </div>
 
                     <p class="sp-class-card-meta">
-                        <span style="color: #000000; font-weight: bold; background-color: transparent; padding: 0.25em 0.5em; border-radius: 0.25em; border: 1px solid transparent;"><?php echo esc_html( number_format_i18n( sp_count_class_students( $sp_class->id ) ) ); ?> students</span>
+                        <span class="sp-class-meta-item">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+                            <?php echo esc_html( number_format_i18n( sp_count_class_students( $sp_class->id ) ) ); ?> students
+                        </span>
                         <?php if ( $sp_class->start_date ) : ?>
-                            <span style="color: #000000; font-weight: bold; background-color: transparent; padding: 0.25em 0.5em; border-radius: 0.25em; border: 1px solid transparent;">Starts :  <?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $sp_class->start_date ) ) ); ?></span>
+                            <span class="sp-class-meta-item">
+                                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></svg>
+                                Starts : <strong><?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $sp_class->start_date ) ) ); ?></strong>
+                            </span>
                         <?php endif; ?>
                     </p>
 
@@ -214,7 +227,7 @@ if ( ! $sp_classes && ! $sp_archived && current_user_can( 'manage_options' ) ) {
                     <?php endif; ?>
 
                     <div class="sp-card-actions sp-class-card-actions">
-                        <a class="sp-btn sp-btn-primary" href="<?php echo esc_url( add_query_arg( 'tab', 'attendance', sp_teacher_url( 'classes/' . (int) $sp_class->id ) ) ); ?>">Take attendance <span aria-hidden="true">→</span></a>
+                        <a class="sp-btn sp-class-attendance-btn" href="<?php echo esc_url( add_query_arg( 'tab', 'attendance', sp_teacher_url( 'classes/' . (int) $sp_class->id ) ) ); ?>">Take attendance <span aria-hidden="true">→</span></a>
                         <a class="sp-btn sp-btn-ghost" href="<?php echo esc_url( sp_teacher_url( 'classes/' . (int) $sp_class->id ) ); ?>">Open class</a>
                     </div>
                 </article>

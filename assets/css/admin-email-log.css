@@ -5,14 +5,14 @@
  */
 
 .sp-emaillog-ui {
-    --sp-el-ink: #172235;
-    --sp-el-muted: #6b778b;
-    --sp-el-border: #e5eaf2;
-    --sp-el-surface: #ffffff;
-    --sp-el-soft: #f7f9fc;
-    --sp-el-accent: #3858d6;
-    --sp-el-accent-dark: #2947bf;
-    --sp-el-radius: 16px;
+    --sp-el-ink: var(--sp-theme-ink);
+    --sp-el-muted: var(--sp-theme-muted);
+    --sp-el-border: var(--sp-theme-border);
+    --sp-el-surface: var(--sp-theme-surface);
+    --sp-el-soft: var(--sp-theme-surface-soft);
+    --sp-el-accent: var(--sp-theme-brand);
+    --sp-el-accent-dark: var(--sp-theme-brand-strong);
+    --sp-el-radius: var(--sp-theme-radius-xl);
     box-sizing: border-box;
     max-width: 1320px;
     margin: 18px 20px 32px 2px;
@@ -34,9 +34,9 @@
     gap: 24px;
     padding: 23px 25px;
     margin: 0 0 17px;
-    border: 1px solid #e6eaf2;
+    border: 1px solid var(--sp-theme-border);
     border-radius: var(--sp-el-radius);
-    background: radial-gradient(circle at 96% 0%, rgba(91, 113, 225, 0.11), transparent 31%), linear-gradient(135deg, #fff 0%, #fbfcff 100%);
+    background: radial-gradient(circle at 96% 0%, color-mix(in srgb, var(--sp-theme-brand) 11%, transparent), transparent 31%), linear-gradient(135deg, #fff 0%, var(--sp-theme-surface-hover) 100%);
     box-shadow: 0 3px 12px rgba(25, 39, 70, 0.035);
 }
 
@@ -46,7 +46,7 @@
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    color: #64708a;
+    color: var(--sp-theme-muted);
     font-size: 10px;
     font-weight: 750;
     letter-spacing: 0.13em;
@@ -54,7 +54,7 @@
     text-transform: uppercase;
 }
 
-.sp-emaillog-eyebrow span { color: #a1aabc; }
+.sp-emaillog-eyebrow span { color: var(--sp-theme-faint); }
 
 .sp-emaillog-page-header h1 {
     margin: 8px 0 5px;
@@ -80,7 +80,7 @@
     align-items: center;
     gap: 10px;
     padding: 11px 14px;
-    border: 1px solid #e4e9f4;
+    border: 1px solid var(--sp-theme-border);
     border-radius: 12px;
     background: rgba(255, 255, 255, 0.82);
 }
@@ -92,7 +92,7 @@
     flex: 0 0 34px;
     place-items: center;
     border-radius: 10px;
-    background: #edf1ff;
+    background: var(--sp-theme-brand-soft);
     color: var(--sp-el-accent);
     font-size: 18px;
     font-weight: 750;
@@ -102,14 +102,14 @@
 .sp-emaillog-header-note small { display: block; }
 
 .sp-emaillog-header-note strong {
-    color: #27334a;
+    color: var(--sp-theme-ink-2);
     font-size: 12px;
     font-weight: 750;
 }
 
 .sp-emaillog-header-note small {
     margin-top: 2px;
-    color: #768197;
+    color: var(--sp-theme-muted);
     font-size: 11px;
 }
 /* Stat cards --------------------------------------------------------------- */
@@ -144,9 +144,9 @@
     font-weight: 750;
 }
 
-.sp-emaillog-stat-icon-total { background: #edf1ff; color: #3858d6; }
-.sp-emaillog-stat-icon-sent { background: #e9f8f0; color: #168452; }
-.sp-emaillog-stat-icon-failed { background: #fbeceb; color: #b32d2e; }
+.sp-emaillog-stat-icon-total { background: var(--sp-theme-brand-soft); color: var(--sp-theme-brand); }
+.sp-emaillog-stat-icon-sent { background: var(--sp-theme-success-soft); color: var(--sp-theme-success); }
+.sp-emaillog-stat-icon-failed { background: var(--sp-theme-danger-soft); color: var(--sp-theme-danger); }
 
 .sp-emaillog-stat-card > div {
     display: flex;
@@ -156,7 +156,7 @@
 
 .sp-emaillog-stat-label {
     overflow: hidden;
-    color: #68758a;
+    color: var(--sp-theme-muted);
     font-size: 11px;
     font-weight: 650;
     text-overflow: ellipsis;
@@ -165,7 +165,7 @@
 
 .sp-emaillog-stat-card strong {
     margin-top: 1px;
-    color: #182336;
+    color: var(--sp-theme-brand-ink);
     font-size: 25px;
     font-weight: 760;
     letter-spacing: -0.04em;
@@ -175,7 +175,7 @@
 
 .sp-emaillog-stat-card small {
     margin-top: 2px;
-    color: #8a94a5;
+    color: var(--sp-theme-faint);
     font-size: 10px;
 }
 
@@ -201,16 +201,16 @@
 .sp-emaillog-panel .sp-admin-search select {
     min-width: 180px;
     min-height: 36px;
-    border: 1px solid #d7deea;
+    border: 1px solid var(--sp-theme-border-strong);
     border-radius: 8px;
-    background-color: #fff;
-    color: #202c40;
+    background-color: var(--sp-theme-surface);
+    color: var(--sp-theme-ink);
     box-shadow: 0 1px 2px rgba(20, 35, 60, 0.025);
 }
 
 .sp-emaillog-panel .sp-admin-search select:focus {
-    border-color: #8ba1f2;
-    box-shadow: 0 0 0 3px rgba(56, 88, 214, 0.12);
+    border-color: var(--sp-theme-brand-line);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--sp-theme-brand) 12%, transparent);
     outline: none;
 }
 
@@ -230,7 +230,7 @@
 .sp-emaillog-panel .widefat thead th {
     background: var(--sp-el-soft);
     border-bottom: 1px solid var(--sp-el-border);
-    color: #68758a;
+    color: var(--sp-theme-muted);
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.06em;
@@ -239,7 +239,7 @@
 }
 
 .sp-emaillog-panel .widefat td {
-    border-bottom: 1px solid #eef1f6;
+    border-bottom: 1px solid var(--sp-theme-border-subtle);
     padding: 12px;
     vertical-align: top;
 }
@@ -248,7 +248,7 @@
 
 .sp-emaillog-panel .widefat code {
     background: var(--sp-el-soft);
-    border: 1px solid #eef1f6;
+    border: 1px solid var(--sp-theme-border-subtle);
     border-radius: 5px;
     color: var(--sp-el-muted);
     font-size: 11.5px;
@@ -268,7 +268,7 @@
     justify-content: space-between;
     gap: 12px;
     padding: 3px 3px 0;
-    color: #929bab;
+    color: var(--sp-theme-faint);
     font-size: 10px;
 }
 
@@ -276,7 +276,7 @@
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    color: #7f8a9e;
+    color: var(--sp-theme-muted);
     font-weight: 700;
 }
 
@@ -284,8 +284,8 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: #6cbf92;
-    box-shadow: 0 0 0 3px #eaf8f0;
+    background: var(--sp-theme-success);
+    box-shadow: 0 0 0 3px var(--sp-theme-success-soft);
 }
 
 /* Responsive ---------------------------------------------------------------- */

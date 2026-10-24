@@ -75,9 +75,16 @@ add_action( 'wp_enqueue_scripts', 'sp_portal_enqueue_assets' );
  */
 function sp_portal_enqueue_css( $route ) {
 	wp_enqueue_style(
+		'student-portal-tokens',
+		SP_URL . 'assets/css/tokens.css',
+		array(),
+		SP_VERSION
+	);
+
+	wp_enqueue_style(
 		'student-portal-base',
 		SP_URL . 'assets/css/portal-base.css',
-		array(),
+		array( 'student-portal-tokens' ),
 		SP_VERSION
 	);
 
@@ -222,6 +229,7 @@ function sp_portal_nav_icon( $name ) {
 		'tasks'       => '<path d="M7 3h10a1 1 0 0 1 1 1v16l-6-3.5L6 20V4a1 1 0 0 1 1-1z" /><path d="M9.5 8.5h5M9.5 12h3" />',
 		'calendar'    => '<rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4" />',
 		'profile'     => '<circle cx="12" cy="8" r="4" /><path d="M4.5 21c1.5-4 4.5-6 7.5-6s6 2 7.5 6" />',
+		'notifications' => '<path d=\"M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9\" /><path d=\"M13.73 21a2 2 0 0 1-3.46 0\" />',
 	);
 
 	if ( ! isset( $paths[ $name ] ) ) {
@@ -668,6 +676,101 @@ function sp_portal_action_dismiss_announcement() {
 }
 
 /**
+ * AJAX handler: dismiss an announcement for the current portal user.
+ * Returns JSON so the notification list can update without a reload.
+ */
+function sp_ajax_dismiss_announcement() {
+	check_ajax_referer( 'sp_portal_action_dismiss_announcement', 'nonce' );
+
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error( esc_html__( 'You do not have permission to do that.', 'student-portal' ), 403 );
+	}
+
+	$announcement_id = isset( $_POST['announcement_id'] ) ? (int) $_POST['announcement_id'] : 0;
+
+	if ( $announcement_id ) {
+		sp_announcement_dismiss( $announcement_id );
+	}
+
+	wp_send_json_success( array( 'id' => $announcement_id ) );
+}
+add_action( 'wp_ajax_sp_dismiss_announcement', 'sp_ajax_dismiss_announcement' );
+
+/**
+ * AJAX handler: record that the current portal user has seen the announcements.
+ *
+ * The bell uses this marker to know whether an announcement is new, so opening
+ * the dropdown has to clear it on the server, not only in the browser.
+ */
+function sp_ajax_mark_announcements_seen() {
+	check_ajax_referer( 'sp_portal_action_dismiss_announcement', 'nonce' );
+
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error( esc_html__( 'You do not have permission to do that.', 'student-portal' ), 403 );
+	}
+
+	$announcement_id = isset( $_POST['announcement_id'] ) ? (int) $_POST['announcement_id'] : 0;
+
+	sp_announcement_mark_seen( $announcement_id );
+
+	wp_send_json_success( array( 'id' => $announcement_id ) );
+}
+add_action( 'wp_ajax_sp_mark_announcements_seen', 'sp_ajax_mark_announcements_seen' );
+
+/**
+ * Store a photo a student picked on their own profile.
+ *
+ * Stricter than the wp-admin version: every student can reach this form, so the
+ * file is size-capped first and then rejected outright unless WordPress can read
+ * it back as a real image, which throws away anything that merely claims an
+ * image mime type.
+ *
+ * @return int|WP_Error Attachment ID, 0 when no file was submitted.
+ */
+function sp_portal_upload_profile_photo() {
+	if ( empty( $_FILES['photo']['name'] ) || '' === (string) $_FILES['photo']['name'] ) {
+		return 0;
+	}
+
+	if ( ! empty( $_FILES['photo']['error'] ) ) {
+		return new WP_Error(
+			'sp_photo_upload',
+			esc_html__( 'That photo could not be uploaded. Please try a smaller file.', 'student-portal' )
+		);
+	}
+
+	if ( ! empty( $_FILES['photo']['size'] ) && (int) $_FILES['photo']['size'] > 3 * MB_IN_BYTES ) {
+		return new WP_Error(
+			'sp_photo_too_large',
+			esc_html__( 'Please choose a photo under 3 MB.', 'student-portal' )
+		);
+	}
+
+	require_once ABSPATH . 'wp-admin/includes/file.php';
+	require_once ABSPATH . 'wp-admin/includes/image.php';
+	require_once ABSPATH . 'wp-admin/includes/media.php';
+
+	$attachment_id = media_handle_upload( 'photo', 0 );
+
+	if ( is_wp_error( $attachment_id ) ) {
+		return $attachment_id;
+	}
+
+	$meta = wp_get_attachment_metadata( $attachment_id );
+
+	if ( empty( $meta['width'] ) || empty( $meta['height'] ) ) {
+		wp_delete_attachment( $attachment_id, true );
+
+		return new WP_Error(
+			'sp_photo_not_image',
+			esc_html__( 'That file is not an image. Please choose a JPG or PNG photo.', 'student-portal' )
+		);
+	}
+
+	return (int) $attachment_id;
+}
+
+/**
  * Save the contact details a student may edit themselves.
  *
  * Email, username, enrolment ID and status stay read-only: they key the
@@ -692,6 +795,23 @@ function sp_portal_action_save_profile() {
 
 	$phone = substr( trim( (string) preg_replace( '/[^0-9+()\-\s]/', '', $phone ) ), 0, 20 );
 
+	// Unlike the name, a cleared father's name or address is a legitimate
+	// edit, so an empty value clears the column instead of keeping the old one.
+	$address     = isset( $_POST['address'] ) ? sanitize_textarea_field( wp_unslash( $_POST['address'] ) ) : '';
+	$father      = isset( $_POST['father_name'] ) ? sanitize_text_field( wp_unslash( $_POST['father_name'] ) ) : '';
+	$clear_photo = ! empty( $_POST['clear_photo'] );
+	$sp_upload   = sp_portal_upload_profile_photo();
+	$sp_errors   = array();
+
+	// The field is capped at 100 characters, so pasted overflow is trimmed
+	// rather than stored as a line the card cannot print.
+	$address = trim( $address );
+	$address = function_exists( 'mb_substr' ) ? mb_substr( $address, 0, 100 ) : substr( $address, 0, 100 );
+
+	if ( is_wp_error( $sp_upload ) ) {
+		$sp_errors[] = $sp_upload->get_error_message();
+	}
+
 	$dob = ( ! empty( $profile->dob ) && '0000-00-00' !== $profile->dob ) ? (string) $profile->dob : '';
 
 	// A <input type="date"> posts Y-m-d, but older browsers post a local format
@@ -709,15 +829,33 @@ function sp_portal_action_save_profile() {
 		}
 	}
 
+	$sp_data   = array(
+		'full_name'   => $full_name,
+		'phone'       => $phone,
+		'dob'         => '' !== $dob ? $dob : null,
+		'father_name' => '' !== $father ? $father : null,
+		'address'     => '' !== $address ? $address : null,
+	);
+	$sp_format = array( '%s', '%s', '%s', '%s', '%s' );
+
+	/*
+	 * Three mutually exclusive photo outcomes: a new file replaces the record,
+	 * an explicit removal clears it, and a failed upload leaves the stored
+	 * photo alone so the rest of the form still saves.
+	 */
+	if ( ! is_wp_error( $sp_upload ) && $sp_upload ) {
+		$sp_data['photo_id'] = (int) $sp_upload;
+		$sp_format[]         = '%d';
+	} elseif ( $clear_photo ) {
+		$sp_data['photo_id'] = null;
+		$sp_format[]         = '%d';
+	}
+
 	$wpdb->update(
 		sp_table( 'student_profiles' ),
-		array(
-			'full_name' => $full_name,
-			'phone'     => $phone,
-			'dob'       => '' !== $dob ? $dob : null,
-		),
+		$sp_data,
 		array( 'id' => (int) $profile->id ),
-		array( '%s', '%s', '%s' ),
+		$sp_format,
 		array( '%d' )
 	);
 
@@ -728,13 +866,22 @@ function sp_portal_action_save_profile() {
 		'Student updated their own contact details.'
 	);
 
-	$url = add_query_arg( 'sp_notice', rawurlencode( 'Your profile details have been saved.' ), sp_portal_url( 'profile' ) );
-
 	if ( $dob_error ) {
+		$sp_errors[] = 'That date of birth could not be read, so the stored value was kept.';
+	}
+
+	if ( $sp_errors ) {
+		// The other fields did save, so say so instead of implying it all failed.
 		$url = add_query_arg(
 			'sp_notice_error',
-			rawurlencode( 'That date of birth could not be read, so the stored value was kept.' ),
-			$url
+			rawurlencode( implode( ' ', $sp_errors ) . ' Your other details were saved.' ),
+			sp_portal_url( 'profile' )
+		);
+	} else {
+		$url = add_query_arg(
+			'sp_notice',
+			rawurlencode( 'Your profile details have been saved.' ),
+			sp_portal_url( 'profile' )
 		);
 	}
 

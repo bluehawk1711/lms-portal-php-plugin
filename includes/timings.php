@@ -262,6 +262,60 @@ function sp_sanitize_time( $value ) {
 }
 
 /**
+ * Human clock label for a stored `HH:MM` time, in the site's time format.
+ *
+ * @param string $value Raw time, e.g. "13:00".
+ * @return string '' when the value is not a clock time.
+ */
+function sp_format_clock_time( $value ) {
+	$value = sp_sanitize_time( $value );
+
+	if ( ! $value ) {
+		return '';
+	}
+
+	return date_i18n( get_option( 'time_format' ), (int) strtotime( '2000-01-01 ' . $value ) );
+}
+
+/**
+ * The hours a class runs on a given weekday.
+ *
+ * Returns that weekday's own row when it has one. A class stored with a single
+ * daily timing (the same start and end every row) also covers weekdays without
+ * their own row; anything else means the class does not meet that day, and
+ * null is returned so the caller can say so instead of inventing hours.
+ *
+ * @param int $class_id Class id.
+ * @param int $day      Weekday, 0 (Sunday) to 6.
+ * @return array|null { day_of_week, start_time, end_time } or null.
+ */
+function sp_class_timing_for_weekday( $class_id, $day ) {
+	$rows = sp_get_class_timings( $class_id );
+
+	if ( ! $rows ) {
+		return null;
+	}
+
+	$day = (int) $day;
+
+	foreach ( $rows as $row ) {
+		if ( (int) $row['day_of_week'] === $day ) {
+			return $row;
+		}
+	}
+
+	$first = $rows[0];
+
+	foreach ( $rows as $row ) {
+		if ( $row['start_time'] !== $first['start_time'] || $row['end_time'] !== $first['end_time'] ) {
+			return null;
+		}
+	}
+
+	return $first;
+}
+
+/**
  * Replace a class's timetable and point the class at its timing set.
  *
  * @param int   $class_id Class id.

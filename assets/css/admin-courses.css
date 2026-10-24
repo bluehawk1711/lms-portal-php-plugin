@@ -14,23 +14,23 @@
  * ------------------------------------------------------------------------ */
 
 .sp-page-courses {
-    --sp-accent: var(--wp-admin-theme-color, #2271b1);
-    --sp-ink: #1d2327;
-    --sp-ink-soft: #3c434a;
-    --sp-muted: #646970;
-    --sp-faint: #8c8f94;
-    --sp-line: #dcdcde;
-    --sp-line-soft: #eceef0;
-    --sp-surface: #fff;
-    --sp-surface-alt: #f6f7f7;
-    --sp-success: #00a32a;
-    --sp-success-soft: #ebf7ee;
-    --sp-warning: #996800;
-    --sp-warning-soft: #fcf3e3;
-    --sp-danger: #b32d2e;
-    --sp-danger-soft: #fbeaea;
+    --sp-accent: var(--wp-admin-theme-color, var(--sp-theme-brand));
+    --sp-ink: var(--sp-theme-ink);
+    --sp-ink-soft: var(--sp-theme-ink-2);
+    --sp-muted: var(--sp-theme-muted);
+    --sp-faint: var(--sp-theme-faint);
+    --sp-line: var(--sp-theme-border-strong);
+    --sp-line-soft: var(--sp-theme-border-subtle);
+    --sp-surface: var(--sp-theme-surface);
+    --sp-surface-alt: var(--sp-theme-surface-alt);
+    --sp-success: var(--sp-theme-success);
+    --sp-success-soft: var(--sp-theme-success-soft);
+    --sp-warning: var(--sp-theme-warn-ink);
+    --sp-warning-soft: var(--sp-theme-warn-soft);
+    --sp-danger: var(--sp-theme-danger);
+    --sp-danger-soft: var(--sp-theme-danger-soft);
     --sp-radius: 10px;
-    --sp-radius-sm: 8px;
+    --sp-radius-sm: var(--sp-theme-radius-sm);
     --sp-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.04);
     font-size: 13px;
 }
@@ -61,9 +61,9 @@
     gap: 24px;
     padding: 23px 25px;
     margin: 0 0 17px;
-    border: 1px solid #e6eaf2;
+    border: 1px solid var(--sp-theme-border);
     border-radius: var(--sp-radius);
-    background: radial-gradient(circle at 96% 0%, rgba(91, 113, 225, 0.11), transparent 31%), linear-gradient(135deg, #fff 0%, #fbfcff 100%);
+    background: radial-gradient(circle at 96% 0%, color-mix(in srgb, var(--sp-theme-brand) 11%, transparent), transparent 31%), linear-gradient(135deg, #fff 0%, var(--sp-theme-surface-hover) 100%);
     box-shadow: 0 3px 12px rgba(25, 39, 70, 0.035);
 }
 
@@ -75,7 +75,7 @@
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    color: #64708a;
+    color: var(--sp-theme-muted);
     font-size: 10px;
     font-weight: 750;
     letter-spacing: 0.13em;
@@ -84,7 +84,7 @@
 }
 
 .sp-courses-eyebrow span {
-    color: #a1aabc;
+    color: var(--sp-theme-faint);
 }
 
 .sp-courses-page-header h1 {
@@ -111,7 +111,7 @@
     align-items: center;
     gap: 10px;
     padding: 11px 14px;
-    border: 1px solid #e4e9f4;
+    border: 1px solid var(--sp-theme-border);
     border-radius: 12px;
     background: rgba(255, 255, 255, 0.82);
 }
@@ -123,7 +123,7 @@
     flex: 0 0 34px;
     place-items: center;
     border-radius: 10px;
-    background: #edf1ff;
+    background: var(--sp-theme-brand-soft);
     color: var(--sp-accent);
     font-size: 18px;
     font-weight: 750;
@@ -135,14 +135,14 @@
 }
 
 .sp-courses-header-note strong {
-    color: #27334a;
+    color: var(--sp-theme-ink-2);
     font-size: 12px;
     font-weight: 750;
 }
 
 .sp-courses-header-note small {
     margin-top: 2px;
-    color: #768197;
+    color: var(--sp-theme-muted);
     font-size: 11px;
 }
 
@@ -176,9 +176,9 @@
     font-weight: 750;
 }
 
-.sp-courses-stat-icon-total { background: #edf1ff; color: #3858d6; }
-.sp-courses-stat-icon-active { background: #e9f8f0; color: #168452; }
-.sp-courses-stat-icon-archived { background: #fff5df; color: #a66b0b; }
+.sp-courses-stat-icon-total { background: var(--sp-theme-brand-soft); color: var(--sp-theme-brand); }
+.sp-courses-stat-icon-active { background: var(--sp-theme-success-soft); color: var(--sp-theme-success); }
+.sp-courses-stat-icon-archived { background: var(--sp-theme-warn-soft); color: var(--sp-theme-warn); }
 
 .sp-courses-stat-card > div {
     display: flex;
@@ -188,7 +188,7 @@
 
 .sp-courses-stat-label {
     overflow: hidden;
-    color: #68758a;
+    color: var(--sp-theme-muted);
     font-size: 11px;
     font-weight: 650;
     text-overflow: ellipsis;
@@ -197,7 +197,7 @@
 
 .sp-courses-stat-card strong {
     margin-top: 1px;
-    color: #182336;
+    color: var(--sp-theme-brand-ink);
     font-size: 25px;
     font-weight: 760;
     letter-spacing: -0.04em;
@@ -207,7 +207,7 @@
 
 .sp-courses-stat-card small {
     margin-top: 2px;
-    color: #8a94a5;
+    color: var(--sp-theme-faint);
     font-size: 10px;
 }
 
@@ -279,7 +279,7 @@
 
 .sp-panel-head h2 .dashicons {
     align-items: center;
-    background: #f0f6fc;
+    background: var(--sp-theme-brand-wash);
     background: color-mix(in srgb, var(--sp-accent) 10%, #fff);
     border-radius: 7px;
     color: var(--sp-accent);
@@ -332,7 +332,7 @@
 }
 
 .sp-chip-accent {
-    background: #f0f6fc;
+    background: var(--sp-theme-brand-wash);
     background: color-mix(in srgb, var(--sp-accent) 10%, #fff);
     color: var(--sp-accent);
 }
@@ -429,7 +429,7 @@
 
 .sp-page-courses .sp-input {
     background: var(--sp-surface);
-    border: 1px solid #a7aaad;
+    border: 1px solid var(--sp-theme-faint);
     border-radius: 6px;
     color: var(--sp-ink);
     font-size: 13px;
@@ -461,7 +461,7 @@
 
 .sp-page-courses .sp-input:focus {
     border-color: var(--sp-accent);
-    box-shadow: 0 0 0 3px rgba(34, 113, 177, 0.16);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--sp-theme-brand) 16%, transparent);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--sp-accent) 16%, transparent);
     outline: none;
 }
@@ -595,14 +595,14 @@
 }
 
 .sp-btn-danger:not(:disabled) {
-    border-color: #e5a1a2;
+    border-color: var(--sp-theme-danger-line);
     color: var(--sp-danger);
 }
 
 .sp-btn-danger:not(:disabled):hover {
     background: var(--sp-danger);
     border-color: var(--sp-danger);
-    color: #fff;
+    color: var(--sp-theme-on-brand);
 }
 
 .sp-page-courses .button:disabled,
@@ -685,7 +685,7 @@
 }
 
 .sp-table tbody tr:hover {
-    background: #f7fafe;
+    background: var(--sp-theme-surface-tint);
     background: color-mix(in srgb, var(--sp-accent) 4%, #fff);
 }
 
@@ -763,7 +763,7 @@
 
 .sp-empty {
     background: var(--sp-surface-alt);
-    border: 1px dashed #c3c4c7;
+    border: 1px dashed var(--sp-theme-border-strong);
     border-radius: var(--sp-radius);
     color: var(--sp-muted);
     margin: 18px 0 2px;
@@ -866,13 +866,13 @@
 }
 
 .sp-outline-item:hover {
-    border-color: #b9bcc0;
+    border-color: var(--sp-theme-faint);
     box-shadow: var(--sp-shadow-1);
 }
 
 .sp-outline-item.is-editing {
     border-color: var(--sp-accent);
-    box-shadow: 0 0 0 3px rgba(34, 113, 177, 0.12);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--sp-theme-brand) 12%, transparent);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--sp-accent) 12%, transparent);
 }
 
@@ -892,7 +892,7 @@
 
 .sp-outline-item.is-editing .sp-outline-num {
     background: var(--sp-accent);
-    color: #fff;
+    color: var(--sp-theme-on-brand);
 }
 
 .sp-outline-body {
@@ -950,7 +950,7 @@
 
 .sp-icon-btn:hover {
     background: var(--sp-surface-alt);
-    border-color: #a7aaad;
+    border-color: var(--sp-theme-faint);
     color: var(--sp-ink);
 }
 
@@ -1030,7 +1030,7 @@
 .sp-import-icon {
     align-items: center;
     background: var(--sp-warning-soft);
-    border: 1px solid #eadfc0;
+    border: 1px solid var(--sp-theme-warn-line);
     border-radius: 9px;
     color: var(--sp-warning);
     display: flex;
@@ -1062,7 +1062,7 @@
 .sp-import-drop {
     align-items: center;
     background: var(--sp-surface);
-    border: 1px dashed #c3c4c7;
+    border: 1px dashed var(--sp-theme-border-strong);
     border-radius: var(--sp-radius-sm);
     display: flex;
     flex-wrap: wrap;
@@ -1073,7 +1073,7 @@
 
 .sp-import-drop:hover,
 .sp-import-drop:focus-within {
-    background: #f7fafe;
+    background: var(--sp-theme-surface-tint);
     background: color-mix(in srgb, var(--sp-accent) 4%, #fff);
     border-color: var(--sp-accent);
 }
@@ -1117,7 +1117,7 @@
     justify-content: space-between;
     gap: 12px;
     padding: 3px 3px 0;
-    color: #929bab;
+    color: var(--sp-theme-faint);
     font-size: 10px;
 }
 
@@ -1125,7 +1125,7 @@
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    color: #7f8a9e;
+    color: var(--sp-theme-muted);
     font-weight: 700;
 }
 
@@ -1133,8 +1133,8 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: #6cbf92;
-    box-shadow: 0 0 0 3px #eaf8f0;
+    background: var(--sp-theme-success);
+    box-shadow: 0 0 0 3px var(--sp-theme-success-soft);
 }
 
 /* --------------------------------------------------------------------------

@@ -37,7 +37,7 @@
 	display: grid;
 	place-items: center;
 	background: var(--sp-bad);
-	color: #ffffff;
+	color: var(--sp-theme-on-brand);
 	font-size: 0.65rem;
 	font-weight: 700;
 	line-height: 1;
@@ -51,24 +51,39 @@
 	align-items: center;
 	justify-content: space-between;
 	gap: 1.5rem;
-	padding: 1.6rem 1.8rem;
-	border-radius: var(--sp-radius);
-	background: linear-gradient(120deg, var(--sp-primary-dark) 0%, var(--sp-primary) 55%, var(--sp-accent-dark) 100%);
-	color: #ffffff;
-	box-shadow: var(--sp-shadow);
+	padding: 1.8rem 2rem;
+	border-radius: var(--sp-theme-radius-3xl);
+	background: linear-gradient(110deg, var(--sp-theme-navy) 0%, var(--sp-theme-navy-soft) 55%, #0c1a30 100%);
+	color: var(--sp-theme-on-brand);
+	box-shadow: var(--sp-theme-shadow-navy);
 	overflow: hidden;
 	font-family: var(--sp-font);
+}
+
+.sp-teacher-portal .sp-dash-banner::before {
+	content: "";
+	position: absolute;
+	top: -8rem;
+	right: -8rem;
+	width: 20rem;
+	height: 20rem;
+	border-radius: 50%;
+	background: rgba(255, 153, 51, 0.15);
+	filter: blur(64px);
+	pointer-events: none;
 }
 
 .sp-teacher-portal .sp-dash-banner::after {
 	content: "";
 	position: absolute;
-	right: -4rem;
-	top: -6rem;
+	bottom: -10rem;
+	right: 25%;
 	width: 16rem;
 	height: 16rem;
 	border-radius: 50%;
-	background: rgba(255, 255, 255, 0.07);
+	background: rgba(37, 99, 235, 0.1);
+	filter: blur(64px);
+	pointer-events: none;
 }
 
 .sp-teacher-portal .sp-dash-banner-body {
@@ -78,20 +93,38 @@
 }
 
 .sp-teacher-portal .sp-dash-banner-kicker {
-	margin: 0 0 0.45rem;
-	font-size: 0.72rem;
-	font-weight: 600;
+	margin: 0 0 0.55rem;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.3rem 0.75rem;
+	font-size: 0.68rem;
+	font-weight: 700;
 	text-transform: uppercase;
-	letter-spacing: 0.12em;
-	color: rgba(255, 255, 255, 0.75);
+	letter-spacing: 0.1em;
+	color: var(--sp-theme-brand-bright);
+	background: rgba(255, 255, 255, 0.1);
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	border-radius: 999px;
+	width: fit-content;
+}
+
+.sp-teacher-portal .sp-dash-banner-kicker::before {
+	content: "";
+	width: 0.45rem;
+	height: 0.45rem;
+	border-radius: 50%;
+	background: var(--sp-theme-brand-bright);
+	flex: none;
 }
 
 .sp-teacher-portal .sp-dash-banner h2 {
 	margin: 0 0 0.5rem;
-	font-size: 1.35rem;
+	font-size: 1.7rem;
 	font-weight: 800;
-	line-height: 1.25;
-	color: #ffffff;
+	line-height: 1.2;
+	letter-spacing: -0.02em;
+	color: var(--sp-theme-on-brand);
 }
 
 .sp-teacher-portal .sp-dash-banner-text {
@@ -102,21 +135,23 @@
 }
 
 .sp-teacher-portal .sp-dash-banner-btn {
-	display: inline-block;
-	padding: 0.6rem 1.15rem;
-	border-radius: 999px;
-	background: #ffffff;
-	color: var(--sp-primary-dark);
-	font-size: 0.88rem;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.55rem;
+	padding: 0.7rem 1.35rem;
+	border-radius: var(--sp-radius);
+	background: linear-gradient(90deg, var(--sp-theme-brand-bright) 0%, var(--sp-primary) 100%);
+	color: #fff;
+	font-size: 0.92rem;
 	font-weight: 700;
 	text-decoration: none;
-	box-shadow: var(--sp-shadow);
-	transition: transform 0.15s ease, background-color 0.15s ease;
+	box-shadow: 0 8px 20px -4px rgba(255, 153, 51, 0.35);
+	transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .sp-teacher-portal .sp-dash-banner-btn:hover {
-	background: #f8fafc;
 	transform: translateY(-1px);
+	box-shadow: 0 10px 24px -4px rgba(255, 153, 51, 0.45);
 }
 
 .sp-teacher-portal .sp-dash-banner-btn:focus-visible {
@@ -133,22 +168,40 @@
 }
 
 .sp-teacher-portal .sp-dash-banner-ring {
+	position: relative;
 	display: grid;
 	place-items: center;
 	align-content: center;
-	width: 8.5rem;
-	height: 8.5rem;
+	width: 9rem;
+	height: 9rem;
 	border-radius: 50%;
-	border: 2px dashed rgba(255, 255, 255, 0.45);
-	background: rgba(255, 255, 255, 0.08);
+	padding: 0.6rem;
+	background: conic-gradient(var(--sp-theme-brand-bright) calc(var(--sp-dash-pct, 0) * 1%), rgba(255, 255, 255, 0.15) 0);
+	box-shadow: 0 12px 28px -6px rgba(10, 25, 47, 0.45);
 	text-align: center;
 }
 
+.sp-teacher-portal .sp-dash-banner-ring::before {
+	content: "";
+	position: absolute;
+	inset: 0.6rem;
+	border-radius: 50%;
+	background: var(--sp-theme-navy);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sp-teacher-portal .sp-dash-banner-ring > strong,
+.sp-teacher-portal .sp-dash-banner-ring > span {
+	position: relative;
+	z-index: 1;
+	display: block;
+}
+
 .sp-teacher-portal .sp-dash-banner-ring strong {
-	font-size: 2rem;
+	font-size: 1.9rem;
 	font-weight: 800;
 	line-height: 1;
-	color: #ffffff;
+	color: var(--sp-theme-on-brand);
 }
 
 .sp-teacher-portal .sp-dash-banner-ring span {
@@ -203,13 +256,27 @@
 	justify-content: space-between;
 	gap: 0.75rem;
 	margin: 0 0 0.9rem;
+	padding-bottom: 0.8rem;
+	border-bottom: 1px solid var(--sp-border-subtle);
 }
 
 .sp-teacher-portal .sp-dash-card-head h2 {
 	margin: 0;
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
 	font-size: 1rem;
 	font-weight: 700;
 	color: var(--sp-text);
+}
+
+.sp-teacher-portal .sp-dash-card-head.is-dotted h2::before {
+	content: "";
+	width: 0.55rem;
+	height: 0.55rem;
+	border-radius: 50%;
+	background: var(--sp-primary);
+	flex: none;
 }
 
 .sp-teacher-portal .sp-dash-card-head a {
@@ -258,6 +325,7 @@
 	height: 2.35rem;
 	border-radius: 50%;
 	background: linear-gradient(135deg, var(--sp-primary-soft), var(--sp-accent-soft));
+	border: 1px solid var(--sp-theme-brand-line);
 	color: var(--sp-primary-dark);
 	font-size: 0.78rem;
 	font-weight: 700;
@@ -330,8 +398,8 @@
 	width: 2.35rem;
 	height: 2.35rem;
 	border-radius: var(--sp-radius-sm);
-	background: linear-gradient(135deg, var(--sp-primary), var(--sp-accent));
-	color: #ffffff;
+	background: linear-gradient(135deg, var(--sp-theme-navy), #1e293b);
+	color: var(--sp-theme-brand-bright);
 	font-size: 0.78rem;
 	font-weight: 700;
 	flex: none;
@@ -388,10 +456,14 @@
 }
 
 .sp-teacher-portal .sp-dash-avatar-lg {
-	width: 4.25rem;
-	height: 4.25rem;
+	width: 4.5rem;
+	height: 4.5rem;
 	margin-bottom: 0.35rem;
-	font-size: 1.25rem;
+	font-size: 1.3rem;
+	background: linear-gradient(135deg, var(--sp-primary-soft) 0%, #ffd9b8 100%);
+	border: 2px solid #fdbd7f;
+	box-shadow: var(--sp-shadow);
+	color: var(--sp-primary-dark);
 }
 
 .sp-teacher-portal .sp-dash-profile-name {
@@ -464,7 +536,7 @@
 
 .sp-teacher-portal .sp-cal-cell.is-today {
 	background: var(--sp-primary);
-	color: #ffffff;
+	color: var(--sp-theme-on-brand);
 	font-weight: 700;
 }
 
@@ -478,7 +550,7 @@
 }
 
 .sp-teacher-portal .sp-cal-cell.is-today .sp-cal-dot {
-	background: #ffffff;
+	background: var(--sp-theme-surface);
 	box-shadow: 0 0 0 1.5px var(--sp-primary);
 }
 
@@ -537,7 +609,7 @@
 .sp-teacher-portal .sp-dash-now {
 	padding: 0.1rem 0.45rem;
 	border-radius: 999px;
-	background: #ffffff;
+	background: var(--sp-theme-surface);
 	color: var(--sp-primary);
 	font-size: 0.66rem;
 	font-weight: 700;
@@ -548,7 +620,7 @@
 	background: var(--mat-good-soft);
 }
 
-.sp-mat .sp-muted { color: #98a2b3; }
+.sp-mat .sp-muted { color: var(--sp-theme-faint); }
 
 @media (max-width: 1180px) {
 	.sp-teacher-portal .sp-dash {

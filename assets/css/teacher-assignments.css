@@ -11,23 +11,18 @@
 	--asg-border: var(--sp-border, color-mix(in srgb, currentColor 14%, transparent));
 	--asg-subtle: color-mix(in srgb, currentColor 5%, transparent);
 	--asg-track: color-mix(in srgb, currentColor 12%, transparent);
-	--asg-muted: var(--sp-muted, #667085);
-	--asg-primary: var(--sp-primary, #4f46e5);
+	--asg-muted: var(--sp-muted, var(--sp-theme-muted));
+	--asg-primary: var(--sp-primary, var(--sp-theme-brand));
 	--asg-accent-text: color-mix(in srgb, var(--asg-primary) 75%, currentColor);
-	--asg-good: #12b76a;
-	--asg-warn: #b54708;
+	--asg-good: var(--sp-theme-success);
+	--asg-warn: var(--sp-theme-warn);
 	--asg-radius: 14px;
 	--asg-shadow: var(--sp-shadow-sm, 0 1px 2px rgba(16, 24, 40, 0.06));
 }
 
-@media (prefers-color-scheme: dark) {
-	:root:not([data-theme="light"]) .sp-asg {
-		--asg-warn: #fdb022;
-	}
-}
 
 :root[data-theme="dark"] .sp-asg {
-	--asg-warn: #fdb022;
+	--asg-warn: var(--sp-theme-warn);
 }
 
 /* Visually hidden, still read by screen readers */
@@ -416,7 +411,7 @@
 	color: var(--asg-muted);
 }
 
-/* Small screens: each row becomes a card --------------------------------- */
+/* Small screens: the table keeps its columns and scrolls sideways ---------- */
 
 @media (max-width: 720px) {
 	.sp-asg-head .sp-btn {
@@ -428,55 +423,12 @@
 	}
 
 	.sp-asg-tablewrap {
-		overflow: visible;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
 	}
 
-	.sp-asg-table,
-	.sp-asg-table tbody {
-		display: block;
-	}
-
-	.sp-asg-table thead {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		margin: -1px;
-		overflow: hidden;
-		clip: rect(0 0 0 0);
-	}
-
-	.sp-asg-table tr {
-		display: grid;
-		gap: 0.6rem;
-		padding: 1rem 1.15rem;
-		border-top: 1px solid var(--asg-border);
-	}
-
-	.sp-asg-table tbody tr:first-child {
-		border-top: 0;
-	}
-
-	.sp-asg-table td,
-	.sp-asg-table tbody tr:first-child td {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 1rem;
-		padding: 0;
-		border: 0;
-	}
-
-	.sp-asg-table td[data-label]::before {
-		content: attr(data-label);
-		flex: none;
-		color: var(--asg-muted);
-		font-size: 0.8125rem;
-	}
-
-	.sp-asg-cell-title {
-		display: block;
-		width: auto;
-		min-width: 0;
+	.sp-asg-table {
+		min-width: 40rem;
 	}
 
 	.sp-asg-when {
@@ -487,14 +439,6 @@
 	.sp-asg-prog {
 		flex: 1;
 		max-width: 14rem;
-	}
-
-	.sp-asg-cell-action {
-		width: auto;
-	}
-
-	.sp-asg-cell-action .sp-btn {
-		width: 100%;
 	}
 
 	.sp-asg-summary {

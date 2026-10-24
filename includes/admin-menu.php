@@ -240,10 +240,21 @@ function sp_admin_enqueue_assets( $hook ) {
 	 * would degrade without network access. The portal ships its own self-contained
 	 * stylesheet instead.
 	 */
+	/*
+	 * Theme tokens load first: every other plugin stylesheet resolves its
+	 * colours and radii through them (assets/css/tokens.css).
+	 */
+	wp_enqueue_style(
+		'student-portal-tokens',
+		SP_URL . 'assets/css/tokens.css',
+		array(),
+		SP_VERSION
+	);
+
 	wp_enqueue_style(
 		'student-portal-admin',
 		SP_URL . 'assets/css/admin-base.css',
-		array(),
+		array( 'student-portal-tokens' ),
 		SP_VERSION
 	);
 
@@ -264,6 +275,19 @@ function sp_admin_enqueue_assets( $hook ) {
 		wp_enqueue_style(
 			'student-portal-admin-add-student',
 			SP_URL . 'assets/css/admin-add-student.css',
+			array( 'student-portal-admin' ),
+			SP_VERSION
+		);
+	}
+
+	/*
+	 * The compose preview on the Announcements screen renders the real portal
+	 * banner and bar, so it needs the same stylesheet the portals use.
+	 */
+	if ( 'sp-announcements' === $slug && file_exists( SP_PATH . 'assets/css/announcements.css' ) ) {
+		wp_enqueue_style(
+			'student-portal-announcements',
+			SP_URL . 'assets/css/announcements.css',
 			array( 'student-portal-admin' ),
 			SP_VERSION
 		);

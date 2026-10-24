@@ -627,7 +627,11 @@ function sp_save_question( $args ) {
 						return trim( (string) $o );
 					},
 					(array) $args['options']
-				)
+				),
+				function ( $option ) {
+					// Keep "0": a numeric MCQ can offer it as a real choice.
+					return '' !== $option;
+				}
 			)
 		);
 
@@ -803,7 +807,15 @@ function sp_import_questions_csv( $class_id, $csv ) {
 				'class_id' => $class_id,
 				'type'     => $type,
 				'prompt'   => $prompt,
-				'options'  => array_filter( array( $opt_a, $opt_b, $opt_c, $opt_d ) ),
+				'options'  => array_filter(
+					array( $opt_a, $opt_b, $opt_c, $opt_d ),
+					function ( $option ) {
+						// Only blank padding is dropped: a numeric question can
+						// legitimately offer "0", and array_filter() alone would
+						// treat it as empty and shift the A/B/C/D letters.
+						return '' !== (string) $option;
+					}
+				),
 				'answer'   => $answer,
 			)
 		);

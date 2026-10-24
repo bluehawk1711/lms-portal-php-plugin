@@ -27,6 +27,7 @@ function sp_teacher_routes() {
 		'results'       => array( 'label' => 'Results', 'template' => 'teacher-results.php', 'public' => false ),
 		'calendar'      => array( 'label' => 'Calendar', 'template' => 'teacher-calendar.php', 'public' => false ),
 		'profile'       => array( 'label' => 'Profile', 'template' => 'teacher-profile.php', 'public' => false ),
+		'notifications' => array( 'label' => 'Announcements', 'template' => 'teacher-notifications.php', 'public' => false ),
 	);
 }
 
@@ -35,7 +36,7 @@ function sp_teacher_routes() {
  */
 function sp_teacher_rewrite_rules() {
 	add_rewrite_rule( '^teacher/?$', 'index.php?pagename=teacher&sp_teacher_route=home', 'top' );
-	add_rewrite_rule( '^teacher/(classes|materials|results|assignments|calendar|profile)/?$', 'index.php?pagename=teacher&sp_teacher_route=$matches[1]', 'top' );
+	add_rewrite_rule( '^teacher/(classes|materials|results|assignments|calendar|profile|notifications)/?$', 'index.php?pagename=teacher&sp_teacher_route=$matches[1]', 'top' );
 	add_rewrite_rule( '^teacher/materials/new/?$', 'index.php?pagename=teacher&sp_teacher_route=material-edit', 'top' );
 	add_rewrite_rule( '^teacher/materials/(\d+)/?$', 'index.php?pagename=teacher&sp_teacher_route=material-edit&sp_material_id=$matches[1]', 'top' );
 	add_rewrite_rule( '^teacher/assignments/new/?$', 'index.php?pagename=teacher&sp_teacher_route=assignment-edit', 'top' );

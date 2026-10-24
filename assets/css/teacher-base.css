@@ -2,41 +2,41 @@
 
 :root {
 	
-	--sp-font: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+	--sp-font: var(--sp-theme-font-body);
 
 	
-	--sp-bg: #f4f6f9;
-	--sp-surface: #ffffff;
-	--sp-border: #e5e9f0;
-	--sp-text: #1f2933;
-	--sp-muted: #64748b;
+	--sp-bg: var(--sp-theme-bg);
+	--sp-surface: var(--sp-theme-surface);
+	--sp-border: var(--sp-theme-border);
+	--sp-text: var(--sp-theme-ink);
+	--sp-muted: var(--sp-theme-muted);
 
 	
-	--sp-primary: #1d4ed8;
-	--sp-primary-dark: #1e3a8a;
-	--sp-primary-soft: #eff4ff;
+	--sp-primary: var(--sp-theme-brand);
+	--sp-primary-dark: var(--sp-theme-brand-deep);
+	--sp-primary-soft: var(--sp-theme-brand-soft);
 
 	
-	--sp-accent: #8b5cf6;
-	--sp-accent-dark: #7c3aed;
-	--sp-accent-ink: #4c1d95;
-	--sp-accent-soft: #ede9fe;
+	--sp-accent: var(--sp-theme-accent);
+	--sp-accent-dark: var(--sp-theme-accent-strong);
+	--sp-accent-ink: var(--sp-theme-accent-ink);
+	--sp-accent-soft: var(--sp-theme-accent-soft);
 
 	
-	--sp-good: #15803d;
-	--sp-good-bg: #dcfce7;
-	--sp-warn: #b45309;
-	--sp-warn-bg: #fef3c7;
-	--sp-bad: #b91c1c;
-	--sp-bad-bg: #fee2e2;
+	--sp-good: var(--sp-theme-success);
+	--sp-good-bg: var(--sp-theme-success-tint);
+	--sp-warn: var(--sp-theme-warn);
+	--sp-warn-bg: var(--sp-theme-warn-tint);
+	--sp-bad: var(--sp-theme-danger);
+	--sp-bad-bg: var(--sp-theme-danger-tint);
 
 	
-	--sp-radius: 14px;
-	--sp-radius-sm: 9px;
-	--sp-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
-	--sp-shadow: 0 1px 3px rgba(15, 23, 42, 0.07), 0 6px 16px -6px rgba(15, 23, 42, 0.1);
-	--sp-shadow-lg: 0 4px 10px rgba(15, 23, 42, 0.08), 0 18px 36px -12px rgba(15, 23, 42, 0.16);
-	--sp-ring: 0 0 0 3px rgba(29, 78, 216, 0.22);
+	--sp-radius: var(--sp-theme-radius-lg);
+	--sp-radius-sm: var(--sp-theme-radius-sm);
+	--sp-shadow-sm: var(--sp-theme-shadow-sm);
+	--sp-shadow: var(--sp-theme-shadow);
+	--sp-shadow-lg: var(--sp-theme-shadow-lg);
+	--sp-ring: var(--sp-theme-ring);
 
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
@@ -59,7 +59,7 @@ body.sp-standalone h2,
 body.sp-standalone h3,
 body.sp-standalone h4 {
 	color: var(--sp-text);
-	font-family: var(--sp-font);
+	font-family: var(--sp-theme-font-head);
 	font-weight: 700;
 	line-height: 1.2;
 }
@@ -92,7 +92,7 @@ body.sp-standalone h4 {
 }
 
 .sp-attendance-option-excused:has(input:checked) {
-	background: #e0e7ff;
+	background: var(--sp-theme-brand-soft);
 	border-color: var(--sp-primary);
 	color: var(--sp-primary);
 	font-weight: 600;
@@ -111,7 +111,7 @@ body.sp-standalone h4 {
 }
 
 .sp-attendance-option-excused.is-checked {
-	background: #e0e7ff;
+	background: var(--sp-theme-brand-soft);
 	border-color: var(--sp-primary);
 	color: var(--sp-primary);
 }
@@ -121,7 +121,7 @@ body.sp-standalone h4 {
 .sp-teacher-portal .wp-editor-container {
 	border: 1px solid var(--sp-border);
 	border-radius: 7px;
-	background: #fff;
+	background: var(--sp-theme-surface);
 }
 
 .sp-teacher-portal .wp-editor {
@@ -142,7 +142,7 @@ body.sp-standalone h4 {
 }
 
 .sp-note-body {
-	color: #334155;
+	color: var(--sp-theme-ink-2);
 	font-size: 0.95rem;
 	line-height: 1.65;
 }
@@ -174,6 +174,20 @@ body.sp-standalone h4 {
 	box-sizing: inherit;
 }
 
+.sp-portal h1,
+.sp-portal h2,
+.sp-portal h3,
+.sp-portal h4,
+.sp-portal h5,
+.sp-portal h6 {
+	font-family: var(--sp-theme-font-head);
+	letter-spacing: -0.01em;
+}
+
+.sp-portal table {
+	font-variant-numeric: tabular-nums;
+}
+
 .sp-teacher-portal.sp-portal {
 	max-width: 1440px;
 	padding: 1.75rem 1.5rem 1rem;
@@ -196,12 +210,29 @@ body.sp-standalone h4 {
 	display: flex;
 	flex-direction: column;
 	gap: 1.1rem;
+	height: calc(100vh - 3rem);
+	max-height: calc(100vh - 3rem);
 	padding: 1.1rem;
 	background: var(--sp-surface);
 	border: 1px solid var(--sp-border);
 	border-radius: var(--sp-radius);
 	box-shadow: var(--sp-shadow-sm);
 	font-family: var(--sp-font);
+}
+
+/* Brand stays pinned at the top of the rail. */
+.sp-teacher-portal .sp-side-brand {
+	flex: none;
+}
+
+/* The nav is the scrollable region of the rail; the promo + user stay fixed. */
+.sp-teacher-portal .sp-side-nav {
+	flex: 1 1 auto;
+	min-height: 0;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	scrollbar-width: thin;
+	scrollbar-color: var(--sp-border) transparent;
 }
 
 .sp-teacher-portal .sp-side-brand-link {
@@ -225,8 +256,8 @@ body.sp-standalone h4 {
 	width: 2.25rem;
 	height: 2.25rem;
 	border-radius: var(--sp-radius-sm);
-	background: linear-gradient(135deg, var(--sp-primary), var(--sp-accent));
-	color: #ffffff;
+	background: linear-gradient(135deg, var(--sp-theme-navy) 0%, #1e293b 100%);
+	color: var(--sp-theme-brand-bright);
 	flex: none;
 }
 
@@ -287,25 +318,66 @@ body.sp-standalone h4 {
 	box-shadow: var(--sp-ring);
 }
 
+.sp-teacher-portal .sp-side-nav-link.is-active {
+	position: relative;
+	background: var(--sp-primary-soft);
+	color: var(--sp-primary);
+	font-weight: 600;
+}
+
+.sp-teacher-portal .sp-side-nav-link.is-active::after {
+	content: "";
+	position: absolute;
+	right: 0.7rem;
+	width: 0.4rem;
+	height: 0.4rem;
+	border-radius: 50%;
+	background: var(--sp-primary);
+}
+
+.sp-teacher-portal .sp-side-nav-link.is-active .sp-side-icon {
+	color: var(--sp-primary);
+}
+
 .sp-teacher-portal .sp-side-icon {
 	flex: none;
 }
 
 .sp-teacher-portal .sp-side-promo {
-	background: linear-gradient(135deg, var(--sp-primary), var(--sp-accent-dark));
+	position: relative;
+	flex: none;
+	overflow: hidden;
+	background: linear-gradient(135deg, var(--sp-theme-navy) 0%, #1e293b 100%);
 	border-radius: var(--sp-radius);
 	padding: 1rem;
-	color: #ffffff;
+	color: var(--sp-theme-on-brand);
+}
+
+.sp-teacher-portal .sp-side-promo::after {
+	content: "";
+	position: absolute;
+	right: -1.5rem;
+	bottom: -1.5rem;
+	width: 6rem;
+	height: 6rem;
+	border-radius: 50%;
+	background: rgba(255, 153, 51, 0.22);
+	filter: blur(24px);
+	pointer-events: none;
 }
 
 .sp-teacher-portal .sp-side-promo-title {
+	position: relative;
+	z-index: 1;
 	margin: 0 0 0.3rem;
 	font-size: 0.92rem;
 	font-weight: 700;
-	color: #ffffff;
+	color: var(--sp-theme-on-brand);
 }
 
 .sp-teacher-portal .sp-side-promo-text {
+	position: relative;
+	z-index: 1;
 	margin: 0 0 0.8rem;
 	font-size: 0.78rem;
 	line-height: 1.45;
@@ -313,11 +385,13 @@ body.sp-standalone h4 {
 }
 
 .sp-teacher-portal .sp-side-promo-btn {
+	position: relative;
+	z-index: 1;
 	display: block;
 	padding: 0.5rem 0.75rem;
 	border-radius: var(--sp-radius-sm);
-	background: #ffffff;
-	color: var(--sp-primary-dark);
+	background: var(--sp-theme-surface);
+	color: var(--sp-theme-navy);
 	font-size: 0.82rem;
 	font-weight: 700;
 	text-align: center;
@@ -326,7 +400,7 @@ body.sp-standalone h4 {
 }
 
 .sp-teacher-portal .sp-side-promo-btn:hover {
-	background: #f8fafc;
+	background: var(--sp-theme-surface-soft);
 	box-shadow: var(--sp-shadow);
 	transform: translateY(-1px);
 }
@@ -340,6 +414,7 @@ body.sp-standalone h4 {
 	display: flex;
 	align-items: center;
 	gap: 0.65rem;
+	flex: none;
 	margin-top: auto;
 	padding-top: 0.9rem;
 	border-top: 1px solid var(--sp-border);
@@ -422,8 +497,8 @@ body.sp-standalone h4 {
 }
 
 .sp-teacher-portal .sp-dash-score.is-top {
-	background: var(--sp-primary);
-	color: #ffffff;
+	background: var(--sp-theme-navy);
+	color: var(--sp-theme-brand-bright);
 }
 
 .sp-teacher-portal .sp-dash-timeline-item {
@@ -521,8 +596,8 @@ body.sp-side-open {
 }
 
 .sp-mat-title__icon--file {
-	color: #c2410c;
-	background: #fff4ed;
+	color: var(--sp-theme-warn);
+	background: var(--sp-theme-warn-soft);
 }
 
 .sp-mat-title__icon--note {
@@ -570,6 +645,7 @@ body.sp-side-open {
 		border-top: 0;
 		border-bottom: 1px solid var(--sp-border);
 		padding-bottom: 0.6rem;
+		overflow: visible;
 	}
 
 	.sp-teacher-portal .sp-side-promo {
@@ -588,6 +664,8 @@ body.sp-side-open {
 		left: 0;
 		bottom: 0;
 		z-index: 100;
+		height: auto;
+		max-height: none;
 		width: min(19rem, 86vw);
 		flex-direction: column;
 		flex-wrap: nowrap;
@@ -729,6 +807,26 @@ body.sp-side-open {
 	vertical-align: middle;
 }
 
+/*
+ * Contain visually-hidden captions and labels inside the table. Without a
+ * positioned ancestor they anchor to the scrollable table's right edge and make
+ * the whole page scroll sideways on narrow screens.
+ */
+.sp-table,
+.sp-asg-table,
+.sp-ae-table {
+	position: relative;
+}
+
+.sp-table th,
+.sp-table td,
+.sp-asg-table th,
+.sp-asg-table td,
+.sp-ae-table th,
+.sp-ae-table td {
+	position: relative;
+}
+
 .sp-table th {
 	background: var(--sp-bg);
 	color: var(--sp-muted);
@@ -763,7 +861,7 @@ body.sp-side-open {
 }
 
 .sp-meter-bar span {
-	background: linear-gradient(90deg, var(--sp-primary) 0%, #3b82f6 100%);
+	background: linear-gradient(90deg, var(--sp-primary) 0%, var(--sp-theme-brand) 100%);
 	border-radius: 999px;
 	display: block;
 	height: 100%;
@@ -779,7 +877,7 @@ body.sp-side-open {
 }
 
 .sp-card:hover {
-	border-color: #d6dcea;
+	border-color: var(--sp-theme-brand-line);
 	box-shadow: var(--sp-shadow);
 	transform: translateY(-2px);
 }
@@ -800,11 +898,11 @@ body.sp-side-open {
 .sp-badge-warn,
 .sp-chip-warn {
 	background: var(--sp-warn-bg);
-	color: #78350f;
+	color: var(--sp-theme-warn-ink);
 }
 
 .sp-table td {
-	border-bottom: 1px solid #f1f4f8;
+	border-bottom: 1px solid var(--sp-theme-surface-soft);
 	padding: 0.7rem 0.9rem;
 	vertical-align: middle;
 }
@@ -814,7 +912,7 @@ body.sp-side-open {
 }
 
 .sp-table tbody tr:hover {
-	background: #fafbfd;
+	background: var(--sp-theme-surface-hover);
 }
 
 .sp-empty strong {
@@ -983,9 +1081,9 @@ body.sp-side-open {
 
 .sp-portal .sp-btn-danger:hover,
 .sp-portal .sp-btn-danger:focus-visible {
-	background: #991b1b;
-	border-color: #991b1b;
-	color: #fff;
+	background: var(--sp-theme-danger-strong);
+	border-color: var(--sp-theme-danger-strong);
+	color: var(--sp-theme-on-brand);
 }
 
 .sp-cert-form {
@@ -1018,13 +1116,13 @@ body.sp-side-open {
 
 .sp-portal .sp-btn-primary {
 	background: var(--sp-primary);
-	color: #fff;
+	color: var(--sp-theme-on-brand);
 }
 
 .sp-portal .sp-btn-primary:hover,
 .sp-portal .sp-btn-primary:focus {
 	background: var(--sp-primary-dark);
-	color: #fff;
+	color: var(--sp-theme-on-brand);
 }
 
 .sp-form > .sp-btn {
@@ -1036,7 +1134,7 @@ body.sp-side-open {
 .sp-portal .sp-btn-primary:focus-visible {
 	background: var(--sp-primary-dark);
 	border-color: var(--sp-primary-dark);
-	color: #fff;
+	color: var(--sp-theme-on-brand);
 }
 
 .sp-card-meta {
@@ -1092,7 +1190,7 @@ body.sp-side-open {
 .sp-portal .sp-btn-ghost:hover,
 .sp-portal .sp-btn-ghost:focus-visible {
 	background: var(--sp-primary-soft);
-	border-color: #c7d5f5;
+	border-color: var(--sp-theme-brand-line);
 	color: var(--sp-primary-dark);
 }
 
@@ -1121,7 +1219,7 @@ body.sp-side-open {
 .sp-field input[type="number"],
 .sp-field select,
 .sp-field textarea {
-	background: #fff;
+	background: var(--sp-theme-surface);
 	border: 1px solid var(--sp-border);
 	border-radius: 7px;
 	color: var(--sp-text);
@@ -1135,7 +1233,7 @@ body.sp-side-open {
 .sp-portal .sp-field select:focus,
 .sp-portal .sp-field textarea:focus {
 	border-color: var(--sp-primary);
-	box-shadow: 0 0 0 3px rgba(31, 60, 136, 0.12);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--sp-theme-brand) 12%, transparent);
 	outline: none;
 }
 
@@ -1176,7 +1274,7 @@ body.sp-side-open {
 .sp-field select,
 .sp-field textarea {
 	background: var(--sp-surface);
-	border: 1px solid #cdd5e0;
+	border: 1px solid var(--sp-theme-border-strong);
 	border-radius: var(--sp-radius-sm);
 	transition: border-color 0.15s ease, box-shadow 0.15s ease;
 	width: 100%;
@@ -1186,10 +1284,10 @@ body.sp-side-open {
 .sp-quiz-options .sp-radio,
 .sp-quiz-options label {
 	align-items: center;
-	background: #f1f5f9;
+	background: var(--sp-theme-surface-soft);
 	border: 2px solid transparent;
 	border-radius: 12px;
-	color: #334155;
+	color: var(--sp-theme-ink-2);
 	cursor: pointer;
 	display: flex;
 	font-size: 0.95rem;
@@ -1203,51 +1301,26 @@ body.sp-side-open {
 .sp-quiz-options .sp-exam-option:hover,
 .sp-quiz-options .sp-radio:hover,
 .sp-quiz-options label:hover {
-	background: #e2e8f0;
+	background: var(--sp-theme-border);
 }
 
 @media (max-width: 640px) {
-	.sp-table thead {
-		display: none;
+	/*
+	 * Tables stay tabular on phones. Instead of collapsing each row into a card
+	 * and hiding the header, the wrapper scrolls sideways so every column keeps
+	 * its heading and its alignment.
+	 */
+	.sp-table-wrap {
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
 	}
 
-	.sp-table,
-	.sp-table tbody,
-	.sp-table tr,
-	.sp-table td {
-		display: block;
-		width: 100%;
-	}
-
-	.sp-table tr {
-		border-bottom: 1px solid var(--sp-border);
-		padding: 0.5rem 0;
-	}
-
-	.sp-table td {
-		border: none;
-		display: flex;
-		gap: 0.75rem;
-		justify-content: space-between;
-		padding: 0.35rem 0.85rem;
-		text-align: right;
-	}
-
-	.sp-table td::before {
-		color: var(--sp-muted);
-		content: attr(data-label);
-		font-size: 0.8rem;
-		font-weight: 700;
-		text-transform: uppercase;
+	.sp-table {
+		min-width: 34rem;
 	}
 
 	.sp-card:hover {
 		transform: none;
-	}
-
-	.sp-table th[scope="row"] {
-		display: block;
-		width: 100%;
 	}
 
 	.sp-table-form input[type="number"] {
@@ -1258,7 +1331,6 @@ body.sp-side-open {
 		flex: 1 1 auto;
 		text-align: center;
 	}
-
 }
 
 @media (prefers-reduced-motion: reduce) {

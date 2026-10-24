@@ -206,7 +206,7 @@ body.sp-standalone .sp-auth .sp-auth-submit {
 	background: var(--sp-accent);
 	border: 0;
 	border-radius: 8px;
-	color: #fff;
+	color: var(--sp-theme-on-brand);
 	cursor: pointer;
 	display: inline-flex;
 	font-family: var(--sp-font);
@@ -225,11 +225,11 @@ body.sp-standalone .sp-auth .sp-auth-submit {
 body.sp-standalone .sp-auth .sp-auth-submit:hover,
 body.sp-standalone .sp-auth .sp-auth-submit:focus {
 	background: var(--sp-accent-dark);
-	color: #fff;
+	color: var(--sp-theme-on-brand);
 }
 
 body.sp-standalone .sp-auth .sp-auth-submit:focus-visible {
-	box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.35);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--sp-theme-accent) 35%, transparent);
 	outline: none;
 }
 
@@ -246,7 +246,7 @@ body.sp-standalone .sp-auth .sp-auth-submit.is-loading::before {
 	animation: sp-auth-spin 0.7s linear infinite;
 	border: 2px solid rgba(255, 255, 255, 0.4);
 	border-radius: 50%;
-	border-top-color: #fff;
+	border-top-color: var(--sp-theme-on-brand);
 	box-sizing: border-box;
 	content: "";
 	flex: 0 0 auto;
@@ -277,7 +277,7 @@ body.sp-standalone .sp-auth .sp-auth-submit.is-loading::before {
 .sp-auth-hero {
 	align-items: center;
 	background: var(--sp-accent);
-	color: #fff;
+	color: var(--sp-theme-on-brand);
 	display: flex;
 	overflow: hidden;
 	padding: clamp(2rem, 5vw, 4rem);
@@ -316,7 +316,7 @@ body.sp-standalone .sp-auth .sp-auth-submit.is-loading::before {
 }
 
 body.sp-standalone .sp-auth-hero-title {
-	color: #fff;
+	color: var(--sp-theme-on-brand);
 	font-family: var(--sp-font);
 	font-size: clamp(2rem, 3.4vw, 3.1rem);
 	font-weight: 800;
@@ -351,13 +351,13 @@ body.sp-standalone .sp-auth-hero-title {
 .sp-notice-good {
 	background: var(--sp-good-bg);
 	border-color: var(--sp-good);
-	color: #14532d;
+	color: var(--sp-theme-success-ink);
 }
 
 .sp-notice-error {
 	background: var(--sp-bad-bg);
 	border-color: var(--sp-bad);
-	color: #7f1d1d;
+	color: var(--sp-theme-danger-strong);
 }
 
 @media (max-width: 900px) {

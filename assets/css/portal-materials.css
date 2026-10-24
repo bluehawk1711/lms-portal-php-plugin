@@ -81,13 +81,13 @@
 
 .sp-portal .sp-btn-primary {
 	background: var(--sp-primary);
-	color: #fff;
+	color: var(--sp-theme-on-brand);
 }
 
 .sp-portal .sp-btn-primary:hover,
 .sp-portal .sp-btn-primary:focus {
 	background: var(--sp-primary-dark);
-	color: #fff;
+	color: var(--sp-theme-on-brand);
 }
 
 .sp-auth .sp-notice {
@@ -125,7 +125,7 @@
 }
 
 .sp-card:hover {
-	border-color: #d6dcea;
+	border-color: var(--sp-theme-brand-line);
 	box-shadow: var(--sp-shadow);
 	transform: translateY(-2px);
 }
@@ -159,14 +159,14 @@
 .sp-portal .sp-btn-primary {
 	background: var(--sp-primary);
 	border-color: var(--sp-primary);
-	color: #fff;
+	color: var(--sp-theme-on-brand);
 }
 
 .sp-portal .sp-btn-primary:hover,
 .sp-portal .sp-btn-primary:focus-visible {
 	background: var(--sp-primary-dark);
 	border-color: var(--sp-primary-dark);
-	color: #fff;
+	color: var(--sp-theme-on-brand);
 }
 
 .sp-notice {
@@ -179,12 +179,12 @@
 .sp-notice-warn {
 	background: var(--sp-warn-bg);
 	border-color: var(--sp-warn);
-	color: #78350f;
+	color: var(--sp-theme-warn-ink);
 }
 
 .sp-empty {
 	background: var(--sp-surface);
-	border: 1px dashed #cdd5e0;
+	border: 1px dashed var(--sp-theme-border-strong);
 	border-radius: var(--sp-radius);
 	color: var(--sp-muted);
 	padding: 2.25rem 1.5rem;
@@ -257,7 +257,7 @@
 }
 
 .sp-embed-frame {
-	background: #fff;
+	background: var(--sp-theme-surface);
 	border: 1px solid var(--sp-border);
 	border-radius: var(--sp-radius-sm);
 	height: 70vh;
@@ -265,7 +265,7 @@
 }
 
 .sp-embed-image {
-	background: #fff;
+	background: var(--sp-theme-surface);
 	border: 1px solid var(--sp-border);
 	border-radius: var(--sp-radius-sm);
 	height: auto;
@@ -276,7 +276,7 @@
 .sp-embed-docx {
 	align-items: center;
 	background: var(--sp-primary-soft);
-	border: 1px dashed #c3d0ee;
+	border: 1px dashed var(--sp-theme-brand-line);
 	border-radius: var(--sp-radius-sm);
 	color: var(--sp-muted);
 	display: flex;
@@ -295,7 +295,7 @@
 }
 
 .sp-embed-docx.is-ready {
-	background: #fff;
+	background: var(--sp-theme-surface);
 	border-style: solid;
 	display: block;
 	padding: 1.25rem;
@@ -354,7 +354,7 @@
 
 .sp-embed-unavailable {
 	background: var(--sp-surface);
-	border: 1px dashed #cdd5e0;
+	border: 1px dashed var(--sp-theme-border-strong);
 	border-radius: var(--sp-radius);
 	color: var(--sp-muted);
 	display: flex;

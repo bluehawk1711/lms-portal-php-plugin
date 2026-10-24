@@ -102,8 +102,10 @@ $sp_ico_ext    = $sp_icon( '<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 
 	</div>
 
 	<form class="sp-me-form" method="post" enctype="multipart/form-data"
-		action="<?php echo esc_url( sp_teacher_url( 'materials/new' ) ); ?>" data-sp-material-form>
+		action="<?php echo esc_url( $sp_is_edit ? sp_teacher_url( 'materials/' . (int) $sp_material->id ) : sp_teacher_url( 'materials/new' ) ); ?>" data-sp-material-form>
 		<?php sp_teacher_nonce_field( 'save_material' ); ?>
+		<input type="hidden" name="sp_redirect"
+			value="<?php echo esc_url( $sp_is_edit ? add_query_arg( 'tab', 'materials', sp_teacher_url( 'classes/' . (int) $sp_class_id ) ) : $sp_list_url ); ?>" />
 
 		<?php if ( $sp_is_edit ) : ?>
 			<input type="hidden" name="material_id" value="<?php echo esc_attr( (int) $sp_material->id ); ?>" />

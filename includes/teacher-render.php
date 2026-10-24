@@ -21,9 +21,16 @@ function sp_teacher_enqueue_assets() {
 	}
 
 	wp_enqueue_style(
+		'student-portal-tokens',
+		SP_URL . 'assets/css/tokens.css',
+		array(),
+		SP_VERSION
+	);
+
+	wp_enqueue_style(
 		'student-portal-teacher-base',
 		SP_URL . 'assets/css/teacher-base.css',
-		array(),
+		array( 'student-portal-tokens' ),
 		SP_VERSION
 	);
 
@@ -59,6 +66,16 @@ function sp_teacher_enqueue_assets() {
 		wp_enqueue_style(
 			'student-portal-teacher-schedule',
 			SP_URL . 'assets/css/schedule.css',
+			array( 'student-portal-teacher-base' ),
+			SP_VERSION
+		);
+	}
+
+	if ( 'class' === $route ) {
+		// Enqueue curriculum styles for the class screen.
+		wp_enqueue_style(
+			'student-portal-teacher-curriculum',
+			SP_URL . 'assets/css/teacher-curriculum.css',
 			array( 'student-portal-teacher-base' ),
 			SP_VERSION
 		);
@@ -150,6 +167,18 @@ function sp_teacher_enqueue_assets() {
 add_action( 'wp_enqueue_scripts', 'sp_teacher_enqueue_assets', 21 );
 
 /**
+ * Enqueue assets for the teacher curriculum tab.
+ */
+function sp_teacher_enqueue_curriculum_assets() {
+	wp_enqueue_style(
+		'student-portal-teacher-curriculum',
+		SP_URL . 'assets/css/teacher-curriculum.css',
+		array( 'student-portal-teacher-base' ),
+		SP_VERSION
+	);
+}
+
+/**
  * Render a teacher route and end the request.
  *
  * Shares the standalone document shell with the student portal: the theme's
@@ -216,6 +245,9 @@ function sp_teacher_handle_post() {
 	switch ( $action ) {
 		case 'create_class':
 			sp_teacher_action_create_class( $redirect );
+			break;
+		case 'update_class':
+			sp_teacher_action_update_class( $redirect );
 			break;
 	case 'save_session':
 		sp_teacher_action_save_session( $redirect );
@@ -383,6 +415,8 @@ function sp_teacher_notice_message( $code ) {
 	switch ( $code ) {
 		case 'class_created':
 			return 'Class created. It is waiting for admin approval — an administrator will approve it and add students.';
+		case 'class_updated':
+			return 'Class details saved.';
 		case 'session_saved':
 			return 'Attendance saved.';
 		case 'session_submitted':
@@ -511,6 +545,66 @@ function sp_teacher_action_create_class( $redirect ) {
 		sp_teacher_url( 'classes/' . (int) $class_id ),
 		'class_created'
 	);
+}
+
+/**
+ * Update a class's details and timetable from the class page.
+ *
+ * The approval status is carried over untouched — only an administrator
+ * approves, archives or resets a class.
+ *
+ * @param string $redirect Destination after the action.
+ */
+function sp_teacher_action_update_class( $redirect ) {
+	$class_id = isset( $_POST['class_id'] ) ? (int) $_POST['class_id'] : 0;
+
+	$teacher = sp_require_assigned_teacher( $class_id );
+
+	if ( is_wp_error( $teacher ) ) {
+		sp_teacher_redirect( $redirect, '', $teacher->get_error_message() );
+	}
+
+	// Validate the timing before anything is written, so a half-filled pair
+	// cannot leave the class without its schedule.
+	$timings = sp_normalize_timing_rows( sp_timing_rows_from_request() );
+
+	if ( is_wp_error( $timings ) ) {
+		sp_teacher_redirect( $redirect, '', $timings->get_error_message() );
+	}
+
+	$existing = sp_get_class( $class_id );
+
+	$saved = sp_save_class(
+		array(
+			'id'          => $class_id,
+			'title'       => isset( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : '',
+			'code'        => isset( $_POST['code'] ) ? sanitize_text_field( wp_unslash( $_POST['code'] ) ) : '',
+			'course_id'   => isset( $_POST['course_id'] ) ? (int) $_POST['course_id'] : 0,
+			'description' => isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '',
+			'start_date'  => isset( $_POST['start_date'] ) ? sanitize_text_field( wp_unslash( $_POST['start_date'] ) ) : '',
+			'end_date'    => isset( $_POST['end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['end_date'] ) ) : '',
+			'status'      => $existing ? (string) $existing->status : 'active',
+		)
+	);
+
+	if ( is_wp_error( $saved ) ) {
+		sp_teacher_redirect( $redirect, '', $saved->get_error_message() );
+	}
+
+	// Blank timings mean "leave the timetable alone"; anything else replaces it.
+	if ( $timings ) {
+		$updated = sp_save_class_timings( $class_id, $timings );
+
+		if ( is_wp_error( $updated ) ) {
+			sp_teacher_redirect(
+				$redirect,
+				'',
+				'Class saved, but the daily timing could not be saved: ' . $updated->get_error_message()
+			);
+		}
+	}
+
+	sp_teacher_redirect( $redirect, 'class_updated' );
 }
 
 /**

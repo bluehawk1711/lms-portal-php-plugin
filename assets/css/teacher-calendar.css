@@ -12,5 +12,5 @@
 	font-size: 0.82rem;
 }
 
-.sp-mat .sp-muted { color: #98a2b3; }
+.sp-mat .sp-muted { color: var(--sp-theme-faint); }
 

@@ -3,20 +3,21 @@
  * Load this stylesheet only on Student Portal > Announcements.
  */
 .sp-annc-ui {
-    --sp-annc-ink: #17212f;
-    --sp-annc-muted: #697586;
-    --sp-annc-border: #e5eaf0;
-    --sp-annc-surface: #ffffff;
-    --sp-annc-soft: #f7f9fc;
-    --sp-annc-accent: #3858d6;
-    --sp-annc-accent-dark: #2947bf;
-    --sp-annc-radius: 16px;
+    --sp-annc-ink: var(--sp-theme-ink);
+    --sp-annc-muted: var(--sp-theme-muted);
+    --sp-annc-border: var(--sp-theme-border);
+    --sp-annc-surface: var(--sp-theme-surface);
+    --sp-annc-soft: var(--sp-theme-surface-soft);
+    --sp-annc-accent: var(--sp-theme-brand);
+    --sp-annc-accent-dark: var(--sp-theme-brand-strong);
+    --sp-annc-radius: var(--sp-theme-radius-xl);
     box-sizing: border-box;
     max-width: 1700px;
     margin: 18px 20px 32px 2px;
     color: var(--sp-annc-ink);
     font-size: 13px;
     line-height: 1.5;
+    overflow-x: hidden;
 }
 
 .sp-annc-ui *,
@@ -36,9 +37,9 @@
     gap: 24px;
     padding: 23px 25px;
     margin: 0 0 17px;
-    border: 1px solid #e6eaf2;
+    border: 1px solid var(--sp-theme-border);
     border-radius: var(--sp-annc-radius);
-    background: radial-gradient(circle at 96% 0%, rgba(91, 113, 225, 0.11), transparent 31%), linear-gradient(135deg, #fff 0%, #fbfcff 100%);
+    background: radial-gradient(circle at 96% 0%, color-mix(in srgb, var(--sp-theme-brand) 11%, transparent), transparent 31%), linear-gradient(135deg, #fff 0%, var(--sp-theme-surface-hover) 100%);
     box-shadow: 0 3px 12px rgba(25, 39, 70, 0.035);
 }
 
@@ -51,7 +52,7 @@
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    color: #64708a;
+    color: var(--sp-theme-muted);
     font-size: 10px;
     font-weight: 750;
     letter-spacing: 0.13em;
@@ -60,7 +61,7 @@
 }
 
 .sp-annc-eyebrow span {
-    color: #a1aabc;
+    color: var(--sp-theme-faint);
 }
 
 .sp-annc-page-header h1 {
@@ -86,7 +87,7 @@
     align-items: center;
     gap: 10px;
     padding: 11px 14px;
-    border: 1px solid #e4e9f4;
+    border: 1px solid var(--sp-theme-border);
     border-radius: 12px;
     background: rgba(255, 255, 255, 0.82);
 }
@@ -98,7 +99,7 @@
     flex: 0 0 34px;
     place-items: center;
     border-radius: 10px;
-    background: #edf1ff;
+    background: var(--sp-theme-brand-soft);
     color: var(--sp-annc-accent);
     font-size: 18px;
     font-weight: 700;
@@ -110,14 +111,14 @@
 }
 
 .sp-annc-header-note strong {
-    color: #27334a;
+    color: var(--sp-theme-ink-2);
     font-size: 12px;
     font-weight: 750;
 }
 
 .sp-annc-header-note small {
     margin-top: 2px;
-    color: #768197;
+    color: var(--sp-theme-muted);
     font-size: 11px;
 }
 
@@ -151,10 +152,10 @@
     font-weight: 750;
 }
 
-.sp-annc-stat-icon-total { background: #edf1ff; color: #3858d6; }
-.sp-annc-stat-icon-active { background: #e9f8f0; color: #168452; }
-.sp-annc-stat-icon-pending { background: #fff5df; color: #a66b0b; }
-.sp-annc-stat-icon-teachers { background: #f3ebff; color: #7a45bd; }
+.sp-annc-stat-icon-total { background: var(--sp-theme-brand-soft); color: var(--sp-theme-brand); }
+.sp-annc-stat-icon-active { background: var(--sp-theme-success-soft); color: var(--sp-theme-success); }
+.sp-annc-stat-icon-pending { background: var(--sp-theme-warn-soft); color: var(--sp-theme-warn); }
+.sp-annc-stat-icon-teachers { background: var(--sp-theme-brand-soft); color: var(--sp-theme-accent-strong); }
 
 .sp-annc-stat-card > div {
     display: flex;
@@ -164,7 +165,7 @@
 
 .sp-annc-stat-label {
     overflow: hidden;
-    color: #68758a;
+    color: var(--sp-theme-muted);
     font-size: 11px;
     font-weight: 650;
     text-overflow: ellipsis;
@@ -173,7 +174,7 @@
 
 .sp-annc-stat-card strong {
     margin-top: 1px;
-    color: #182336;
+    color: var(--sp-theme-brand-ink);
     font-size: 25px;
     font-weight: 760;
     letter-spacing: -0.04em;
@@ -183,7 +184,7 @@
 
 .sp-annc-stat-card small {
     margin-top: 2px;
-    color: #8a94a5;
+    color: var(--sp-theme-faint);
     font-size: 10px;
 }
 
@@ -211,8 +212,8 @@
     justify-content: space-between;
     gap: 16px;
     padding: 21px 22px 18px;
-    border-bottom: 1px solid #edf0f5;
-    background: linear-gradient(180deg, #fff, #fcfdff);
+    border-bottom: 1px solid var(--sp-theme-border-subtle);
+    background: linear-gradient(180deg, #fff, var(--sp-theme-surface-hover));
 }
 
 .sp-annc-panel-heading h2 {
@@ -222,7 +223,7 @@
     gap: 9px;
     margin: 6px 0 5px;
     padding: 0;
-    color: #1a2639;
+    color: var(--sp-theme-ink);
     font-size: 17px;
     font-weight: 750;
     letter-spacing: -0.025em;
@@ -243,9 +244,9 @@
     height: 36px;
     flex: 0 0 36px;
     place-items: center;
-    border: 1px solid #e5eafe;
+    border: 1px solid var(--sp-theme-brand-soft);
     border-radius: 11px;
-    background: #f1f4ff;
+    background: var(--sp-theme-brand-wash);
     color: var(--sp-annc-accent);
     font-size: 21px;
     font-weight: 500;
@@ -258,9 +259,9 @@
     align-items: center;
     justify-content: center;
     padding: 0 7px;
-    border: 1px solid #e5eaff;
+    border: 1px solid var(--sp-theme-brand-soft);
     border-radius: 8px;
-    background: #f1f4ff;
+    background: var(--sp-theme-brand-wash);
     color: var(--sp-annc-accent);
     font-size: 11px;
     font-weight: 750;
@@ -280,7 +281,7 @@
 }
 
 .sp-annc-field > label {
-    color: #334155;
+    color: var(--sp-theme-ink-2);
     font-size: 11px;
     font-weight: 750;
     line-height: 1.35;
@@ -296,10 +297,10 @@
     min-height: 39px;
     margin: 0;
     padding: 8px 10px;
-    border: 1px solid #dce3ed;
+    border: 1px solid var(--sp-theme-border);
     border-radius: 9px;
-    background-color: #fff;
-    color: #263348;
+    background-color: var(--sp-theme-surface);
+    color: var(--sp-theme-ink-2);
     font-size: 12px;
     line-height: 1.45;
     box-shadow: 0 1px 2px rgba(20, 35, 60, 0.02);
@@ -308,15 +309,15 @@
 
 .sp-annc-field input::placeholder,
 .sp-annc-field textarea::placeholder {
-    color: #a0a9b7;
+    color: var(--sp-theme-faint);
 }
 
 .sp-annc-field input:focus,
 .sp-annc-field select:focus,
 .sp-annc-field textarea:focus {
-    border-color: #8195ed;
+    border-color: var(--sp-theme-brand-line);
     outline: none;
-    box-shadow: 0 0 0 3px rgba(56, 88, 214, 0.11);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--sp-theme-brand) 11%, transparent);
 }
 
 .sp-annc-field textarea {
@@ -334,7 +335,7 @@
 .sp-annc-field .description,
 .sp-annc-form .description {
     margin: 0;
-    color: #8590a1;
+    color: var(--sp-theme-faint);
     font-size: 10px;
     line-height: 1.55;
 }
@@ -353,7 +354,7 @@
 .sp-annc-divider {
     height: 1px;
     margin: 20px 0 17px;
-    background: #edf0f5;
+    background: var(--sp-theme-border-subtle);
 }
 
 .sp-annc-form-section-title {
@@ -370,8 +371,8 @@
     flex: 0 0 27px;
     place-items: center;
     border-radius: 8px;
-    background: #f0f3ff;
-    color: #4661ce;
+    background: var(--sp-theme-brand-wash);
+    color: var(--sp-theme-brand);
     font-size: 10px;
     font-weight: 800;
 }
@@ -382,14 +383,14 @@
 }
 
 .sp-annc-form-section-title strong {
-    color: #2e3a4e;
+    color: var(--sp-theme-ink-2);
     font-size: 12px;
     font-weight: 750;
 }
 
 .sp-annc-form-section-title small {
     margin-top: 1px;
-    color: #8791a1;
+    color: var(--sp-theme-faint);
     font-size: 10px;
 }
 
@@ -405,14 +406,14 @@
 }
 
 .sp-annc-input-hint {
-    color: #7d889a;
+    color: var(--sp-theme-muted);
     font-size: 10px;
     font-weight: 650;
 }
 
 .sp-annc-time-separator {
     padding-bottom: 10px;
-    color: #a1aaba;
+    color: var(--sp-theme-faint);
     font-size: 11px;
 }
 
@@ -426,10 +427,10 @@
     gap: 10px;
     margin-top: 12px;
     padding: 11px 12px;
-    border: 1px solid #e4eafe;
+    border: 1px solid var(--sp-theme-brand-soft);
     border-radius: 10px;
-    background: #f7f8ff;
-    color: #4961bb;
+    background: var(--sp-theme-brand-wash);
+    color: var(--sp-theme-brand);
 }
 
 .sp-annc-pattern-note > span {
@@ -443,19 +444,19 @@
 }
 
 .sp-annc-pattern-note small {
-    color: #7481a7;
+    color: var(--sp-theme-muted);
     font-size: 10px;
 }
 
 .sp-annc-pattern-note strong {
     margin: 2px 0;
-    color: #344b9c;
+    color: var(--sp-theme-brand-strong);
     font-size: 11px;
 }
 
 .sp-annc-optional {
     margin-left: 4px;
-    color: #919bad;
+    color: var(--sp-theme-faint);
     font-size: 10px;
     font-weight: 500;
 }
@@ -467,13 +468,13 @@
     gap: 12px;
     margin: 22px -22px 0;
     padding: 15px 22px;
-    border-top: 1px solid #edf0f5;
-    background: #fbfcfe;
+    border-top: 1px solid var(--sp-theme-border-subtle);
+    background: var(--sp-theme-surface-hover);
 }
 
 .sp-annc-form-footer > p {
     margin: 0;
-    color: #8993a3;
+    color: var(--sp-theme-faint);
     font-size: 10px;
 }
 
@@ -488,10 +489,10 @@
 .sp-annc-ui .button {
     min-height: 32px;
     padding: 4px 11px;
-    border-color: #dce3ed;
+    border-color: var(--sp-theme-border);
     border-radius: 8px;
-    background: #fff;
-    color: #415067;
+    background: var(--sp-theme-surface);
+    color: var(--sp-theme-brand-deep);
     font-size: 11px;
     font-weight: 650;
     line-height: 1.5;
@@ -500,13 +501,13 @@
 }
 
 .sp-annc-ui .button:hover {
-    border-color: #c4cfe0;
-    background: #f8faff;
-    color: #263955;
+    border-color: var(--sp-theme-brand-line);
+    background: var(--sp-theme-surface-tint);
+    color: var(--sp-theme-ink-2);
 }
 
 .sp-annc-ui .button:focus-visible {
-    outline: 2px solid #8093eb;
+    outline: 2px solid var(--sp-theme-brand-line);
     outline-offset: 2px;
 }
 
@@ -520,17 +521,17 @@
     padding: 7px 14px;
     border-color: var(--sp-annc-accent);
     background: var(--sp-annc-accent);
-    color: #fff;
+    color: var(--sp-theme-on-brand);
     font-size: 11px;
     font-weight: 750;
-    box-shadow: 0 3px 7px rgba(56, 88, 214, 0.14);
+    box-shadow: 0 3px 7px color-mix(in srgb, var(--sp-theme-brand) 14%, transparent);
 }
 
 .sp-annc-ui .button.button-primary:hover,
 .sp-annc-ui .sp-annc-submit:hover {
     border-color: var(--sp-annc-accent-dark);
     background: var(--sp-annc-accent-dark);
-    color: #fff;
+    color: var(--sp-theme-on-brand);
 }
 
 .sp-annc-submit > span {
@@ -545,23 +546,26 @@
 .sp-annc-list-notice {
     margin: 12px 18px 0;
     padding: 8px 10px;
-    border: 1px solid #f3e4bd;
+    border: 1px solid var(--sp-theme-warn-line);
     border-radius: 8px;
-    background: #fffaf0;
-    color: #8b6519;
+    background: var(--sp-theme-warn-soft);
+    color: var(--sp-theme-warn-strong);
     font-size: 11px;
 }
 
 .sp-annc-table-wrap {
     width: 100%;
     max-width: 100%;
+    /* Scrolls the table inside its panel on narrow screens instead of
+       clipping the Actions column away (or widening the page). */
     overflow-x: auto;
     overscroll-behavior-x: contain;
 }
 
 .sp-annc-table {
     width: 100%;
-    min-width: 850px;
+    min-width: 0;
+    table-layout: auto;
     margin: 0;
     border: 0;
     border-collapse: separate;
@@ -573,16 +577,16 @@
 .sp-annc-table thead th {
     padding: 12px 11px;
     border: 0;
-    border-bottom: 1px solid #e9edf4;
-    background: #f8faff;
-    color: #7a869a;
+    border-bottom: 1px solid var(--sp-theme-border);
+    background: var(--sp-theme-surface-tint);
+    color: var(--sp-theme-muted);
     font-size: 9px;
     font-weight: 800;
     letter-spacing: 0.075em;
     line-height: 1.4;
     text-align: left;
     text-transform: uppercase;
-    white-space: nowrap;
+    white-space: normal;
 }
 
 .sp-annc-table thead th:first-child,
@@ -593,9 +597,9 @@
 .sp-annc-table tbody td {
     padding: 13px 11px;
     border: 0;
-    border-bottom: 1px solid #edf0f5;
-    background: #fff;
-    color: #39465b;
+    border-bottom: 1px solid var(--sp-theme-border-subtle);
+    background: var(--sp-theme-surface);
+    color: var(--sp-theme-ink-2);
     font-size: 11px;
     vertical-align: middle;
 }
@@ -605,54 +609,55 @@
 }
 
 .sp-annc-table tbody tr:hover td {
-    background: #fbfcff;
+    background: var(--sp-theme-surface-hover);
 }
 
 .sp-annc-title-cell {
-    min-width: 180px;
+    min-width: 0;
+    width: 32%;
     white-space: normal;
 }
 
-.sp-annc-class-avatar {
+.sp-annc-avatar {
     display: inline-grid;
     width: 34px;
     height: 34px;
     float: left;
     place-items: center;
     margin-right: 9px;
-    border: 1px solid #e1e7ff;
+    border: 1px solid var(--sp-theme-brand-soft);
     border-radius: 10px;
-    background: linear-gradient(135deg, #f0f3ff, #e9edff);
-    color: #435dce;
+    background: linear-gradient(135deg, var(--sp-theme-brand-wash), var(--sp-theme-brand-soft));
+    color: var(--sp-theme-brand);
     font-size: 13px;
     font-weight: 800;
     text-transform: uppercase;
 }
 
-.sp-annc-class-details {
+.sp-annc-details {
     display: block;
-    min-width: 110px;
+    min-width: 0;
     overflow: hidden;
     padding-top: 1px;
 }
 
-.sp-annc-class-details strong,
-.sp-annc-class-details small {
+.sp-annc-details strong,
+.sp-annc-details small {
     display: block;
 }
 
-.sp-annc-class-details strong {
-    max-width: 245px;
+.sp-annc-details strong {
+    max-width: 100%;
     overflow-wrap: anywhere;
-    color: #253248;
+    color: var(--sp-theme-ink-2);
     font-size: 11px;
     font-weight: 750;
     line-height: 1.45;
 }
 
-.sp-annc-class-details small {
+.sp-annc-details small {
     margin-top: 3px;
-    color: #8a95a7;
+    color: var(--sp-theme-faint);
     font-size: 10px;
 }
 
@@ -661,12 +666,12 @@
 .sp-annc-lead-pill {
     display: inline-flex;
     align-items: center;
-    max-width: 180px;
+    max-width: 100%;
     padding: 4px 8px;
-    border: 1px solid #e5eafe;
+    border: 1px solid var(--sp-theme-brand-soft);
     border-radius: 7px;
-    background: #f3f5ff;
-    color: #4a60b8;
+    background: var(--sp-theme-brand-wash);
+    color: var(--sp-theme-brand);
     font-size: 10px;
     font-weight: 700;
     line-height: 1.3;
@@ -681,25 +686,25 @@
 .sp-annc-number-pill {
     min-width: 32px;
     justify-content: center;
-    border-color: #e8edf4;
-    background: #f7f9fc;
-    color: #43516a;
+    border-color: var(--sp-theme-border);
+    background: var(--sp-theme-surface-soft);
+    color: var(--sp-theme-ink-2);
     font-variant-numeric: tabular-nums;
 }
 
 .sp-annc-muted {
-    color: #9aa3b1;
+    color: var(--sp-theme-faint);
     font-size: 10px;
 }
 
 .sp-annc-teachers-cell {
-    min-width: 135px;
+    min-width: 0;
 }
 
 .sp-annc-teacher-name {
     display: block;
     margin: 2px 0;
-    color: #435067;
+    color: var(--sp-theme-ink-2);
     font-size: 10px;
     line-height: 1.4;
     white-space: nowrap;
@@ -710,8 +715,8 @@
     margin-left: 5px;
     padding: 1px 5px;
     border-radius: 4px;
-    background: #e9f7f0;
-    color: #168452;
+    background: var(--sp-theme-success-soft);
+    color: var(--sp-theme-success);
     font-size: 8px;
     font-weight: 800;
     text-transform: uppercase;
@@ -721,7 +726,7 @@
 .sp-annc-teacher-more {
     display: inline-block;
     margin-top: 3px;
-    color: #6574bb;
+    color: var(--sp-theme-brand);
     font-size: 9px;
     font-weight: 750;
 }
@@ -747,12 +752,12 @@
     content: "";
 }
 
-.sp-annc-status-active { border-color: #d4f0e1; background: #edfaf3; color: #178252; }
-.sp-annc-status-pending { border-color: #f2e3bd; background: #fff8e8; color: #9a6b12; }
-.sp-annc-status-archived { border-color: #e4e7ed; background: #f4f5f7; color: #737d8d; }
+.sp-annc-status-active { border-color: var(--sp-theme-success-line); background: var(--sp-theme-success-soft); color: var(--sp-theme-success); }
+.sp-annc-status-pending { border-color: var(--sp-theme-warn-line); background: var(--sp-theme-warn-soft); color: var(--sp-theme-warn-ink); }
+.sp-annc-status-archived { border-color: var(--sp-theme-brand-line); background: var(--sp-theme-surface-soft); color: var(--sp-theme-muted); }
 
 .sp-annc-actions-cell {
-    min-width: 160px;
+    min-width: 0;
 }
 
 .sp-annc-row-actions {
@@ -761,7 +766,7 @@
     justify-content: flex-start;
     flex-wrap: wrap;
     gap: 5px;
-    min-width: 150px;
+    min-width: 0;
 }
 
 .sp-annc-ui .sp-annc-row-actions .button {
@@ -786,30 +791,30 @@
 }
 
 .sp-annc-ui .sp-annc-row-actions .sp-annc-approve {
-    border-color: #cbeedb;
-    background: #eaf8f0;
-    color: #16774a;
+    border-color: var(--sp-theme-success-line);
+    background: var(--sp-theme-success-soft);
+    color: var(--sp-theme-success-strong);
     box-shadow: none;
 }
 
 .sp-annc-ui .sp-annc-row-actions .sp-annc-approve:hover {
-    border-color: #a4ddbf;
-    background: #def4e8;
-    color: #115f3b;
+    border-color: var(--sp-theme-success-line);
+    background: var(--sp-theme-success-line);
+    color: var(--sp-theme-success-strong);
 }
 
 .sp-annc-ui .sp-annc-row-actions .sp-annc-delete,
 .sp-annc-ui .sp-annc-unassign {
-    border-color: #f0dada;
-    background: #fff;
-    color: #b43a42;
+    border-color: var(--sp-theme-danger-line);
+    background: var(--sp-theme-surface);
+    color: var(--sp-theme-danger);
 }
 
 .sp-annc-ui .sp-annc-row-actions .sp-annc-delete:hover,
 .sp-annc-ui .sp-annc-unassign:hover {
-    border-color: #e8bcbc;
-    background: #fff5f5;
-    color: #9d252e;
+    border-color: var(--sp-theme-danger-line);
+    background: var(--sp-theme-danger-soft);
+    color: var(--sp-theme-danger);
 }
 
 .sp-annc-empty {
@@ -828,20 +833,20 @@
     height: 42px;
     place-items: center;
     border-radius: 13px;
-    background: #f0f3ff;
-    color: #5066cf;
+    background: var(--sp-theme-brand-wash);
+    color: var(--sp-theme-brand);
     font-size: 20px;
 }
 
 .sp-annc-empty strong {
     margin-top: 11px;
-    color: #334056;
+    color: var(--sp-theme-ink-2);
     font-size: 12px;
 }
 
 .sp-annc-empty p {
     margin: 4px 0 0;
-    color: #8791a1;
+    color: var(--sp-theme-faint);
     font-size: 11px;
 }
 
@@ -851,24 +856,24 @@
     justify-content: space-between;
     gap: 12px;
     padding: 12px 18px;
-    border-top: 1px solid #edf0f5;
-    background: #fbfcfe;
-    color: #8a94a4;
+    border-top: 1px solid var(--sp-theme-border-subtle);
+    background: var(--sp-theme-surface-hover);
+    color: var(--sp-theme-faint);
     font-size: 10px;
 }
 
 .sp-annc-table-footer strong {
-    color: #526078;
+    color: var(--sp-theme-ink-2);
 }
 
 .sp-annc-table-footer a {
-    color: #4b61c6;
+    color: var(--sp-theme-brand);
     font-weight: 750;
     text-decoration: none;
 }
 
 .sp-annc-table-footer a:hover {
-    color: #293f9e;
+    color: var(--sp-theme-brand-strong);
 }
 
 .sp-annc-assignment-panel {
@@ -880,7 +885,7 @@
 }
 
 .sp-annc-assigned-table tbody td:first-child {
-    color: #28354a;
+    color: var(--sp-theme-ink-2);
 }
 
 .sp-annc-inline-empty {
@@ -891,19 +896,19 @@
 }
 
 .sp-annc-inline-empty strong {
-    color: #526078;
+    color: var(--sp-theme-ink-2);
     font-size: 11px;
 }
 
 .sp-annc-inline-empty span {
-    color: #8a94a4;
+    color: var(--sp-theme-faint);
     font-size: 10px;
 }
 
 .sp-annc-lead-pill {
-    border-color: #d4f0e1;
-    background: #edfaf3;
-    color: #168252;
+    border-color: var(--sp-theme-success-line);
+    background: var(--sp-theme-success-soft);
+    color: var(--sp-theme-success);
 }
 
 .sp-annc-assign-form {
@@ -913,8 +918,8 @@
     gap: 18px;
     margin: 0;
     padding: 18px 22px 22px;
-    border-top: 1px solid #edf0f5;
-    background: #fbfcfe;
+    border-top: 1px solid var(--sp-theme-border-subtle);
+    background: var(--sp-theme-surface-hover);
 }
 
 .sp-annc-assign-form .sp-annc-field select {
@@ -932,7 +937,7 @@
     align-items: flex-start;
     gap: 8px;
     margin: 0;
-    color: #435067;
+    color: var(--sp-theme-ink-2);
     cursor: pointer;
 }
 
@@ -947,14 +952,14 @@
 }
 
 .sp-annc-assign-options strong {
-    color: #39475d;
+    color: var(--sp-theme-ink-2);
     font-size: 10px;
     font-weight: 750;
 }
 
 .sp-annc-assign-options small {
     margin-top: 1px;
-    color: #8892a2;
+    color: var(--sp-theme-faint);
     font-size: 9px;
 }
 
@@ -968,13 +973,13 @@
     justify-content: space-between;
     gap: 14px;
     padding: 18px 22px 22px;
-    border-top: 1px solid #edf0f5;
-    background: #fbfcfe;
+    border-top: 1px solid var(--sp-theme-border-subtle);
+    background: var(--sp-theme-surface-hover);
 }
 
 .sp-annc-teacher-empty p {
     margin: 0;
-    color: #7d889a;
+    color: var(--sp-theme-muted);
     font-size: 11px;
 }
 
@@ -984,7 +989,7 @@
     justify-content: space-between;
     gap: 12px;
     padding: 3px 3px 0;
-    color: #929bab;
+    color: var(--sp-theme-faint);
     font-size: 10px;
 }
 
@@ -992,7 +997,7 @@
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    color: #7f8a9e;
+    color: var(--sp-theme-muted);
     font-weight: 700;
 }
 
@@ -1000,8 +1005,8 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: #6cbf92;
-    box-shadow: 0 0 0 3px #eaf8f0;
+    background: var(--sp-theme-success);
+    box-shadow: 0 0 0 3px var(--sp-theme-success-soft);
 }
 
 @media (max-width: 1480px) {
@@ -1176,13 +1181,34 @@
 
 /* ---------- Screen-specific additions ---------- */
 .sp-annc-stat-icon-archived {
-    background: #eef2ff;
-    color: #4b5fd1;
+    background: var(--sp-theme-brand-soft);
+    color: var(--sp-theme-brand);
 }
 
 .sp-annc-status-archived {
-    background: #f1f3f7;
-    color: #697586;
+    background: var(--sp-theme-surface-soft);
+    color: var(--sp-theme-muted);
+}
+
+/* Past the end date: still active in the table, already hidden in both portals. */
+.sp-annc-stat-icon-expired {
+    background: var(--sp-theme-danger-soft);
+    color: var(--sp-theme-danger);
+}
+
+.sp-annc-status-expired {
+    border-color: var(--sp-theme-danger-line);
+    background: var(--sp-theme-danger-soft);
+    color: var(--sp-theme-danger);
+}
+
+/* End date, kept under the status pill so the table stays six columns wide. */
+.sp-annc-status-note {
+    display: block;
+    margin-top: 3px;
+    color: var(--sp-theme-faint);
+    font-size: 10px;
+    white-space: nowrap;
 }
 
 .sp-annc-radio-row {
@@ -1204,13 +1230,13 @@
 }
 
 .sp-annc-radio-card:hover {
-    border-color: #b9c6f3;
-    background: #f4f7ff;
+    border-color: var(--sp-theme-brand-line);
+    background: var(--sp-theme-brand-wash);
 }
 
 .sp-annc-radio-card:has(input:checked) {
     border-color: var(--sp-annc-accent);
-    background: #eef2ff;
+    background: var(--sp-theme-brand-soft);
 }
 
 .sp-annc-radio-card input {
@@ -1230,4 +1256,54 @@
     color: var(--sp-annc-muted);
     font-size: 11.5px;
     line-height: 1.45;
+}
+
+/* ---------- Send email checkbox ---------- */
+.sp-annc-field label[for="sp_ann_send_email"] {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: 750;
+}
+
+.sp-annc-field label[for="sp_ann_send_email"] input[type="checkbox"] {
+    accent-color: var(--sp-annc-accent);
+    margin: 0;
+}
+
+.sp-annc-field label[for="sp_ann_send_email"] span {
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* ---------- Preview ----------
+   The preview blocks below are the portal components themselves: the same
+   <section class="sp-ann …"> markup the students and teachers get, styled by
+   assets/css/announcements.css, which is enqueued on this screen. Only the
+   dashed frame around them belongs to the admin UI. */
+.sp-annc-preview {
+    margin: 20px 0 0;
+    padding: 16px;
+    border: 1px dashed var(--sp-annc-border);
+    border-radius: var(--sp-annc-radius);
+    background: var(--sp-annc-soft);
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sp-annc-preview > .sp-ann {
+    width: 100%;
+    margin: 0;
+}
+
+.sp-annc-preview .sp-ann-dismiss-form,
+.sp-annc-preview form.sp-ann-dismiss {
+    margin: 0;
+}
+
+.sp-annc-preview .sp-ann-dismiss-btn {
+    pointer-events: none;
 }

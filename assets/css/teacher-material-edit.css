@@ -47,14 +47,14 @@
 
 .sp-me {
 	--me-surface: var(--sp-surface, #ffffff);
-	--me-text: var(--sp-text, #1f2933);
-	--me-muted: var(--sp-muted, #64748b);
-	--me-border: var(--sp-border, #e5e9f0);
-	--me-primary: var(--sp-primary, #1d4ed8);
-	--me-primary-dark: var(--sp-primary-dark, #1e40af);
+	--me-text: var(--sp-text, var(--sp-theme-ink));
+	--me-muted: var(--sp-muted, var(--sp-theme-muted));
+	--me-border: var(--sp-border, var(--sp-theme-border));
+	--me-primary: var(--sp-primary, var(--sp-theme-brand));
+	--me-primary-dark: var(--sp-primary-dark, var(--sp-theme-brand-strong));
 	--me-on-primary: var(--sp-on-primary, #ffffff);
-	--me-good: var(--sp-good, #15803d);
-	--me-danger: var(--sp-danger, #b42318);
+	--me-good: var(--sp-good, var(--sp-theme-success));
+	--me-danger: var(--sp-danger, var(--sp-theme-danger));
 	--me-radius: 12px;
 	--me-shadow: var(--sp-shadow-sm, 0 1px 2px rgba(15, 23, 42, 0.06));
 
@@ -541,8 +541,8 @@
 	flex: none;
 	width: 36px;
 	height: 36px;
-	color: color-mix(in srgb, #ea580c 80%, var(--me-text));
-	background: color-mix(in srgb, #ea580c 13%, var(--me-surface));
+	color: color-mix(in srgb, var(--sp-theme-warn) 80%, var(--me-text));
+	background: color-mix(in srgb, var(--sp-theme-warn) 13%, var(--me-surface));
 	border-radius: 10px;
 }
 

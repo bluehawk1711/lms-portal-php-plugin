@@ -81,13 +81,13 @@
 
 .sp-portal .sp-btn-primary {
 	background: var(--sp-primary);
-	color: #fff;
+	color: var(--sp-theme-on-brand);
 }
 
 .sp-portal .sp-btn-primary:hover,
 .sp-portal .sp-btn-primary:focus {
 	background: var(--sp-primary-dark);
-	color: #fff;
+	color: var(--sp-theme-on-brand);
 }
 
 .sp-form > .sp-btn {
@@ -115,7 +115,7 @@
 }
 
 .sp-card:hover {
-	border-color: #d6dcea;
+	border-color: var(--sp-theme-brand-line);
 	box-shadow: var(--sp-shadow);
 	transform: translateY(-2px);
 }
@@ -155,19 +155,19 @@
 .sp-portal .sp-btn-primary {
 	background: var(--sp-primary);
 	border-color: var(--sp-primary);
-	color: #fff;
+	color: var(--sp-theme-on-brand);
 }
 
 .sp-portal .sp-btn-primary:hover,
 .sp-portal .sp-btn-primary:focus-visible {
 	background: var(--sp-primary-dark);
 	border-color: var(--sp-primary-dark);
-	color: #fff;
+	color: var(--sp-theme-on-brand);
 }
 
 .sp-empty {
 	background: var(--sp-surface);
-	border: 1px dashed #cdd5e0;
+	border: 1px dashed var(--sp-theme-border-strong);
 	border-radius: var(--sp-radius);
 	color: var(--sp-muted);
 	padding: 2.25rem 1.5rem;

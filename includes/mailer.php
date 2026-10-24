@@ -325,6 +325,92 @@ function sp_email_assignment_notice( $teacher, $class ) {
 }
 
 /**
+ * Send an announcement email to all targeted recipients.
+ *
+ * @param int   $announcement_id Announcement row id.
+ * @param string $audience    'all_students', 'one_student' or 'teachers'.
+ * @param int   $profile_id   Student profile id (for one_student audience).
+ * @param string $title    Announcement title.
+ * @param string $body    Announcement body.
+ * @return int Number of emails sent.
+ */
+function sp_send_announcement_email( $announcement_id, $audience, $profile_id, $title, $body ) {
+	$student_link = sp_portal_url( 'notifications' );
+	$teacher_link = sp_teacher_url( 'notifications' );
+
+	$recipients = array();
+
+	if ( 'teachers' === $audience ) {
+		$teachers = sp_get_teachers();
+		foreach ( $teachers as $teacher ) {
+			if ( ! empty( $teacher->email ) ) {
+				$recipients[] = array(
+					'to'      => $teacher->email,
+					'user_id' => (int) $teacher->user_id,
+					'name'    => $teacher->full_name,
+					'link'    => $teacher_link,
+				);
+			}
+		}
+	} elseif ( 'one_student' === $audience ) {
+		$profile = sp_get_profile_by_id( $profile_id );
+		if ( $profile && ! empty( $profile->email ) ) {
+			$recipients[] = array(
+				'to'      => $profile->email,
+				'user_id' => (int) $profile->user_id,
+				'name'    => $profile->full_name,
+				'link'    => $student_link,
+			);
+		}
+	} else {
+		$students = sp_get_profiles( array( 'per_page' => 1000 ) );
+		foreach ( $students as $profile ) {
+			if ( ! empty( $profile->email ) ) {
+				$recipients[] = array(
+					'to'      => $profile->email,
+					'user_id' => (int) $profile->user_id,
+					'name'    => $profile->full_name,
+					'link'    => $student_link,
+				);
+			}
+		}
+	}
+
+	$sent = 0;
+
+	foreach ( $recipients as $recipient ) {
+		ob_start();
+		?>
+		<p>Dear <?php echo esc_html( $recipient['name'] ); ?>,</p>
+		<?php if ( '' !== trim( (string) $title ) ) : ?>
+			<p><strong><?php echo esc_html( $title ); ?></strong></p>
+		<?php endif; ?>
+		<p><?php echo wp_kses_post( wpautop( $body ) ); ?></p>
+		<p>
+			<a href="<?php echo esc_url( $recipient['link'] ); ?>">View all announcements</a>
+		</p>
+		<?php
+		$email_body = (string) ob_get_clean();
+
+		$subject = '' !== trim( (string) $title ) ? sanitize_text_field( $title ) : 'New announcement';
+
+		if ( sp_send_mail(
+			$recipient['to'],
+			$subject,
+			sp_email_shell( 'New announcement', $email_body ),
+			array(
+				'user_id' => $recipient['user_id'],
+				'context' => 'announcement',
+			)
+		) ) {
+			++$sent;
+		}
+	}
+
+	return $sent;
+}
+
+/**
  * Format a number for display without trailing noise.
  *
  * @param mixed $value Numeric value.

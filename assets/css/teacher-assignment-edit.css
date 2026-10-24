@@ -13,32 +13,25 @@
 	--ae-border: var(--sp-border, color-mix(in srgb, currentColor 14%, transparent));
 	--ae-subtle: color-mix(in srgb, currentColor 5%, transparent);
 	--ae-track: color-mix(in srgb, currentColor 12%, transparent);
-	--ae-muted: var(--sp-muted, #667085);
-	--ae-primary: var(--sp-primary, #4f46e5);
+	--ae-muted: var(--sp-muted, var(--sp-theme-muted));
+	--ae-primary: var(--sp-primary, var(--sp-theme-brand));
 	--ae-on-primary: var(--sp-primary-contrast, #fff);
 	--ae-accent-text: color-mix(in srgb, var(--ae-primary) 75%, currentColor);
 	--ae-ring: color-mix(in srgb, var(--ae-primary) 24%, transparent);
-	--ae-good: #067647;
-	--ae-warn: #b54708;
-	--ae-danger: #f71000;
+	--ae-good: var(--sp-theme-success);
+	--ae-warn: var(--sp-theme-warn);
+	--ae-danger: var(--sp-theme-danger);
 	--ae-radius: 14px;
 	--ae-radius-sm: 10px;
 	--ae-shadow: var(--sp-shadow-sm, 0 1px 2px rgba(16, 24, 40, 0.06));
 	--ae-shadow-lg: 0 -8px 24px -12px rgba(16, 24, 40, 0.25);
 }
 
-@media (prefers-color-scheme: dark) {
-	:root:not([data-theme="light"]) .sp-ae {
-		--ae-good: #47cd89;
-		--ae-warn: #fdb022;
-		--ae-danger: #ff1100;
-	}
-}
 
 :root[data-theme="dark"] .sp-ae {
-	--ae-good: #47cd89;
-	--ae-warn: #fdb022;
-	--ae-danger: #f97066;
+	--ae-good: var(--sp-theme-success);
+	--ae-warn: var(--sp-theme-warn);
+	--ae-danger: var(--sp-theme-danger);
 }
 
 /* Scripts toggle [hidden]; display rules below must never override it. */
@@ -1229,70 +1222,18 @@
 		border-top: 1px solid var(--ae-border);
 	}
 
-	/* Table rows become cards */
+	/* Keep the table layout; the wrapper scrolls sideways on phones. */
 	.sp-ae-tablewrap {
-		overflow: visible;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
 	}
 
-	.sp-ae-table,
-	.sp-ae-table tbody {
-		display: block;
-	}
-
-	.sp-ae-table thead {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		margin: -1px;
-		overflow: hidden;
-		clip: rect(0 0 0 0);
-	}
-
-	.sp-ae-table tr {
-		display: grid;
-		gap: 0.55rem;
-		padding: 1rem;
-		border-top: 1px solid var(--ae-border);
-	}
-
-	.sp-ae-table tbody tr:first-child {
-		border-top: 0;
-	}
-
-	.sp-ae-table td,
-	.sp-ae-table tbody tr:first-child td {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 1rem;
-		padding: 0;
-		border: 0;
-	}
-
-	.sp-ae-table td[data-label]::before {
-		content: attr(data-label);
-		flex: none;
-		color: var(--ae-muted);
-		font-size: 0.8125rem;
+	.sp-ae-table {
+		min-width: 40rem;
 	}
 
 	.sp-ae-cell-num {
-		width: auto;
 		font-size: 0.8125rem;
-	}
-
-	.sp-ae-cell-num::before {
-		content: "Question #";
-	}
-
-	.sp-ae-cell-q,
-	.sp-ae-cell-name {
-		display: block;
-		min-width: 0;
-	}
-
-	.sp-ae-cell-action {
-		width: auto;
 	}
 
 	.sp-ae-cell-action .sp-btn,

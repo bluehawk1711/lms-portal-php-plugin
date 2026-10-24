@@ -44,6 +44,7 @@ if ( ! function_exists( 'sp_teacher_nav_icon' ) ) {
 			'results'     => '<path d="M4 20V10" /><path d="M10 20V4" /><path d="M16 20v-7" /><path d="M22 20H2" />',
 			'calendar'    => '<rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4" />',
 			'profile'     => '<circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5" />',
+			'notifications' => '<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" />',
 		);
 
 		if ( ! isset( $paths[ $name ] ) ) {
@@ -80,6 +81,7 @@ if ( ! function_exists( 'sp_teacher_nav_icon' ) ) {
 						'results'     => array( 'label' => 'Results', 'url' => sp_teacher_url( 'results' ) ),
 						'profile'      => array( 'label' => 'Profile', 'url' => sp_teacher_url( 'profile' ) ),
 						'calendar'    => array( 'label' => 'Calendar', 'url' => sp_teacher_url( 'calendar' ) ),
+						'notifications' => array( 'label' => 'Announcements', 'url' => sp_teacher_url( 'notifications' ) ),
 					);
 					foreach ( $sp_side_items as $sp_side_key => $sp_side_item ) :
 						$sp_side_active = $sp_side_key === $sp_nav_current;

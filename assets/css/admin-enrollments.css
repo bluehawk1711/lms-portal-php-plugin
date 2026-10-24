@@ -4,15 +4,15 @@
  */
 
 .sp-scope.sp-enrollments-page {
-    --sp-enroll-ink: #1d2327;
-    --sp-enroll-muted: #646970;
-    --sp-enroll-line: #dcdcde;
-    --sp-enroll-soft-line: #e8eaf0;
-    --sp-enroll-surface: #ffffff;
-    --sp-enroll-canvas: #f6f7fb;
-    --sp-enroll-primary: #2271b1;
-    --sp-enroll-primary-dark: #135e96;
-    --sp-enroll-radius: 12px;
+    --sp-enroll-ink: var(--sp-theme-ink);
+    --sp-enroll-muted: var(--sp-theme-muted);
+    --sp-enroll-line: var(--sp-theme-border-strong);
+    --sp-enroll-soft-line: var(--sp-theme-border);
+    --sp-enroll-surface: var(--sp-theme-surface);
+    --sp-enroll-canvas: var(--sp-theme-bg);
+    --sp-enroll-primary: var(--sp-theme-brand);
+    --sp-enroll-primary-dark: var(--sp-theme-brand-deep);
+    --sp-enroll-radius: var(--sp-theme-radius-md);
 
     color: var(--sp-enroll-ink);
     margin: 8px 0 28px;
@@ -152,10 +152,10 @@
 
 .sp-enrollments-page .sp-count-pill {
     align-items: center;
-    background: #f0f6fc;
-    border: 1px solid #d2e5f7;
+    background: var(--sp-theme-brand-wash);
+    border: 1px solid var(--sp-theme-brand-line);
     border-radius: 999px;
-    color: #135e96;
+    color: var(--sp-theme-brand-deep);
     display: inline-flex;
     flex: 0 0 auto;
     font-size: 12px;
@@ -190,9 +190,9 @@
 }
 
 .sp-enrollments-page table.sp-table thead th {
-    background: #f8f9fc;
+    background: var(--sp-theme-surface-tint);
     border-bottom: 1px solid var(--sp-enroll-line);
-    color: #555d66;
+    color: var(--sp-theme-ink-2);
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.045em;
@@ -205,8 +205,8 @@
 }
 
 .sp-enrollments-page table.sp-table tbody td {
-    border-bottom: 1px solid #edf0f4;
-    color: #343a40;
+    border-bottom: 1px solid var(--sp-theme-border-subtle);
+    color: var(--sp-theme-ink-2);
     font-size: 13px;
     line-height: 1.45;
     padding: 13px 14px;
@@ -218,17 +218,17 @@
 }
 
 .sp-enrollments-page table.sp-table tbody tr:hover td {
-    background: #fbfcfe;
+    background: var(--sp-theme-surface-hover);
 }
 
 .sp-enrollments-page table.sp-table tbody tr:nth-child(odd) td,
 .sp-enrollments-page table.sp-table.striped > tbody > :nth-child(odd) td {
-    background: #fff;
+    background: var(--sp-theme-surface);
 }
 
 .sp-enrollments-page table.sp-table tbody tr:nth-child(odd):hover td,
 .sp-enrollments-page table.sp-table.striped > tbody > :nth-child(odd):hover td {
-    background: #fbfcfe;
+    background: var(--sp-theme-surface-hover);
 }
 
 .sp-enrollments-page .sp-student-cell {
@@ -242,7 +242,7 @@
 }
 
 .sp-enrollments-page .sp-email-cell {
-    color: #555d66;
+    color: var(--sp-theme-ink-2);
     min-width: 200px;
     overflow-wrap: anywhere;
 }
@@ -250,8 +250,8 @@
 .sp-enrollments-page .sp-table-input,
 .sp-enrollments-page .sp-student-search input[type="search"],
 .sp-enrollments-page .sp-filter-controls select {
-    background-color: #fff;
-    border: 1px solid #c8ccd0;
+    background-color: var(--sp-theme-surface);
+    border: 1px solid var(--sp-theme-border-strong);
     border-radius: 6px;
     box-shadow: none;
     color: var(--sp-enroll-ink);
@@ -287,7 +287,7 @@
 
 .sp-enrollments-page .sp-table-input::placeholder,
 .sp-enrollments-page .sp-student-search input::placeholder {
-    color: #8c9299;
+    color: var(--sp-theme-faint);
     opacity: 1;
 }
 
@@ -304,7 +304,7 @@
 }
 
 .sp-enrollments-page .sp-th-optional {
-    color: #8c9299;
+    color: var(--sp-theme-faint);
     font-size: 10px;
     font-weight: 500;
     letter-spacing: 0;
@@ -354,32 +354,32 @@
 .sp-enrollments-page .button.button-primary {
     background: var(--sp-enroll-primary);
     border-color: var(--sp-enroll-primary);
-    color: #fff;
+    color: var(--sp-theme-on-brand);
 }
 
 .sp-enrollments-page .button.button-primary:hover,
 .sp-enrollments-page .button.button-primary:focus {
     background: var(--sp-enroll-primary-dark);
     border-color: var(--sp-enroll-primary-dark);
-    color: #fff;
+    color: var(--sp-theme-on-brand);
 }
 
 .sp-enrollments-page .button:not(.button-primary):hover,
 .sp-enrollments-page .button:not(.button-primary):focus {
-    background: #f6f7f7;
-    border-color: #8c8f94;
-    color: #1d2327;
+    background: var(--sp-theme-surface-alt);
+    border-color: var(--sp-theme-faint);
+    color: var(--sp-theme-ink);
 }
 
 .sp-enrollments-page .button.sp-button-subtle-danger {
-    color: #a12622;
+    color: var(--sp-theme-danger);
 }
 
 .sp-enrollments-page .button.sp-button-subtle-danger:hover,
 .sp-enrollments-page .button.sp-button-subtle-danger:focus {
-    background: #fcf0f1;
-    border-color: #d63638;
-    color: #8a1f1f;
+    background: var(--sp-theme-danger-soft);
+    border-color: var(--sp-theme-danger);
+    color: var(--sp-theme-danger-strong);
 }
 
 .sp-enrollments-page .sp-admin-muted {
@@ -414,10 +414,10 @@
 
 .sp-enrollments-page .sp-inline-notice {
     align-items: flex-start;
-    background: #f8f9fc;
+    background: var(--sp-theme-surface-tint);
     border: 1px solid var(--sp-enroll-soft-line);
     border-radius: 8px;
-    color: #4c5560;
+    color: var(--sp-theme-ink-2);
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -459,7 +459,7 @@
 
 .sp-enrollments-page .sp-notify-label {
     align-items: center;
-    color: #4c5560;
+    color: var(--sp-theme-ink-2);
     cursor: pointer;
     display: inline-flex;
     gap: 7px;
@@ -468,7 +468,7 @@
 
 .sp-enrollments-page .sp-enrol-submit-row {
     align-items: center;
-    background: #fbfcfe;
+    background: var(--sp-theme-surface-hover);
     border-top: 1px solid var(--sp-enroll-soft-line);
     display: flex;
     flex-wrap: wrap;
@@ -507,7 +507,7 @@
 
 .sp-enrollments-page .sp-empty-state-icon {
     align-items: center;
-    background: #f0f6fc;
+    background: var(--sp-theme-brand-wash);
     border-radius: 12px;
     color: var(--sp-enroll-primary);
     display: inline-flex;

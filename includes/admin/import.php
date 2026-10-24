@@ -70,7 +70,9 @@ function sp_admin_render_import( $type ) {
     $is_student = ( 'student' === $type );
     $plan       = get_transient( sp_import_plan_key( $type ) );
     $action     = $is_student ? 'import_students' : 'import_teachers';
-    $columns    = $is_student ? 'name, email, phone, enroll_id, class_code, admission_date' : 'name, email, phone';
+    $columns    = $is_student
+        ? 'name, email, phone, address, enroll_id, class_code, admission_date, dob, password'
+        : 'name, email, phone, password';
     $sample     = $is_student ? 'students' : 'teachers';
     ?>
     <div class="sp-import-workspace">
@@ -89,7 +91,7 @@ function sp_admin_render_import( $type ) {
             <div class="sp-import-requirements">
                 <div class="sp-import-requirement">
                     <span class="sp-import-requirement-icon is-required" aria-hidden="true">*</span>
-                    <div><strong>Required</strong><p><code>name</code> and <code>email</code> must be provided for each record.</p></div>
+                    <div><strong>Required</strong><p><code>name</code> and <code>email</code> must be provided for each record<?php if ( ! $is_student ) : ?>, and so must <code>password</code><?php endif; ?>.</p></div>
                 </div>
                 <?php if ( $is_student ) : ?>
                     <div class="sp-import-requirement">
@@ -99,7 +101,17 @@ function sp_admin_render_import( $type ) {
                 <?php endif; ?>
                 <div class="sp-import-requirement">
                     <span class="sp-import-requirement-icon" aria-hidden="true"><span class="dashicons dashicons-info-outline"></span></span>
-                    <div><strong>Optional columns</strong><p><code>phone</code> is optional. Extra columns are ignored.</p></div>
+                    <div>
+                        <strong>Optional columns</strong>
+                        <p>
+                            <?php if ( $is_student ) : ?>
+                                <code>phone</code>, <code>dob</code>, <code>address</code> and <code>password</code> are optional. <code>address</code> is printed on the student's ID card and is cut at 100 characters. Leave <code>password</code> blank and a random one is generated and emailed to the student.
+                            <?php else : ?>
+                                <code>phone</code> is optional.
+                            <?php endif; ?>
+                            Extra columns are ignored.
+                        </p>
+                    </div>
                 </div>
             </div>
 

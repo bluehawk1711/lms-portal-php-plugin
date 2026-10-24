@@ -14,6 +14,9 @@
  *   select[data-sp-async-change]      auto-submit its form when changed.
  *   'sp:async-replace' document event after every swap — page scripts use it
  *                                     to re-bind handlers on the fresh nodes.
+ *   'sp:async-done'    document event after every fetch, with
+ *                                     { form, ok } — page scripts restore the
+ *                                     controls sp-async marked busy.
  *
  * Server notices rendered outside the region surface as floating toasts, so
  * feedback is never lost the way a redirect banner would be.
@@ -200,6 +203,8 @@
 			}
 		}
 
+		var ok = false;
+
 		fetch( url.toString(), options )
 			.then( function ( res ) {
 				return res.text().then( function ( html ) {
@@ -208,6 +213,7 @@
 			} )
 			.then( function ( payload ) {
 				var res = payload.res;
+				ok = res.ok;
 				var doc = new DOMParser().parseFromString( payload.html, 'text/html' );
 				var incoming = null;
 
@@ -251,7 +257,12 @@
 				}
 				toast( 'Network problem — the action did not go through. Please try again.', 'is-error' );
 			} )
-			.then( done );
+			.then( function () {
+				document.dispatchEvent( new CustomEvent( 'sp:async-done', {
+					detail: { form: form, ok: ok }
+				} ) );
+				done();
+			} );
 	}
 
 	function runForm( form, submitter ) {

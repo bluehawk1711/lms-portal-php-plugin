@@ -78,8 +78,10 @@ function sp_admin_render_student_form() {
 				<tr>
 					<th scope="row"><label for="sp_address">Address</label></th>
 					<td>
-						<textarea id="sp_address" name="address" rows="2" class="large-text"><?php echo esc_textarea( $editing && ! empty( $editing->address ) ? $editing->address : '' ); ?></textarea>
-						<p class="description">Printed on the ID card's bottom strip.</p>
+						<?php $sp_address_value = ( $editing && ! empty( $editing->address ) ) ? (string) $editing->address : ''; ?>
+						<textarea id="sp_address" name="address" rows="2" maxlength="100" class="large-text"><?php echo esc_textarea( $sp_address_value ); ?></textarea>
+						<p class="description">Printed in the Address row of the student's ID card.</p>
+						<p class="description sp-address-count"><span data-sp-address-count><?php echo esc_html( (string) ( function_exists( 'mb_strlen' ) ? mb_strlen( $sp_address_value ) : strlen( $sp_address_value ) ) ); ?></span> / 100 characters</p>
 					</td>
 				</tr>
 				<tr>
@@ -189,5 +191,24 @@ function sp_admin_render_student_form() {
 			</p>
 		<?php endif; ?>
 	</div>
+
+	<script>
+	( function () {
+		var field = document.getElementById( 'sp_address' );
+		var count = document.querySelector( '[data-sp-address-count]' );
+
+		if ( ! field || ! count ) {
+			return;
+		}
+
+		var update = function () {
+			count.textContent = String( field.value.length );
+			count.parentNode.classList.toggle( 'is-near', field.value.length >= 90 );
+		};
+
+		field.addEventListener( 'input', update );
+		update();
+	} )();
+	</script>
 	<?php
 }

@@ -5,13 +5,13 @@
  */
 
 .sp-teacher-portal {
-    --sp-class-ui-radius: 18px;
-    --sp-class-ui-radius-sm: 12px;
+    --sp-class-ui-radius: var(--sp-theme-radius-2xl);
+    --sp-class-ui-radius-sm: var(--sp-theme-radius-md);
     --sp-class-ui-shadow: 0 10px 30px rgba(16, 24, 40, 0.06);
     --sp-class-ui-shadow-hover: 0 16px 36px rgba(16, 24, 40, 0.10);
-    --sp-class-ui-line: var(--sp-border, #e4e7ec);
+    --sp-class-ui-line: var(--sp-border, var(--sp-theme-brand-line));
     --sp-class-ui-surface: var(--sp-surface, #fff);
-    --sp-class-ui-muted: var(--sp-muted, #667085);
+    --sp-class-ui-muted: var(--sp-muted, var(--sp-theme-muted));
 }
 
 .sp-teacher-portal .sp-class-page-head {
@@ -45,30 +45,33 @@
 .sp-teacher-portal .sp-class-stat {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 0.9rem;
     min-width: 0;
-    padding: 1rem 1.1rem;
+    padding: 1.15rem 1.25rem;
     background: var(--sp-class-ui-surface);
     border: 1px solid var(--sp-class-ui-line);
-    border-radius: var(--sp-class-ui-radius-sm);
-    box-shadow: 0 3px 12px rgba(16, 24, 40, 0.025);
+    border-radius: var(--sp-class-ui-radius);
+    box-shadow: var(--sp-theme-shadow-card);
 }
 
 .sp-teacher-portal .sp-class-stat-icon {
     display: grid;
-    flex: 0 0 44px;
-    width: 44px;
-    height: 44px;
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
     place-items: center;
-    border-radius: 13px;
-    background: var(--sp-primary-soft, #eef4ff);
-    color: var(--sp-primary-dark, #344e9e);
+    border-radius: var(--sp-theme-radius-md);
+    border: 1px solid var(--sp-theme-brand-line);
+    background: var(--sp-primary-soft, var(--sp-theme-brand-wash));
+    color: var(--sp-primary, var(--sp-theme-brand));
     font-size: 1.25rem;
     line-height: 1;
 }
 
 .sp-teacher-portal .sp-class-stat.is-archived .sp-class-stat-icon {
-    background: var(--sp-surface-alt, #f2f4f7);
+    background: var(--sp-surface-alt, var(--sp-theme-surface-soft));
+    border-color: var(--sp-border);
     color: var(--sp-class-ui-muted);
 }
 
@@ -80,7 +83,7 @@
 }
 
 .sp-teacher-portal .sp-class-stat-value {
-    color: var(--sp-text, #101828);
+    color: var(--sp-text, var(--sp-theme-ink));
     font-size: 1.45rem;
     font-weight: 760;
     letter-spacing: -0.035em;
@@ -90,8 +93,10 @@
 
 .sp-teacher-portal .sp-class-stat-label {
     color: var(--sp-class-ui-muted);
-    font-size: 0.82rem;
-    font-weight: 600;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
 }
 
 /* Create form */
@@ -103,7 +108,7 @@
     border: 1px solid var(--sp-class-ui-line);
     border-radius: var(--sp-class-ui-radius);
     background:
-        radial-gradient(ellipse at top right, rgba(99, 102, 241, 0.055), transparent 45%),
+        radial-gradient(ellipse at top right, color-mix(in srgb, var(--sp-theme-brand) 5.5%, transparent), transparent 45%),
         var(--sp-class-ui-surface);
     box-shadow: var(--sp-class-ui-shadow);
 }
@@ -117,16 +122,17 @@
 
 .sp-teacher-portal .sp-class-create-icon {
     display: grid;
-    flex: 0 0 44px;
-    width: 44px;
-    height: 44px;
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
     place-items: center;
-    border: 1px solid var(--sp-border, #dbe4ff);
-    border-radius: 13px;
-    background: var(--sp-primary-soft, #eef4ff);
-    color: var(--sp-primary-dark, #344e9e);
+    border: 0;
+    border-radius: 50%;
+    background: var(--sp-primary, var(--sp-theme-brand));
+    color: #fff;
     font-size: 1.35rem;
     font-weight: 600;
+    line-height: 1;
 }
 
 .sp-teacher-portal .sp-class-create-head-copy {
@@ -160,9 +166,11 @@
 .sp-teacher-portal .sp-class-create-form label {
     display: inline-block;
     margin-bottom: 0.42rem;
-    color: var(--sp-text, #344054);
-    font-size: 0.875rem;
-    font-weight: 650;
+    color: var(--sp-text, var(--sp-theme-ink-2));
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
 }
 
 .sp-teacher-portal .sp-class-create-form input,
@@ -175,7 +183,7 @@
     border: 1px solid var(--sp-class-ui-line);
     border-radius: 10px;
     background: var(--sp-input-bg, var(--sp-surface, #fff));
-    color: var(--sp-text, #101828);
+    color: var(--sp-text, var(--sp-theme-ink));
     font: inherit;
     font-size: 0.94rem;
     line-height: 1.45;
@@ -190,7 +198,7 @@
 .sp-teacher-portal .sp-class-create-form input::placeholder,
 .sp-teacher-portal .sp-class-create-form textarea::placeholder,
 .sp-teacher-portal .sp-class-search-input::placeholder {
-    color: #98a2b3;
+    color: var(--sp-theme-faint);
     opacity: 1;
 }
 
@@ -198,8 +206,8 @@
 .sp-teacher-portal .sp-class-create-form textarea:focus,
 .sp-teacher-portal .sp-class-search-input:focus {
     outline: none;
-    border-color: var(--sp-primary, #5269d8);
-    box-shadow: 0 0 0 3px var(--sp-primary-soft, rgba(82, 105, 216, 0.14));
+    border-color: var(--sp-primary, var(--sp-theme-brand));
+    box-shadow: 0 0 0 3px var(--sp-primary-soft, color-mix(in srgb, var(--sp-theme-brand) 14%, transparent));
 }
 
 .sp-teacher-portal .sp-class-create-form .sp-card-actions {
@@ -242,7 +250,7 @@
 
 .sp-teacher-portal .sp-class-toolbar-title {
     margin: 0 0 0.25rem;
-    color: var(--sp-text, #101828);
+    color: var(--sp-text, var(--sp-theme-ink));
     font-size: 1.18rem;
     font-weight: 740;
     letter-spacing: -0.025em;
@@ -280,7 +288,7 @@
     transform: translateY(-50%);
 }
 
-.sp-teacher-portal .sp-class-search-input {
+.sp-teacher-portal .sp-class-search-input:not([type="radio"]):not([type="checkbox"]):not([type="hidden"]):not([type="submit"]):not([type="button"]):not([type="reset"]) {
     min-height: 44px;
     padding-left: 2.5rem;
     padding-right: 0.75rem;
@@ -304,9 +312,9 @@
 }
 
 .sp-teacher-portal .sp-class-search-clear:hover {
-    border-color: var(--sp-primary, #5269d8);
-    background: var(--sp-primary-soft, #eef4ff);
-    color: var(--sp-primary-dark, #344e9e);
+    border-color: var(--sp-primary, var(--sp-theme-brand));
+    background: var(--sp-primary-soft, var(--sp-theme-brand-wash));
+    color: var(--sp-primary-dark, var(--sp-theme-brand-strong));
 }
 
 .sp-teacher-portal .sp-class-search-status {
@@ -316,10 +324,10 @@
     font-variant-numeric: tabular-nums;
 }
 
-/* Active class cards */
+/* Active class cards — full-width list rows */
 .sp-teacher-portal .sp-class-grid {
     display: grid;
-    grid-template-columns: repeat( auto-fit, minmax(min(100%, 290px), 1fr) );
+    grid-template-columns: minmax(0, 1fr);
     gap: 1rem;
     align-items: stretch;
 }
@@ -338,7 +346,7 @@
 }
 
 .sp-teacher-portal .sp-class-card:hover {
-    border-color: var(--sp-primary-border, #c7d2fe);
+    border-color: var(--sp-primary-border, var(--sp-theme-brand-line));
     box-shadow: var(--sp-class-ui-shadow-hover);
     transform: translateY(-2px);
 }
@@ -354,7 +362,7 @@
 .sp-teacher-portal .sp-class-card .sp-card-title {
     min-width: 0;
     margin: 0;
-    color: var(--sp-text, #101828);
+    color: var(--sp-text, var(--sp-theme-ink));
     font-size: 1.08rem;
     font-weight: 740;
     letter-spacing: -0.025em;
@@ -369,7 +377,7 @@
 }
 
 .sp-teacher-portal .sp-class-card .sp-card-title a:hover {
-    color: var(--sp-primary-dark, #344e9e);
+    color: var(--sp-primary-dark, var(--sp-theme-brand-strong));
     text-decoration: underline;
 }
 
@@ -378,10 +386,11 @@
     flex: 0 0 auto;
     align-items: center;
     max-width: 45%;
-    padding: 0.28rem 0.5rem;
-    border: 1px solid var(--sp-class-ui-line);
+    margin-left: auto;
+    padding: 0.28rem 0.55rem;
+    border: 1px solid var(--sp-border);
     border-radius: 7px;
-    background: var(--sp-surface-alt, #f9fafb);
+    background: var(--sp-surface-alt, var(--sp-theme-surface-soft));
     color: var(--sp-class-ui-muted);
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 0.72rem;
@@ -391,15 +400,31 @@
     white-space: nowrap;
 }
 
+.sp-teacher-portal .sp-class-live {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    padding: 0.22rem 0.55rem;
+    border: 1px solid var(--sp-theme-brand-line);
+    border-radius: 999px;
+    background: var(--sp-primary-soft, var(--sp-theme-brand-wash));
+    color: var(--sp-primary, var(--sp-theme-brand));
+    font-size: 0.66rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+}
+
 .sp-teacher-portal .sp-class-pending {
     display: inline-flex;
     flex: 0 0 auto;
     align-items: center;
     padding: 0.28rem 0.5rem;
-    border: 1px solid #f59e0b;
+    border: 1px solid var(--sp-theme-warn);
     border-radius: 7px;
-    background: #fef3c7;
-    color: #92400e;
+    background: var(--sp-theme-warn-tint);
+    color: var(--sp-theme-warn-strong);
     font-size: 0.72rem;
     font-weight: 650;
     white-space: nowrap;
@@ -408,30 +433,45 @@
 .sp-teacher-portal .sp-class-card-meta {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.42rem;
+    align-items: center;
+    gap: 0.35rem 0.9rem;
     margin: 0 0 0.9rem;
+    color: var(--sp-class-ui-muted);
+    font-size: 0.82rem;
 }
 
-.sp-teacher-portal .sp-class-card-meta span {
+.sp-teacher-portal .sp-class-card-meta .sp-class-meta-item {
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
+    gap: 0.35rem;
     max-width: 100%;
-    padding: 0.32rem 0.55rem;
-    border: 1px solid var(--sp-class-ui-line);
-    border-radius: 7px;
-    background: var(--sp-surface-alt, #f9fafb);
+    padding: 0;
+    border: 0;
+    background: transparent;
     color: var(--sp-class-ui-muted);
-    font-size: 0.77rem;
+    font-size: 0.82rem;
     line-height: 1.35;
     overflow-wrap: anywhere;
 }
 
+.sp-teacher-portal .sp-class-card-meta .sp-class-meta-item strong {
+    color: var(--sp-text, var(--sp-theme-ink-2));
+    font-weight: 700;
+}
+
+.sp-teacher-portal .sp-class-card-meta .sp-class-meta-item svg {
+    flex: none;
+    color: var(--sp-theme-faint);
+}
+
 .sp-teacher-portal .sp-class-card-description {
     margin: 0 0 1.15rem;
+    padding: 0.7rem 0.85rem;
+    border-radius: var(--sp-theme-radius-sm);
+    background: var(--sp-surface-alt, var(--sp-theme-surface-soft));
     color: var(--sp-class-ui-muted);
-    font-size: 0.9rem;
-    line-height: 1.65;
+    font-size: 0.88rem;
+    line-height: 1.6;
     overflow-wrap: anywhere;
 }
 
@@ -444,12 +484,34 @@
     border-top: 1px solid var(--sp-class-ui-line);
 }
 
-.sp-teacher-portal .sp-class-card-actions .sp-btn-primary {
-    flex: 1 1 135px;
+.sp-teacher-portal .sp-class-card-actions .sp-class-attendance-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    min-height: 43px;
+    padding: 0.55rem 1.1rem;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: var(--sp-text, var(--sp-theme-ink));
+    color: #fff;
+    font-weight: 650;
+    text-decoration: none;
+    transition: transform 140ms ease, box-shadow 140ms ease, background-color 140ms ease;
+}
+
+.sp-teacher-portal .sp-class-card-actions .sp-class-attendance-btn:hover {
+    background: var(--sp-primary-dark, var(--sp-theme-brand-ink));
+    box-shadow: 0 8px 20px -4px rgba(10, 25, 47, 0.3);
+}
+
+.sp-teacher-portal .sp-class-card-actions .sp-class-attendance-btn span[aria-hidden] {
+    color: var(--sp-theme-brand-bright);
 }
 
 .sp-teacher-portal .sp-class-card-actions .sp-btn-ghost {
     flex: 0 1 auto;
+    margin-left: auto;
 }
 
 .sp-teacher-portal .sp-class-empty-search {
@@ -457,7 +519,7 @@
     padding: 1.25rem;
     border: 1px dashed var(--sp-class-ui-line);
     border-radius: var(--sp-class-ui-radius-sm);
-    background: var(--sp-surface-alt, #f9fafb);
+    background: var(--sp-surface-alt, var(--sp-theme-surface-soft));
     color: var(--sp-class-ui-muted);
     text-align: center;
     line-height: 1.6;
@@ -466,7 +528,7 @@
 .sp-teacher-portal .sp-class-empty-search strong {
     display: block;
     margin-bottom: 0.25rem;
-    color: var(--sp-text, #344054);
+    color: var(--sp-text, var(--sp-theme-ink-2));
 }
 
 /* Archived classes */
@@ -506,8 +568,8 @@
 }
 
 .sp-teacher-portal .sp-archived-class:hover {
-    border-color: var(--sp-primary-border, #c7d2fe);
-    background: var(--sp-surface-alt, #f9fafb);
+    border-color: var(--sp-primary-border, var(--sp-theme-brand-line));
+    background: var(--sp-surface-alt, var(--sp-theme-surface-soft));
 }
 
 .sp-teacher-portal .sp-archived-class-copy {
@@ -518,7 +580,7 @@
 }
 
 .sp-teacher-portal .sp-archived-class-copy strong {
-    color: var(--sp-text, #344054);
+    color: var(--sp-text, var(--sp-theme-ink-2));
     overflow-wrap: anywhere;
 }
 
@@ -531,7 +593,7 @@
     align-self: flex-start;
     padding: 0.18rem 0.45rem;
     border-radius: 6px;
-    background: var(--sp-surface-alt, #f2f4f7);
+    background: var(--sp-surface-alt, var(--sp-theme-surface-soft));
     color: var(--sp-class-ui-muted);
     font-size: 0.7rem;
     font-weight: 700;
@@ -544,7 +606,7 @@
     padding: 1.5rem;
     border: 1px dashed var(--sp-class-ui-line);
     border-radius: var(--sp-class-ui-radius-sm);
-    background: var(--sp-surface-alt, #f9fafb);
+    background: var(--sp-surface-alt, var(--sp-theme-surface-soft));
     color: var(--sp-class-ui-muted);
     line-height: 1.65;
 }
@@ -554,7 +616,7 @@
 .sp-teacher-portal .sp-archived-class .sp-btn:focus-visible,
 .sp-teacher-portal .sp-class-search-clear:focus-visible,
 .sp-teacher-portal .sp-class-card .sp-card-title a:focus-visible {
-    outline: 3px solid var(--sp-primary, #5269d8);
+    outline: 3px solid var(--sp-primary, var(--sp-theme-brand));
     outline-offset: 3px;
 }
 
@@ -668,32 +730,3 @@
     }
 }
 
-@media (prefers-color-scheme: dark) {
-    .sp-teacher-portal {
-        --sp-class-ui-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
-        --sp-class-ui-shadow-hover: 0 16px 36px rgba(0, 0, 0, 0.25);
-    }
-
-    .sp-teacher-portal .sp-class-stat-value,
-    .sp-teacher-portal .sp-class-toolbar-title,
-    .sp-teacher-portal .sp-class-card .sp-card-title,
-    .sp-teacher-portal .sp-class-empty-search strong,
-    .sp-teacher-portal .sp-archived-class-copy strong {
-        color: var(--sp-text, #f2f4f7);
-    }
-
-    .sp-teacher-portal .sp-class-code,
-    .sp-teacher-portal .sp-class-pending {
-        color: #fbbf24;
-        background: rgba(245, 158, 11, 0.12);
-        border-color: rgba(245, 158, 11, 0.45);
-    }
-
-    .sp-teacher-portal .sp-class-card-meta span,
-    .sp-teacher-portal .sp-class-empty-search,
-    .sp-teacher-portal .sp-empty,
-    .sp-teacher-portal .sp-archived-label {
-        color: var(--sp-text, #f2f4f7);
-        background: var(--sp-surface-alt, #202938);
-    }
-}

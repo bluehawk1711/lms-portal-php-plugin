@@ -278,6 +278,17 @@ function sp_admin_page_sp_courses() {
             }
 
             $sp_topics = count( $sp_items );
+
+            // Headings already in this outline, so a topic can be nested under one.
+            $sp_headings = array();
+            foreach ( $sp_items as $sp_h_row ) {
+                if ( ! empty( $sp_h_row->group_title ) ) {
+                    $sp_headings[] = $sp_h_row;
+                }
+            }
+
+            $sp_item_is_heading = $sp_item && ! empty( $sp_item->group_title );
+            $sp_item_parent     = ( $sp_item && ! $sp_item_is_heading && ! empty( $sp_item->parent_id ) ) ? (int) $sp_item->parent_id : 0;
             ?>
             <section class="sp-admin-panel sp-panel-outline">
                 <div class="sp-panel-head">
@@ -320,13 +331,62 @@ function sp_admin_page_sp_courses() {
                         <?php endif; ?>
 
                         <div class="sp-field">
+                            <span class="sp-field-label" id="sp_ci_type_label">Type</span>
+                            <div class="sp-field-control">
+                                <div class="sp-segmented" role="radiogroup" aria-labelledby="sp_ci_type_label">
+                                    <label class="sp-segment sp-segment-active">
+                                        <input type="radio" name="item_type" value="topic"
+                                            <?php checked( ! $sp_item_is_heading ); ?>
+                                            data-sp-ci-type="topic" />
+                                        <span class="sp-segment-body">
+                                            <span class="dashicons dashicons-list-view" aria-hidden="true"></span>
+                                            Topic
+                                        </span>
+                                    </label>
+                                    <label class="sp-segment sp-segment-archived">
+                                        <input type="radio" name="item_type" value="heading"
+                                            <?php checked( $sp_item_is_heading ); ?>
+                                            data-sp-ci-type="heading" />
+                                        <span class="sp-segment-body">
+                                            <span class="dashicons dashicons-heading" aria-hidden="true"></span>
+                                            Heading
+                                        </span>
+                                    </label>
+                                </div>
+                                <p class="sp-hint">A <strong>heading</strong> groups its topics under one section — ticking the heading marks every topic beneath it covered. A <strong>topic</strong> is a single lesson row.</p>
+                            </div>
+                        </div>
+
+                        <div class="sp-field">
                             <label class="sp-field-label" for="sp_ci_title">
-                                Topic <span class="sp-required" aria-hidden="true">*</span>
+                                <span data-sp-ci-title-label><?php echo $sp_item_is_heading ? 'Heading' : 'Topic'; ?></span>
+                                <span class="sp-required" aria-hidden="true">*</span>
                             </label>
                             <div class="sp-field-control">
                                 <input type="text" id="sp_ci_title" name="title" required class="sp-input" autocomplete="off"
                                     placeholder="e.g. Sun salutations"
                                     value="<?php echo esc_attr( $sp_item ? $sp_item->title : '' ); ?>" />
+                            </div>
+                        </div>
+
+                        <div class="sp-field" data-sp-ci-parent-row <?php echo $sp_item_is_heading ? 'hidden' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- boolean attribute. ?>>
+                            <label class="sp-field-label" for="sp_ci_parent">Parent heading</label>
+                            <div class="sp-field-control">
+                                <select id="sp_ci_parent" name="parent_id" class="sp-input">
+                                    <option value="0">— No heading (top level) —</option>
+                                    <?php foreach ( $sp_headings as $sp_h ) : ?>
+                                        <?php // A heading cannot be nested under itself.
+                                        if ( $sp_item && (int) $sp_h->id === (int) $sp_item->id ) {
+                                            continue;
+                                        }
+                                        ?>
+                                        <option value="<?php echo esc_attr( (int) $sp_h->id ); ?>"
+                                            <?php selected( $sp_item_parent, (int) $sp_h->id ); ?>>
+                                            <?php echo esc_html( $sp_h->group_title ); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <p class="sp-hint">Optional. Place this topic under a heading so it belongs to that section.</p>
                             </div>
                         </div>
 
@@ -383,12 +443,17 @@ function sp_admin_page_sp_courses() {
                     <ol class="sp-outline">
                         <?php foreach ( $sp_items as $sp_index => $sp_row ) :
                             $sp_is_editing_item = $sp_item && (int) $sp_item->id === (int) $sp_row->id;
+                            $sp_row_is_heading  = ! empty( $sp_row->group_title );
+                            $sp_row_parent_id   = ! $sp_row_is_heading && ! empty( $sp_row->parent_id ) ? (int) $sp_row->parent_id : 0;
                             ?>
-                            <li class="sp-outline-item<?php echo $sp_is_editing_item ? ' is-editing' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- literal class name. ?>">
-                                <span class="sp-outline-num" aria-hidden="true"><?php echo esc_html( number_format_i18n( $sp_index + 1 ) ); ?></span>
+                            <li class="sp-outline-item<?php echo $sp_is_editing_item ? ' is-editing' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- literal class name. ?><?php echo $sp_row_is_heading ? ' is-heading' : ( $sp_row_parent_id ? ' is-child' : '' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- literal class names. ?>">
+                                <span class="sp-outline-num<?php echo $sp_row_is_heading ? ' sp-outline-num-heading' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- literal class name. ?>" aria-hidden="true"><?php echo esc_html( number_format_i18n( $sp_index + 1 ) ); ?></span>
 
                                 <div class="sp-outline-body">
                                     <span class="sp-outline-title">
+                                        <?php if ( $sp_row_is_heading ) : ?>
+                                            <span class="sp-chip sp-chip-heading"><span class="dashicons dashicons-heading" aria-hidden="true"></span>Heading</span>
+                                        <?php endif; ?>
                                         <?php echo esc_html( $sp_row->title ); ?>
                                         <?php if ( $sp_is_editing_item ) : ?>
                                             <span class="sp-chip sp-chip-accent"><span class="dashicons dashicons-edit" aria-hidden="true"></span>Editing</span>
@@ -396,6 +461,9 @@ function sp_admin_page_sp_courses() {
                                     </span>
                                     <?php if ( $sp_row->detail ) : ?>
                                         <span class="sp-outline-detail"><?php echo esc_html( wp_trim_words( $sp_row->detail, 20 ) ); ?></span>
+                                    <?php endif; ?>
+                                    <?php if ( $sp_row_parent_id ) : ?>
+                                        <span class="sp-outline-parent">Under: <?php echo esc_html( sp_curriculum_item_heading_title( $sp_row_parent_id ) ); ?></span>
                                     <?php endif; ?>
                                 </div>
 
@@ -419,15 +487,15 @@ function sp_admin_page_sp_courses() {
                                         </form>
                                     </span>
 
-                                    <a class="sp-icon-btn sp-icon-btn-ghost" title="Edit topic" aria-label="Edit topic"
+                                    <a class="sp-icon-btn sp-icon-btn-ghost" title="Edit" aria-label="Edit"
                                         href="<?php echo esc_url( add_query_arg( array( 'edit' => (int) $editing->id, 'curriculum' => (int) $sp_row->id ), admin_url( 'admin.php?page=sp-courses' ) ) ); ?>">
                                         <span class="dashicons dashicons-edit" aria-hidden="true"></span>
                                     </a>
 
-                                    <form method="post" class="sp-admin-inline" onsubmit="return confirm('Delete this topic? Any class coverage recorded against it goes too.');">
+                                    <form method="post" class="sp-admin-inline" onsubmit="return confirm('Delete this <?php echo $sp_row_is_heading ? 'heading and detach its topics' : 'topic'; ?>? Any class coverage recorded against it goes too.');">
                                         <?php sp_admin_nonce_field( 'delete_curriculum' ); ?>
                                         <input type="hidden" name="item_id" value="<?php echo esc_attr( (int) $sp_row->id ); ?>" />
-                                        <button type="submit" class="sp-icon-btn sp-icon-btn-danger" title="Delete topic" aria-label="Delete topic">
+                                        <button type="submit" class="sp-icon-btn sp-icon-btn-danger" title="Delete" aria-label="Delete">
                                             <span class="dashicons dashicons-trash" aria-hidden="true"></span>
                                         </button>
                                     </form>
@@ -454,6 +522,33 @@ function sp_admin_page_sp_courses() {
                     this.value = this.value.toUpperCase();
                 });
             }
+
+            // Outline editor: toggling Topic <-> Heading swaps the title label
+            // and shows/hides the parent-heading select.
+            var types = document.querySelectorAll('[data-sp-ci-type]');
+            var parentRow = document.querySelector('[data-sp-ci-parent-row]');
+            var titleLabel = document.querySelector('[data-sp-ci-title-label]');
+            var titleInput = document.getElementById('sp_ci_title');
+
+            function syncOutlineType() {
+                var chosen = document.querySelector('[data-sp-ci-type]:checked');
+                var isHeading = chosen && chosen.value === 'heading';
+
+                if (parentRow) {
+                    parentRow.hidden = isHeading;
+                }
+                if (titleLabel) {
+                    titleLabel.textContent = isHeading ? 'Heading' : 'Topic';
+                }
+                if (titleInput) {
+                    titleInput.placeholder = isHeading ? 'e.g. Unit 1 — Computer Fundamentals' : 'e.g. Sun salutations';
+                }
+            }
+
+            types.forEach(function (radio) {
+                radio.addEventListener('change', syncOutlineType);
+            });
+            syncOutlineType();
         })();
     </script>
     <?php

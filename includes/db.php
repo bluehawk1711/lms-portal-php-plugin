@@ -41,8 +41,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  * 2.8 adds the ID card fields on `sp_student_profiles` (father's name,
  * address, photo attachment) plus `idcard_generated_at`, which drives the
  * "Generated" badge on the student records screen.
+ * 2.9 adds `sp_announcements.send_email` (also email the announcement to the
+ * targeted recipients) and `sp_announcements.ends_at` (an optional expiry
+ * after which the announcement stops showing in the portals on its own).
+ * 2.11 adds heading support to `sp_curriculum`: `parent_id` groups topics
+ * under headings, and `group_title` holds the heading text when the row is
+ * itself a heading. Marking a heading complete marks every topic beneath it.
  */
-define( 'SP_DB_VERSION', '2.8' );
+define( 'SP_DB_VERSION', '2.11' );
 
 /**
  * Fully qualified table name for one of our tables.
@@ -358,11 +364,14 @@ function sp_schema_statements() {
 		title varchar(255) NOT NULL,
 		detail text DEFAULT NULL,
 		position bigint(20) unsigned NOT NULL DEFAULT 0,
+		parent_id bigint(20) unsigned DEFAULT NULL,
+		group_title varchar(255) DEFAULT NULL,
 		created_by bigint(20) unsigned DEFAULT NULL,
 		created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 		PRIMARY KEY  (id),
-		KEY course_idx (course_id)
+		KEY course_idx (course_id),
+		KEY parent_idx (parent_id)
 	) $charset;";
 
 	$statements[] = 'CREATE TABLE ' . sp_table( 'curriculum_progress' ) . " (
@@ -490,6 +499,8 @@ function sp_schema_statements() {
 		audience varchar(20) NOT NULL DEFAULT 'all_students',
 		audience_profile_id bigint(20) unsigned NOT NULL DEFAULT 0,
 		display varchar(10) NOT NULL DEFAULT 'bar',
+	send_email tinyint(1) NOT NULL DEFAULT 0,
+	ends_at datetime DEFAULT NULL,
 		status varchar(20) NOT NULL DEFAULT 'active',
 		created_by bigint(20) unsigned DEFAULT NULL,
 		created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,

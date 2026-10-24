@@ -1,0 +1,245 @@
+/*
+ * Student Portal — reusable searchable select (premium dropdown).
+ * Loaded with sp-search-select.js. Opt-in per select (data-sp-search-select).
+ * Tokens from tokens.css; degrades to sensible defaults without them.
+ */
+
+.sp-ss {
+	--sp-ss-surface: var(--sp-surface, #fff);
+	--sp-ss-border: var(--sp-border, #e2e8f0);
+	--sp-ss-text: var(--sp-text, #172033);
+	--sp-ss-muted: var(--sp-muted, #667085);
+	--sp-ss-brand: var(--sp-primary, #ff8a1f);
+	--sp-ss-brand-soft: var(--sp-primary-soft, rgba(255, 138, 31, 0.12));
+	--sp-ss-brand-strong: var(--sp-primary-dark, #e0740a);
+	--sp-ss-radius: 12px;
+	--sp-ss-shadow: 0 18px 44px rgba(16, 24, 40, 0.16);
+
+	position: relative;
+	display: block;
+	width: 100%;
+	min-width: 0;
+}
+
+/* The native select stays in the DOM for form posts + change listeners. */
+.sp-ss .sp-ss-native {
+	position: absolute !important;
+	width: 1px !important;
+	height: 1px !important;
+	margin: -1px !important;
+	padding: 0 !important;
+	overflow: hidden !important;
+	clip: rect(0 0 0 0) !important;
+	white-space: nowrap !important;
+	border: 0 !important;
+	opacity: 0 !important;
+	pointer-events: none !important;
+}
+
+/* ── Trigger ─────────────────────────────────────────────────────────── */
+
+.sp-ss-trigger {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.6rem;
+	width: 100%;
+	min-height: 44px;
+	padding: 0.6rem 0.75rem;
+	border: 1px solid var(--sp-ss-border);
+	border-radius: var(--sp-ss-radius);
+	background: var(--sp-ss-surface);
+	color: var(--sp-ss-text);
+	font: inherit;
+	font-size: 0.92rem;
+	text-align: left;
+	cursor: pointer;
+	appearance: none;
+	transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.sp-ss-trigger:hover {
+	border-color: color-mix(in srgb, var(--sp-ss-brand) 45%, var(--sp-ss-border));
+}
+
+.sp-ss-trigger:focus-visible,
+.sp-ss.is-open .sp-ss-trigger {
+	outline: none;
+	border-color: var(--sp-ss-brand);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--sp-ss-brand) 18%, transparent);
+}
+
+.sp-ss-label {
+	flex: 1 1 auto;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.sp-ss-trigger.is-placeholder .sp-ss-label {
+	color: var(--sp-ss-muted);
+}
+
+.sp-ss-chevron {
+	flex: 0 0 auto;
+	color: var(--sp-ss-muted);
+	transition: transform 180ms ease;
+}
+
+.sp-ss.is-open .sp-ss-chevron {
+	transform: rotate(180deg);
+}
+
+/* ── Popover ─────────────────────────────────────────────────────────── */
+
+.sp-ss-pop {
+	position: absolute;
+	top: calc(100% + 6px);
+	left: 0;
+	right: 0;
+	z-index: 1000;
+	display: flex;
+	flex-direction: column;
+	max-height: 320px;
+	border: 1px solid var(--sp-ss-border);
+	border-radius: var(--sp-ss-radius);
+	background: var(--sp-ss-surface);
+	box-shadow: var(--sp-ss-shadow);
+	overflow: hidden;
+	animation: sp-ss-in 160ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sp-ss-dropup .sp-ss-pop {
+	top: auto;
+	bottom: calc(100% + 6px);
+}
+
+.sp-ss-pop[hidden] {
+	display: none;
+}
+
+@keyframes sp-ss-in {
+	from {
+		opacity: 0;
+		transform: translateY(-6px) scale(0.985);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+
+/* Search row */
+
+.sp-ss-search {
+	position: relative;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.55rem 0.65rem;
+	border-bottom: 1px solid var(--sp-ss-border);
+	background: var(--sp-ss-surface);
+}
+
+.sp-ss-search-icon {
+	flex: 0 0 auto;
+	color: var(--sp-ss-muted);
+}
+
+.sp-ss-input {
+	flex: 1 1 auto;
+	min-width: 0;
+	min-height: 36px;
+	padding: 0.35rem 0.2rem;
+	border: 0;
+	background: transparent;
+	color: var(--sp-ss-text);
+	font: inherit;
+	font-size: 0.9rem;
+	outline: none;
+	appearance: none;
+}
+
+.sp-ss-input::placeholder {
+	color: var(--sp-ss-muted);
+}
+
+.sp-ss-input::-webkit-search-cancel-button {
+	cursor: pointer;
+}
+
+/* Option list */
+
+.sp-ss-list {
+	margin: 0;
+	padding: 0.4rem;
+	list-style: none;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	scrollbar-width: thin;
+	scrollbar-color: var(--sp-ss-border) transparent;
+}
+
+.sp-ss-opt {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.6rem;
+	padding: 0.55rem 0.65rem;
+	border-radius: 9px;
+	color: var(--sp-ss-text);
+	font-size: 0.89rem;
+	line-height: 1.35;
+	cursor: pointer;
+	transition: background-color 120ms ease, color 120ms ease;
+}
+
+.sp-ss-opt-text {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.sp-ss-opt:hover,
+.sp-ss-opt.is-active {
+	background: var(--sp-ss-brand-soft);
+	color: var(--sp-ss-brand-strong);
+}
+
+.sp-ss-opt.is-selected {
+	font-weight: 650;
+}
+
+.sp-ss-opt.is-selected .sp-ss-check {
+	flex: 0 0 auto;
+	color: var(--sp-ss-brand);
+}
+
+.sp-ss-opt.is-disabled {
+	opacity: 0.45;
+	cursor: not-allowed;
+}
+
+.sp-ss-empty {
+	margin: 0;
+	padding: 1rem 0.75rem;
+	color: var(--sp-ss-muted);
+	font-size: 0.85rem;
+	text-align: center;
+}
+
+.sp-ss-empty[hidden] {
+	display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.sp-ss-pop {
+		animation: none;
+	}
+
+	.sp-ss-chevron {
+		transition: none;
+	}
+}

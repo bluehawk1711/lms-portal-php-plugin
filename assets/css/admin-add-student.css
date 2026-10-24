@@ -5,12 +5,12 @@
  */
 
 .sp-required {
-	color: #b32d2e;
+	color: var(--sp-theme-danger);
 }
 
 .sp-admin-panel {
-	background: #fff;
-	border: 1px solid #dcdcde;
+	background: var(--sp-theme-surface);
+	border: 1px solid var(--sp-theme-border-strong);
 	border-radius: 8px;
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 	margin-bottom: 20px;
@@ -18,14 +18,26 @@
 }
 
 .sp-admin-panel > h2:first-child {
-	color: #1d2327;
+	color: var(--sp-theme-ink);
 	font-size: 15px;
 	margin-top: 16px;
 }
 
 .sp-admin-muted {
-	color: #646970;
+	color: var(--sp-theme-muted);
 	font-size: 13px;
+}
+
+/* Live count under the 100-character address field. */
+.sp-address-count {
+	color: var(--sp-theme-muted);
+	font-size: 12px;
+	margin: 2px 0 0;
+	text-align: right;
+}
+
+.sp-address-count.is-near {
+	color: var(--sp-theme-danger);
 }
 
 @media (max-width: 782px) {

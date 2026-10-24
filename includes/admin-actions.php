@@ -247,6 +247,8 @@ function sp_admin_action_save_announcement() {
 	$audience = isset( $_POST['audience'] ) ? sanitize_key( wp_unslash( $_POST['audience'] ) ) : 'all_students';
 	$display  = isset( $_POST['display'] ) && 'bar' === $_POST['display'] ? 'bar' : 'banner';
 	$profile  = isset( $_POST['profile_id'] ) ? (int) $_POST['profile_id'] : 0;
+	$send_email = ! empty( $_POST['send_email'] ) ? 1 : 0;
+	$ends_at  = sp_announcement_sanitise_end_date( isset( $_POST['ends_at'] ) ? wp_unslash( $_POST['ends_at'] ) : '' );
 
 	$audience = in_array( $audience, array( 'all_students', 'one_student', 'teachers' ), true ) ? $audience : 'all_students';
 
@@ -274,10 +276,12 @@ function sp_admin_action_save_announcement() {
 			'audience'            => $audience,
 			'audience_profile_id' => $profile,
 			'display'             => $display,
+			'send_email'          => $send_email,
+			'ends_at'             => $ends_at,
 			'status'              => 'active',
 			'created_by'          => get_current_user_id(),
 		),
-		array( '%s', '%s', '%s', '%d', '%s', '%s', '%d' )
+		array( '%s', '%s', '%s', '%d', '%s', '%d', '%s', '%s', '%d' )
 	);
 
 	$announcement_id = (int) $wpdb->insert_id;
@@ -288,6 +292,19 @@ function sp_admin_action_save_announcement() {
 		$announcement_id,
 		sprintf( 'Announcement published (%s, %s)', $audience, $display )
 	);
+
+	if ( $send_email ) {
+		$sent = sp_send_announcement_email( $announcement_id, $audience, $profile, $title, $body );
+
+		sp_admin_redirect(
+			'sp-announcements',
+			sprintf(
+				'Announcement published and emailed to %d recipient%s.',
+				$sent,
+				1 === $sent ? '' : 's'
+			)
+		);
+	}
 
 	sp_admin_redirect( 'sp-announcements', 'Announcement published.' );
 }
@@ -406,6 +423,58 @@ function sp_admin_action_save_idcard_settings() {
 		$settings['bottom_address'] = sanitize_textarea_field( wp_unslash( $_POST['bottom_address'] ) );
 	}
 
+	// The bottom line: one field, so every word of it travels together.
+	if ( isset( $_POST['bottom_note'] ) ) {
+		$settings['bottom_note'] = sanitize_text_field( wp_unslash( $_POST['bottom_note'] ) );
+	}
+
+	/*
+	 * Artwork mode: the background style plus the anchors that place the photo
+	 * and the field values on a complete design. Percentages are clamped to the
+	 * card box and the colour has to be a real hex triplet, so a hand-edited
+	 * POST can never put an arbitrary string into the card's inline style.
+	 */
+	$sp_mode = isset( $_POST['background_mode'] ) ? sanitize_text_field( wp_unslash( $_POST['background_mode'] ) ) : 'artwork';
+
+	$settings['background_mode'] = 'frame' === $sp_mode ? 'frame' : 'artwork';
+
+	$sp_percents = array( 'art_photo_left', 'art_photo_top', 'art_photo_size', 'art_value_left', 'art_value_size', 'art_sign_left', 'art_sign_top', 'art_sign_width', 'art_note_top', 'art_note_size' );
+
+	foreach ( $sp_percents as $sp_field ) {
+		if ( isset( $_POST[ $sp_field ] ) ) {
+			$settings[ $sp_field ] = round( min( 100, max( 0, (float) wp_unslash( $_POST[ $sp_field ] ) ) ), 2 );
+		}
+	}
+
+	// Every colour on the card has to be a real hex triplet.
+	$sp_colors = array( 'art_value_color', 'art_note_color' );
+
+	foreach ( $sp_colors as $sp_field ) {
+		$sp_color = isset( $_POST[ $sp_field ] ) ? sanitize_text_field( wp_unslash( $_POST[ $sp_field ] ) ) : '';
+
+		if ( preg_match( '/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/', $sp_color ) ) {
+			$settings[ $sp_field ] = strtolower( $sp_color );
+		}
+	}
+
+	// Always five rows, in the order the artwork prints them.
+	if ( isset( $_POST['art_rows'] ) && is_array( $_POST['art_rows'] ) ) {
+		$sp_rows = array_slice( array_values( wp_unslash( $_POST['art_rows'] ) ), 0, 5 );
+
+		$sp_rows = array_map(
+			function ( $sp_row ) {
+				return round( min( 100, max( 0, (float) $sp_row ) ), 2 );
+			},
+			$sp_rows
+		);
+
+		while ( count( $sp_rows ) < 5 ) {
+			$sp_rows[] = 0.0;
+		}
+
+		$settings['art_rows'] = $sp_rows;
+	}
+
 	update_option( SP_IDCARD_OPTION, $settings );
 
 	sp_log_activity( 'idcard_settings_saved', 'settings', 0, 'ID card design updated' );
@@ -452,6 +521,7 @@ function sp_admin_action_save_student() {
 	// ID card fields: father's name, address and an optional photo.
 	$sp_father  = isset( $_POST['father_name'] ) ? sanitize_text_field( wp_unslash( $_POST['father_name'] ) ) : '';
 	$sp_address = isset( $_POST['address'] ) ? sanitize_textarea_field( wp_unslash( $_POST['address'] ) ) : '';
+	$sp_address = function_exists( 'mb_substr' ) ? mb_substr( $sp_address, 0, 100 ) : substr( $sp_address, 0, 100 );
 	$sp_photo   = sp_admin_upload_student_photo();
 
 	if ( is_wp_error( $sp_photo ) ) {
@@ -533,6 +603,7 @@ function sp_admin_action_update_student( $profile_id ) {
 	// ID card fields: father's name, address and an optional new photo.
 	$sp_father  = isset( $_POST['father_name'] ) ? sanitize_text_field( wp_unslash( $_POST['father_name'] ) ) : '';
 	$sp_address = isset( $_POST['address'] ) ? sanitize_textarea_field( wp_unslash( $_POST['address'] ) ) : '';
+	$sp_address = function_exists( 'mb_substr' ) ? mb_substr( $sp_address, 0, 100 ) : substr( $sp_address, 0, 100 );
 	$sp_photo   = sp_admin_upload_student_photo();
 
 	if ( is_wp_error( $sp_photo ) ) {
@@ -1123,17 +1194,60 @@ function sp_admin_action_delete_teacher() {
 }
 
 /**
- * Create or update an outline item on a course.
+ * Create or update an outline item on a course — a topic or a heading.
+ *
+ * `item_type=heading` turns the row into a section header (`group_title` set,
+ * `parent_id` null). `item_type=topic` (the default) keeps it a leaf and optionally
+ * nests it under a chosen heading via `parent_id`.
  */
 function sp_admin_action_save_curriculum() {
-	$course_id = isset( $_POST['course_id'] ) ? (int) $_POST['course_id'] : 0;
+	global $wpdb;
+
+	$course_id  = isset( $_POST['course_id'] ) ? (int) $_POST['course_id'] : 0;
+	$item_id    = isset( $_POST['curriculum_id'] ) ? (int) $_POST['curriculum_id'] : 0;
+	$title      = isset( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : '';
+	$detail     = isset( $_POST['detail'] ) ? sanitize_textarea_field( wp_unslash( $_POST['detail'] ) ) : '';
+	$item_type  = isset( $_POST['item_type'] ) ? sanitize_key( wp_unslash( $_POST['item_type'] ) ) : 'topic';
+	$is_heading = ( 'heading' === $item_type );
+	$parent_id  = isset( $_POST['parent_id'] ) ? (int) $_POST['parent_id'] : 0;
+
+	// A heading carries its own title in group_title; a topic leaves it empty.
+	$group_title = $is_heading ? $title : '';
+
+	// Converting an existing row: a heading must shed its parent, and a row that
+	// *was* a heading must not leave orphaned children behind.
+	if ( $item_id > 0 ) {
+		$existing = sp_get_curriculum_item( $item_id );
+
+		if ( $existing && (int) $existing->course_id === $course_id ) {
+			$was_heading = ! empty( $existing->group_title );
+
+			if ( $is_heading && ! $was_heading ) {
+				$parent_id = 0; // A heading cannot sit under another heading.
+			}
+
+			if ( ! $is_heading && $was_heading ) {
+				// Demote: its children become top-level topics rather than orphans.
+				$wpdb->update(
+					sp_table( 'curriculum' ),
+					array( 'parent_id' => null ),
+					array( 'parent_id' => (int) $item_id ),
+					array( '%d' ),
+					array( '%d' )
+				);
+			}
+		}
+	}
 
 	$result = sp_save_curriculum(
 		array(
-			'id'        => isset( $_POST['curriculum_id'] ) ? (int) $_POST['curriculum_id'] : 0,
-			'course_id' => $course_id,
-			'title'     => isset( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : '',
-			'detail'    => isset( $_POST['detail'] ) ? sanitize_textarea_field( wp_unslash( $_POST['detail'] ) ) : '',
+			'id'          => $item_id,
+			'course_id'   => $course_id,
+			'title'       => $title,
+			'detail'      => $detail,
+			'is_heading'  => $is_heading,
+			'group_title' => $group_title,
+			'parent_id'   => $parent_id,
 		)
 	);
 
@@ -1141,7 +1255,12 @@ function sp_admin_action_save_curriculum() {
 		sp_admin_redirect( 'sp-courses', $result->get_error_message(), 'error', array( 'edit' => $course_id ) );
 	}
 
-	sp_admin_redirect( 'sp-courses', 'Outline topic saved.', 'good', array( 'edit' => $course_id ) );
+	sp_admin_redirect(
+		'sp-courses',
+		$is_heading ? 'Heading saved.' : 'Topic saved.',
+		'good',
+		array( 'edit' => $course_id )
+	);
 }
 
 /**
@@ -1176,14 +1295,21 @@ function sp_admin_action_move_curriculum() {
 }
 
 /**
- * Bulk-import outline topics for one course from a CSV.
+ * Bulk-import outline items for one course from a CSV.
  *
- * Columns: `title` (required; `topic` and `name` are accepted too) and
- * `detail` (optional; also `description`). A header row is detected by its
- * first cell and skipped; without one, column 1 is the topic and column 2 the
- * detail. Rows are appended after the existing outline, in file order.
+ * Columns: `title` (required; `topic` and `name` accepted), `detail`
+ * (optional; also `description`/`notes`), `type` (optional: `topic` or
+ * `heading`) and `parent`/`heading` (optional: the heading title a topic sits
+ * under). A header row is detected by its first cell and skipped. Rows are
+ * appended after the existing outline, in file order.
+ *
+ * Headings may be declared explicitly with `type=heading`, or implicitly: a
+ * row with a `parent` value that does not yet exist creates that heading on
+ * the fly, so a simple two-column syllabus indents cleanly.
  */
 function sp_admin_action_import_curriculum() {
+	global $wpdb;
+
 	$course_id = isset( $_POST['course_id'] ) ? (int) $_POST['course_id'] : 0;
 
 	if ( ! sp_get_course( $course_id ) ) {
@@ -1206,16 +1332,21 @@ function sp_admin_action_import_curriculum() {
 		sp_admin_redirect( 'sp-courses', 'That file could not be read as CSV.', 'error', $back );
 	}
 
-	$added     = 0;
-	$errors    = array();
-	$row_no    = 0;
-	$title_col = 0;
+	$added      = 0;
+	$errors     = array();
+	$row_no     = 0;
+	$title_col  = 0;
 	$detail_col = 1;
+	$type_col   = null;
+	$parent_col = null;
+
+	// Heading title -> id, so a topic's `parent` cell can resolve within this run.
+	$heading_map = array();
 
 	while ( false !== ( $line = fgetcsv( $handle ) ) ) {
 		++$row_no;
 
-		// One topic per row, 1,000 rows max — a pasted whole-syllabus file
+		// One item per row, 1,000 rows max — a pasted whole-syllabus file
 		// should not be able to run the request out of time.
 		if ( $row_no > 1000 ) {
 			$errors[] = 'Stopped after 1,000 rows.';
@@ -1229,7 +1360,7 @@ function sp_admin_action_import_curriculum() {
 		if ( 1 === $row_no ) {
 			$first = strtolower( trim( (string) $line[0] ) );
 
-			if ( in_array( $first, array( 'title', 'topic', 'name', 'detail', 'description', 'notes' ), true ) ) {
+			if ( in_array( $first, array( 'title', 'topic', 'name', 'detail', 'description', 'notes', 'type', 'parent', 'heading' ), true ) ) {
 				$title_col  = 0;
 				$detail_col = null;
 
@@ -1240,6 +1371,10 @@ function sp_admin_action_import_curriculum() {
 						$title_col = $sp_idx;
 					} elseif ( in_array( $sp_head, array( 'detail', 'description', 'notes' ), true ) ) {
 						$detail_col = $sp_idx;
+					} elseif ( 'type' === $sp_head ) {
+						$type_col = $sp_idx;
+					} elseif ( in_array( $sp_head, array( 'parent', 'heading' ), true ) ) {
+						$parent_col = $sp_idx;
 					}
 				}
 
@@ -1256,16 +1391,65 @@ function sp_admin_action_import_curriculum() {
 			? trim( (string) $line[ $detail_col ] )
 			: '';
 
+		$raw_type   = ( null !== $type_col && isset( $line[ $type_col ] ) ) ? strtolower( trim( (string) $line[ $type_col ] ) ) : '';
+		$is_heading = in_array( $raw_type, array( 'heading', 'section', 'unit', 'h' ), true );
+
+		$raw_parent = ( null !== $parent_col && isset( $line[ $parent_col ] ) ) ? trim( (string) $line[ $parent_col ] ) : '';
+
 		if ( '' === $title ) {
-			$errors[] = sprintf( 'Row %d: no topic title.', $row_no );
+			$errors[] = sprintf( 'Row %d: no title.', $row_no );
 			continue;
+		}
+
+		$parent_id = 0;
+
+		// Resolve (or lazily create) the heading this topic belongs under.
+		if ( ! $is_heading && '' !== $raw_parent ) {
+			$sp_map_key = strtolower( $raw_parent );
+
+			if ( isset( $heading_map[ $sp_map_key ] ) ) {
+				$parent_id = (int) $heading_map[ $sp_map_key ];
+			} else {
+				// Look for an existing heading with this title in the course.
+				$sp_existing = $wpdb->get_var(
+					$wpdb->prepare(
+						'SELECT id FROM ' . sp_table( 'curriculum' ) . ' WHERE course_id = %d AND group_title = %s ORDER BY id ASC LIMIT 1', // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from sp_table().
+						(int) $course_id,
+						$raw_parent
+					)
+				);
+
+				if ( $sp_existing ) {
+					$parent_id = (int) $sp_existing;
+					$heading_map[ $sp_map_key ] = $parent_id;
+				} else {
+					// Create the heading on the fly so a flat syllabus still nests.
+					$sp_new_heading = sp_save_curriculum(
+						array(
+							'course_id'   => (int) $course_id,
+							'title'       => $raw_parent,
+							'is_heading'  => true,
+							'group_title' => $raw_parent,
+						)
+					);
+
+					if ( ! is_wp_error( $sp_new_heading ) ) {
+						$parent_id = (int) $sp_new_heading;
+						$heading_map[ $sp_map_key ] = $parent_id;
+						++$added;
+					}
+				}
+			}
 		}
 
 		$saved = sp_save_curriculum(
 			array(
-				'course_id' => (int) $course_id,
-				'title'     => $title,
-				'detail'    => $detail,
+				'course_id'   => (int) $course_id,
+				'title'       => $title,
+				'detail'      => $detail,
+				'is_heading'  => $is_heading,
+				'group_title' => $is_heading ? $title : '',
+				'parent_id'   => $parent_id,
 			)
 		);
 
@@ -1274,12 +1458,16 @@ function sp_admin_action_import_curriculum() {
 			continue;
 		}
 
+		if ( $is_heading ) {
+			$heading_map[ strtolower( $title ) ] = (int) $saved;
+		}
+
 		++$added;
 	}
 
 	fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- paired with the fopen above.
 
-	$message = sprintf( '%d topic(s) imported.', $added );
+	$message = sprintf( '%d item(s) imported.', $added );
 
 	if ( $errors ) {
 		$message .= ' ' . implode( ' ', array_slice( $errors, 0, 5 ) );

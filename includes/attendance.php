@@ -438,14 +438,16 @@ function sp_reopen_session( $session_id, $reason = '' ) {
  * Recent sessions for a class, newest first.
  *
  * @param int $class_id Class id.
- * @param int $limit       Row cap.
+ * @param int $limit    Row cap.
+ * @param int $offset   Rows to skip, for pagination.
  * @return object[]
  */
-function sp_get_recent_sessions( $class_id, $limit = 15 ) {
+function sp_get_recent_sessions( $class_id, $limit = 15, $offset = 0 ) {
 	global $wpdb;
 
 	$class_id = (int) $class_id;
-	$limit       = max( 1, (int) $limit );
+	$limit    = max( 1, (int) $limit );
+	$offset   = max( 0, (int) $offset );
 
 	if ( $class_id <= 0 ) {
 		return array();
@@ -460,9 +462,30 @@ function sp_get_recent_sessions( $class_id, $limit = 15 ) {
 			 FROM {$table} s
 			 WHERE s.class_id = %d
 			 ORDER BY s.session_date DESC
-			 LIMIT %d",
+			 LIMIT %d OFFSET %d",
 			$class_id,
-			$limit
+			$limit,
+			$offset
 		)
 	);
+}
+
+/**
+ * How many sessions a class has on record, for paging the recent list.
+ *
+ * @param int $class_id Class id.
+ * @return int
+ */
+function sp_count_sessions_for_class( $class_id ) {
+	global $wpdb;
+
+	$class_id = (int) $class_id;
+
+	if ( $class_id <= 0 ) {
+		return 0;
+	}
+
+	$table = sp_table( 'attendance_sessions' );
+
+	return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$table} WHERE class_id = %d", $class_id ) );
 }

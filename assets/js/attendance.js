@@ -11,6 +11,9 @@
 ( function () {
 	'use strict';
 
+	// Refresh hook of the register currently on screen (re-pointed on swap).
+	var activeRefresh = null;
+
 	function registerForm( form ) {
 		if ( form && form.hasAttribute && form.hasAttribute( 'data-sp-register' ) ) {
 			return form;
@@ -52,13 +55,19 @@
 			return '';
 		}
 
-		var parts = [ t.marked + ' of ' + t.total + ' marked' ];
-		var order = [ 'present', 'absent', 'leave' ];
+		var parts = [ t.total + ' total marked' ];
+		var order = [ 'present', 'absent', 'late', 'excused' ];
 
 		for ( var i = 0; i < order.length; i++ ) {
-			if ( t.by[ order[ i ] ] ) {
-				parts.push( order[ i ].charAt( 0 ).toUpperCase() + order[ i ].slice( 1 ) + ': ' + t.by[ order[ i ] ] );
+			var key = order[ i ];
+
+			// Present and absent always show (so an untouched row reads 0),
+			// the rarer marks only appear once somebody carries them.
+			if ( ! t.by[ key ] && 'present' !== key && 'absent' !== key ) {
+				continue;
 			}
+
+			parts.push( key.charAt( 0 ).toUpperCase() + key.slice( 1 ) + ' ' + ( t.by[ key ] || 0 ) );
 		}
 
 		return parts.join( ' · ' );
@@ -101,11 +110,23 @@
 		var out = form.querySelector( '[data-sp-register-count]' ) ||
 			document.querySelector( '[data-sp-register-count]' );
 
+		// Snapshot what the server rendered, so "Reset selection" can undo
+		// every tentative mark in one click.
+		var radios = form.querySelectorAll( 'input[type="radio"][name^="marks["]' );
+
+		for ( var i = 0; i < radios.length; i++ ) {
+			radios[ i ].setAttribute( 'data-sp-initial', radios[ i ].checked ? '1' : '0' );
+		}
+
 		function refresh() {
 			if ( out ) {
 				out.textContent = countText( tally( form ) );
 			}
 		}
+
+		// The reset button lives in the action bar beside the form, so the
+		// click handler runs on the document and calls back into this form.
+		activeRefresh = refresh;
 
 		form.addEventListener( 'change', function ( event ) {
 			var target = event.target;
@@ -150,6 +171,36 @@
 
 			if ( ! window.confirm( confirmMessage( btn, btn.form ) ) ) {
 				event.preventDefault();
+			}
+		}, false );
+
+		// "Reset selection" — put every student back to the state the server
+		// rendered (its saved marks, or the default) without a round trip.
+		document.addEventListener( 'click', function ( event ) {
+			var target = event.target;
+
+			if ( ! target || ! target.closest ) {
+				return;
+			}
+
+			if ( ! target.closest( '[data-sp-register-reset]' ) ) {
+				return;
+			}
+
+			var form = document.querySelector( 'form[data-sp-register]' );
+
+			if ( ! form ) {
+				return;
+			}
+
+			var radios = form.querySelectorAll( 'input[type="radio"][name^="marks["]' );
+
+			for ( var i = 0; i < radios.length; i++ ) {
+				radios[ i ].checked = '1' === radios[ i ].getAttribute( 'data-sp-initial' );
+			}
+
+			if ( activeRefresh ) {
+				activeRefresh();
 			}
 		}, false );
 	}

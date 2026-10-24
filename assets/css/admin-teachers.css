@@ -4,14 +4,14 @@
  */
 
 .sp-scope.sp-teachers-page {
-    --sp-teacher-ink: #1d2327;
-    --sp-teacher-muted: #646970;
-    --sp-teacher-line: #dcdcde;
-    --sp-teacher-soft-line: #e8eaf0;
-    --sp-teacher-surface: #ffffff;
-    --sp-teacher-primary: #2271b1;
-    --sp-teacher-primary-dark: #135e96;
-    --sp-teacher-radius: 12px;
+    --sp-teacher-ink: var(--sp-theme-ink);
+    --sp-teacher-muted: var(--sp-theme-muted);
+    --sp-teacher-line: var(--sp-theme-border-strong);
+    --sp-teacher-soft-line: var(--sp-theme-border);
+    --sp-teacher-surface: var(--sp-theme-surface);
+    --sp-teacher-primary: var(--sp-theme-brand);
+    --sp-teacher-primary-dark: var(--sp-theme-brand-deep);
+    --sp-teacher-radius: var(--sp-theme-radius-md);
 
     color: var(--sp-teacher-ink);
     margin: 8px 0 28px;
@@ -119,18 +119,18 @@
 }
 
 .sp-teachers-page .sp-teacher-stat-icon-blue {
-    background: #eef6fd;
-    color: #2271b1;
+    background: var(--sp-theme-brand-soft);
+    color: var(--sp-theme-brand);
 }
 
 .sp-teachers-page .sp-teacher-stat-icon-green {
-    background: #edf8f0;
-    color: #16803c;
+    background: var(--sp-theme-success-soft);
+    color: var(--sp-theme-success);
 }
 
 .sp-teachers-page .sp-teacher-stat-icon-violet {
-    background: #f3efff;
-    color: #6941c6;
+    background: var(--sp-theme-accent-soft);
+    color: var(--sp-theme-accent-strong);
 }
 
 .sp-teachers-page .sp-teacher-stat-label {
@@ -196,7 +196,7 @@
 
 .sp-teachers-page .sp-teacher-heading-icon {
     align-items: center;
-    background: #f0f6fc;
+    background: var(--sp-theme-brand-wash);
     border-radius: 10px;
     color: var(--sp-teacher-primary);
     display: inline-flex;
@@ -226,19 +226,19 @@
 }
 
 .sp-teachers-page .sp-teacher-field > label {
-    color: #30363d;
+    color: var(--sp-theme-ink-2);
     font-size: 12px;
     font-weight: 650;
     line-height: 1.4;
 }
 
 .sp-teachers-page .sp-required {
-    color: #b32d2e;
+    color: var(--sp-theme-danger);
     font-weight: 700;
 }
 
 .sp-teachers-page .sp-teacher-optional {
-    color: #777f88;
+    color: var(--sp-theme-muted);
     font-size: 11px;
     font-weight: 500;
     margin-left: 5px;
@@ -249,8 +249,8 @@
 .sp-teachers-page .sp-teacher-field input[type="tel"],
 .sp-teachers-page .sp-teacher-field input[type="password"],
 .sp-teachers-page .sp-teacher-field textarea {
-    background: #fff;
-    border: 1px solid #c8ccd0;
+    background: var(--sp-theme-surface);
+    border: 1px solid var(--sp-theme-border-strong);
     border-radius: 7px;
     box-shadow: none;
     color: var(--sp-teacher-ink);
@@ -278,7 +278,7 @@
 
 .sp-teachers-page .sp-teacher-field input::placeholder,
 .sp-teachers-page .sp-teacher-field textarea::placeholder {
-    color: #8c9299;
+    color: var(--sp-theme-faint);
     opacity: 1;
 }
 
@@ -334,40 +334,40 @@
 .sp-teachers-page .button.button-primary {
     background: var(--sp-teacher-primary);
     border-color: var(--sp-teacher-primary);
-    color: #fff;
+    color: var(--sp-theme-on-brand);
 }
 
 .sp-teachers-page .button.button-primary:hover,
 .sp-teachers-page .button.button-primary:focus {
     background: var(--sp-teacher-primary-dark);
     border-color: var(--sp-teacher-primary-dark);
-    color: #fff;
+    color: var(--sp-theme-on-brand);
 }
 
 .sp-teachers-page .button:not(.button-primary):hover,
 .sp-teachers-page .button:not(.button-primary):focus {
-    background: #f6f7f7;
-    border-color: #8c8f94;
-    color: #1d2327;
+    background: var(--sp-theme-surface-alt);
+    border-color: var(--sp-theme-faint);
+    color: var(--sp-theme-ink);
 }
 
 .sp-teachers-page .button.sp-button-subtle-danger {
-    color: #a12622;
+    color: var(--sp-theme-danger);
 }
 
 .sp-teachers-page .button.sp-button-subtle-danger:hover,
 .sp-teachers-page .button.sp-button-subtle-danger:focus {
-    background: #fcf0f1;
-    border-color: #d63638;
-    color: #8a1f1f;
+    background: var(--sp-theme-danger-soft);
+    border-color: var(--sp-theme-danger);
+    color: var(--sp-theme-danger-strong);
 }
 
 .sp-teachers-page .sp-teacher-count-pill {
     align-items: center;
-    background: #f0f6fc;
-    border: 1px solid #d2e5f7;
+    background: var(--sp-theme-brand-wash);
+    border: 1px solid var(--sp-theme-brand-line);
     border-radius: 999px;
-    color: #135e96;
+    color: var(--sp-theme-brand-deep);
     display: inline-flex;
     flex: 0 0 auto;
     font-size: 11px;
@@ -397,9 +397,9 @@
 }
 
 .sp-teachers-page table.sp-teacher-table thead th {
-    background: #f8f9fc;
+    background: var(--sp-theme-surface-tint);
     border-bottom: 1px solid var(--sp-teacher-line);
-    color: #555d66;
+    color: var(--sp-theme-ink-2);
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.045em;
@@ -412,8 +412,8 @@
 }
 
 .sp-teachers-page table.sp-teacher-table tbody td {
-    border-bottom: 1px solid #edf0f4;
-    color: #343a40;
+    border-bottom: 1px solid var(--sp-theme-border-subtle);
+    color: var(--sp-theme-ink-2);
     font-size: 12px;
     line-height: 1.45;
     padding: 13px;
@@ -425,17 +425,17 @@
 }
 
 .sp-teachers-page table.sp-teacher-table tbody tr:hover td {
-    background: #fbfcfe;
+    background: var(--sp-theme-surface-hover);
 }
 
 .sp-teachers-page table.sp-teacher-table tbody tr:nth-child(odd) td,
 .sp-teachers-page table.sp-teacher-table.striped > tbody > :nth-child(odd) td {
-    background: #fff;
+    background: var(--sp-theme-surface);
 }
 
 .sp-teachers-page table.sp-teacher-table tbody tr:nth-child(odd):hover td,
 .sp-teachers-page table.sp-teacher-table.striped > tbody > :nth-child(odd):hover td {
-    background: #fbfcfe;
+    background: var(--sp-theme-surface-hover);
 }
 
 .sp-teachers-page .sp-teacher-identity {
@@ -447,10 +447,10 @@
 
 .sp-teachers-page .sp-teacher-avatar {
     align-items: center;
-    background: #eef4fb;
-    border: 1px solid #dce8f6;
+    background: var(--sp-theme-brand-soft);
+    border: 1px solid var(--sp-theme-brand-line);
     border-radius: 10px;
-    color: #245d91;
+    color: var(--sp-theme-brand-deep);
     display: inline-flex;
     flex: 0 0 38px;
     font-size: 14px;
@@ -505,10 +505,10 @@
 }
 
 .sp-teachers-page .sp-teacher-class-chip {
-    background: #f6f7f9;
-    border: 1px solid #e5e7eb;
+    background: var(--sp-theme-surface-soft);
+    border: 1px solid var(--sp-theme-border);
     border-radius: 5px;
-    color: #444b53;
+    color: var(--sp-theme-ink-2);
     display: inline-block;
     font-size: 11px;
     line-height: 1.35;
@@ -518,7 +518,7 @@
 }
 
 .sp-teachers-page .sp-teacher-unassigned {
-    color: #777f88;
+    color: var(--sp-theme-muted);
     font-size: 11px;
 }
 
@@ -548,7 +548,7 @@
 }
 
 .sp-teachers-page .sp-teacher-table-note {
-    background: #fbfcfe;
+    background: var(--sp-theme-surface-hover);
     border-top: 1px solid var(--sp-teacher-soft-line);
     color: var(--sp-teacher-muted);
     font-size: 11px;
@@ -558,7 +558,7 @@
 }
 
 .sp-teachers-page .sp-teacher-table-note strong {
-    color: #444b53;
+    color: var(--sp-theme-ink-2);
 }
 
 .sp-teachers-page .sp-teacher-empty-state {
@@ -571,7 +571,7 @@
 
 .sp-teachers-page .sp-teacher-empty-icon {
     align-items: center;
-    background: #f0f6fc;
+    background: var(--sp-theme-brand-wash);
     border-radius: 13px;
     color: var(--sp-teacher-primary);
     display: inline-flex;

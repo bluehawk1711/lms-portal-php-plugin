@@ -57,13 +57,13 @@
 
 .sp-mat {
 	--mat-surface: var(--sp-surface, #ffffff);
-	--mat-text: var(--sp-text, #1f2933);
-	--mat-muted: var(--sp-muted, #64748b);
-	--mat-border: var(--sp-border, #e5e9f0);
-	--mat-primary: var(--sp-primary, #1d4ed8);
-	--mat-primary-dark: var(--sp-primary-dark, #1e40af);
+	--mat-text: var(--sp-text, var(--sp-theme-ink));
+	--mat-muted: var(--sp-muted, var(--sp-theme-muted));
+	--mat-border: var(--sp-border, var(--sp-theme-border));
+	--mat-primary: var(--sp-primary, var(--sp-theme-brand));
+	--mat-primary-dark: var(--sp-primary-dark, var(--sp-theme-brand-strong));
 	--mat-on-primary: var(--sp-on-primary, #ffffff);
-	--mat-good: var(--sp-good, #15803d);
+	--mat-good: var(--sp-good, var(--sp-theme-success));
 	--mat-radius: 12px;
 	--mat-shadow: var(--sp-shadow-sm, 0 1px 2px rgba(15, 23, 42, 0.06));
 
@@ -522,8 +522,8 @@
 }
 
 .sp-mat-title__icon--file {
-	color: color-mix(in srgb, #ea580c 80%, var(--mat-text));
-	background: color-mix(in srgb, #ea580c 13%, var(--mat-surface));
+	color: color-mix(in srgb, var(--sp-theme-warn) 80%, var(--mat-text));
+	background: color-mix(in srgb, var(--sp-theme-warn) 13%, var(--mat-surface));
 }
 
 .sp-mat-title__icon--note {
@@ -670,56 +670,17 @@
 
 	.sp-mat .sp-btn.sp-mat-add { width: 100%; }
 
-	.sp-mat .sp-mat-table thead {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		clip: rect(0 0 0 0);
+	/*
+	 * Keep the table layout. Rows stay side by side with their heading row; the
+	 * wrapper scrolls sideways instead of stacking each row into a card.
+	 */
+	.sp-mat .sp-mat-tablewrap {
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
 	}
 
-	.sp-mat .sp-mat-table,
-	.sp-mat .sp-mat-table tbody,
-	.sp-mat .sp-mat-table tr,
-	.sp-mat .sp-mat-table td { display: block; }
-
-	.sp-mat .sp-mat-table tbody tr {
-		padding: 14px 16px;
-		border-bottom: 1px solid var(--mat-line-soft);
-	}
-
-	.sp-mat .sp-mat-table tbody tr:last-child { border-bottom: 0; }
-
-	.sp-mat .sp-mat-table tbody td {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 12px;
-		padding: 6px 0;
-		border: 0;
-	}
-
-	.sp-mat .sp-mat-table tbody td::before {
-		content: attr(data-label);
-		flex-shrink: 0;
-		color: var(--mat-muted);
-		font-size: 12px;
-		font-weight: 600;
-		letter-spacing: 0.04em;
-		text-transform: uppercase;
-	}
-
-	.sp-mat .sp-mat-table tbody td[data-label="Title"] {
-		display: block;
-		padding-bottom: 10px;
-	}
-
-	.sp-mat .sp-mat-table tbody td[data-label="Title"]::before,
-	.sp-mat .sp-mat-table tbody td.sp-mat-actions::before { display: none; }
-
-	.sp-mat .sp-mat-table tbody td.sp-mat-actions {
-		display: block;
-		padding-top: 10px;
+	.sp-mat .sp-mat-table {
+		min-width: 38rem;
 	}
 
 	.sp-mat .sp-btn.sp-mat-edit {

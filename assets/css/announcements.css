@@ -1,176 +1,398 @@
-/* ---------- Announcement banner + thin bar (both portals) ---------- */
-.sp-ann {
-	position: relative;
-	margin: 0 0 18px;
-	border-radius: 14px;
-	overflow: hidden;
+/* ---------- Announcement banner + thin bar (both portals) ----------
+   Selectors are prefixed with `section.sp-ann` so theme/heading/paragraph
+   styles cannot override colours or spacing. */
+
+section.sp-ann {
+  --sp-ann-ink: var(--sp-theme-brand-ink);
+  --sp-ann-blue-900: var(--sp-theme-brand-ink);
+  --sp-ann-blue-800: var(--sp-theme-brand-deep);
+  --sp-ann-blue-600: var(--sp-theme-brand);
+  --sp-ann-blue-500: var(--sp-theme-brand);
+  --sp-ann-blue-100: var(--sp-theme-brand-line);
+  --sp-ann-blue-50: var(--sp-theme-brand-wash);
+  --sp-ann-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 0 14px;
+  border-radius: 16px;
+  overflow: hidden;
+  isolation: isolate;
+  animation: sp-ann-in 0.4s var(--sp-ann-ease) both;
 }
 
-.sp-ann-banner {
-	display: flex;
-	align-items: flex-start;
-	gap: 1rem;
-	padding: 1.1rem 1.15rem;
-	background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 65%, #3b82f6 100%);
-	color: #f8faff;
-	box-shadow: 0 10px 26px -18px rgba(30, 58, 138, 0.85);
+section.sp-ann *,
+section.sp-ann *::before,
+section.sp-ann *::after {
+  box-sizing: border-box;
 }
 
-.sp-ann-banner-inner {
-	flex: 1 1 auto;
-	min-width: 0;
+@keyframes sp-ann-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
-.sp-ann-eyebrow {
-	margin: 0 0 0.35rem;
-	font-size: 0.68rem;
-	font-weight: 700;
-	letter-spacing: 0.14em;
-	text-transform: uppercase;
-	color: #bfdbfe;
+@keyframes sp-ann-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--sp-theme-brand) 70%, transparent);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--sp-theme-brand) 0%, transparent);
+  }
 }
 
-.sp-ann-title {
-	margin: 0 0 0.35rem;
-	font-size: 1.05rem;
-	line-height: 1.35;
-	color: #fff;
+/* ================= BANNER ================= */
+section.sp-ann.sp-ann-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.15rem 1.2rem 1.2rem 1.3rem;
+  background:
+    radial-gradient(
+      110% 130% at 100% 0%,
+      color-mix(in srgb, var(--sp-theme-brand) 50%, transparent) 0%,
+      color-mix(in srgb, var(--sp-theme-brand) 0%, transparent) 55%
+    ),
+    linear-gradient(
+      135deg,
+      var(--sp-ann-blue-900) 0%,
+      var(--sp-ann-blue-800) 50%,
+      var(--sp-ann-blue-600) 100%
+    );
+  color: var(--sp-theme-surface-tint);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 14px 28px -20px color-mix(in srgb, var(--sp-theme-ink) 85%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
 }
 
-.sp-ann-text {
-	margin: 0;
-	font-size: 0.92rem;
-	line-height: 1.55;
-	color: #eaf1ff;
+section.sp-ann.sp-ann-banner::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 170px;
+  height: 170px;
+  top: -85px;
+  right: -40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.09) 0%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  pointer-events: none;
 }
 
-.sp-ann-text p {
-	margin: 0 0 0.4rem;
+section.sp-ann .sp-ann-banner-inner {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
-.sp-ann-text p:last-child {
-	margin-bottom: 0;
+section.sp-ann .sp-ann-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 0.65rem;
+  padding: 0.3rem 0.65rem 0.3rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--sp-theme-brand-soft);
 }
 
-.sp-ann-bar {
-	display: flex;
-	align-items: center;
-	gap: 0.75rem;
-	padding: 0.5rem 0.75rem;
-	background: #eef4ff;
-	border: 1px solid #cfe0ff;
-	color: #1e3a8a;
+section.sp-ann .sp-ann-eyebrow::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 13px;
+  height: 13px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z'/%3E%3Cpath d='M15.5 8.5a5 5 0 0 1 0 7'/%3E%3Cpath d='M18.5 5.5a9 9 0 0 1 0 13'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z'/%3E%3Cpath d='M15.5 8.5a5 5 0 0 1 0 7'/%3E%3Cpath d='M18.5 5.5a9 9 0 0 1 0 13'/%3E%3C/svg%3E")
+    center / contain no-repeat;
 }
 
-.sp-ann-bar-label {
-	flex: 0 0 auto;
-	padding: 0.15rem 0.5rem;
-	border-radius: 999px;
-	background: #1e3a8a;
-	color: #fff;
-	font-size: 0.66rem;
-	font-weight: 700;
-	letter-spacing: 0.08em;
-	text-transform: uppercase;
+/* title: forced light so theme heading colours can't make it unreadable */
+section.sp-ann.sp-ann-banner .sp-ann-title {
+  margin: 0 0 0.4rem;
+  padding: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--sp-theme-on-brand) !important;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
-.sp-ann-bar-text {
-	flex: 1 1 auto;
-	min-width: 0;
-	display: flex;
-	flex-wrap: wrap;
-	align-items: baseline;
-	gap: 0.35rem 0.6rem;
-	font-size: 0.88rem;
-	line-height: 1.45;
+section.sp-ann.sp-ann-banner .sp-ann-text,
+section.sp-ann.sp-ann-banner .sp-ann-text p,
+section.sp-ann.sp-ann-banner .sp-ann-text li {
+  margin: 0;
+  font-size: 0.94rem;
+  line-height: 1.6;
+  color: var(--sp-theme-brand-soft);
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
-.sp-ann-bar-text strong {
-	color: #1e3a8a;
+section.sp-ann.sp-ann-banner .sp-ann-text {
+  max-width: 70ch;
 }
 
-.sp-ann-bar-text span {
-	color: #29406b;
+section.sp-ann.sp-ann-banner .sp-ann-text p {
+  margin-bottom: 0.5rem;
 }
 
-.sp-ann-dismiss {
-	flex: 0 0 auto;
-	margin: 0;
+section.sp-ann.sp-ann-banner .sp-ann-text p:last-child {
+  margin-bottom: 0;
 }
 
-.sp-ann-dismiss-btn {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.35rem;
-	min-height: 32px;
-	padding: 0 0.7rem;
-	border: 1px solid rgba(255, 255, 255, 0.55);
-	border-radius: 999px;
-	background: rgba(255, 255, 255, 0.12);
-	color: #fff;
-	font-size: 0.82rem;
-	font-weight: 650;
-	line-height: 1;
-	cursor: pointer;
-	transition: background 0.15s ease, border-color 0.15s ease;
+section.sp-ann.sp-ann-banner .sp-ann-text a {
+  color: var(--sp-theme-on-brand);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.5);
+  text-underline-offset: 3px;
 }
 
-.sp-ann-dismiss-btn:hover,
-.sp-ann-dismiss-btn:focus {
-	background: rgba(255, 255, 255, 0.24);
-	border-color: #fff;
+section.sp-ann.sp-ann-banner .sp-ann-text ul,
+section.sp-ann.sp-ann-banner .sp-ann-text ol {
+  margin: 0 0 0.5rem;
+  padding-left: 1.2rem;
 }
 
-.sp-ann-dismiss-btn span[aria-hidden='true'] {
-	font-size: 1.05rem;
-	line-height: 1;
+/* ================= THIN BAR ================= */
+section.sp-ann.sp-ann-bar {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  padding: 0.7rem 0.7rem 0.7rem 1rem;
+  background: linear-gradient(
+    90deg,
+    var(--sp-ann-blue-100) 0%,
+    var(--sp-ann-blue-50) 60%,
+    #fff 100%
+  );
+  border: 1px solid var(--sp-theme-brand-line);
+  box-shadow: 0 6px 14px -12px color-mix(in srgb, var(--sp-theme-brand) 60%, transparent);
+  color: var(--sp-ann-blue-800);
 }
 
-.sp-ann-bar .sp-ann-dismiss-btn {
-	min-width: 32px;
-	justify-content: center;
-	padding: 0 0.45rem;
-	border-color: #b8d0ff;
-	background: #fff;
-	color: #1e3a8a;
+section.sp-ann.sp-ann-bar::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: linear-gradient(
+    180deg,
+    var(--sp-ann-blue-500),
+    var(--sp-ann-blue-800)
+  );
 }
 
-.sp-ann-bar .sp-ann-dismiss-btn:hover,
-.sp-ann-bar .sp-ann-dismiss-btn:focus {
-	background: #dfeaff;
-	border-color: #7ea8ff;
+section.sp-ann .sp-ann-bar-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 0 0 auto;
+  margin-top: 1px;
+  padding: 0.3rem 0.65rem 0.3rem 0.55rem;
+  border-radius: 999px;
+  background: var(--sp-ann-blue-800);
+  color: var(--sp-theme-on-brand);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
-.sp-ann-bar .sp-ann-dismiss-text {
-	display: none;
+section.sp-ann .sp-ann-bar-label::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--sp-theme-brand);
+  animation: sp-ann-pulse 2s ease-out infinite;
 }
 
+/* text block: title on its own line, message below, always wraps */
+section.sp-ann .sp-ann-bar-text {
+  flex: 1 1 0;
+  min-width: 0;
+  display: block;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+section.sp-ann .sp-ann-bar-text strong {
+  display: block;
+  margin-bottom: 0.1rem;
+  font-weight: 700;
+  color: var(--sp-ann-ink);
+}
+
+section.sp-ann .sp-ann-bar-text span {
+  display: block;
+  color: var(--sp-theme-brand-deep);
+}
+
+/* ================= DISMISS ================= */
+section.sp-ann .sp-ann-dismiss {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0;
+}
+
+section.sp-ann .sp-ann-dismiss-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 34px;
+  margin: 0;
+  padding: 0 0.85rem 0 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--sp-theme-on-brand);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 650;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s var(--sp-ann-ease);
+}
+
+section.sp-ann .sp-ann-dismiss-btn:hover {
+  background: rgba(255, 255, 255, 0.24);
+  border-color: rgba(255, 255, 255, 0.85);
+}
+
+section.sp-ann .sp-ann-dismiss-btn:active {
+  transform: scale(0.96);
+}
+
+section.sp-ann .sp-ann-dismiss-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+section.sp-ann .sp-ann-dismiss-btn span[aria-hidden="true"] {
+  font-size: 1.15rem;
+  line-height: 1;
+  transition: transform 0.25s var(--sp-ann-ease);
+}
+
+section.sp-ann .sp-ann-dismiss-btn:hover span[aria-hidden="true"] {
+  transform: rotate(90deg);
+}
+
+/* bar: compact round icon button, light surface */
+section.sp-ann.sp-ann-bar .sp-ann-dismiss-btn {
+  width: 30px;
+  min-width: 30px;
+  min-height: 30px;
+  padding: 0;
+  border-color: var(--sp-theme-brand-line);
+  background: var(--sp-theme-surface);
+  color: var(--sp-ann-blue-800);
+}
+
+section.sp-ann.sp-ann-bar .sp-ann-dismiss-btn:hover {
+  background: var(--sp-ann-blue-100);
+  border-color: var(--sp-theme-brand);
+}
+
+section.sp-ann.sp-ann-bar .sp-ann-dismiss-btn:focus-visible {
+  outline-color: var(--sp-ann-blue-600);
+}
+
+section.sp-ann.sp-ann-bar .sp-ann-dismiss-text {
+  display: none;
+}
+
+/* ================= MOBILE ================= */
 @media (max-width: 600px) {
-	.sp-ann-banner {
-		flex-direction: column;
-		align-items: stretch;
-		gap: 0.75rem;
-	}
+  section.sp-ann {
+    border-radius: 14px;
+  }
 
-	.sp-ann-banner .sp-ann-dismiss {
-		align-self: flex-start;
-	}
+  section.sp-ann.sp-ann-banner {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 0.7rem;
+    padding: 0.95rem 1rem 1.05rem;
+  }
 
-	.sp-ann-bar {
-		flex-wrap: wrap;
-	}
+  /* dismiss sits at the top-right, above the content */
+  section.sp-ann.sp-ann-banner .sp-ann-dismiss {
+    align-self: flex-end;
+    margin-bottom: -0.2rem;
+  }
 
-	.sp-ann-bar-label {
-		order: 1;
-	}
+  section.sp-ann.sp-ann-banner .sp-ann-dismiss-btn {
+    min-height: 36px;
+  }
 
-	.sp-ann-bar .sp-ann-dismiss {
-		order: 2;
-		margin-left: auto;
-	}
+  section.sp-ann.sp-ann-banner .sp-ann-title {
+    font-size: 1.08rem;
+  }
 
-	.sp-ann-bar-text {
-		order: 3;
-		flex-basis: 100%;
-	}
+  section.sp-ann.sp-ann-bar {
+    flex-wrap: wrap;
+    align-items: center;
+    row-gap: 0.45rem;
+    padding: 0.65rem 0.65rem 0.7rem 0.95rem;
+  }
+
+  section.sp-ann.sp-ann-bar .sp-ann-bar-label {
+    order: 1;
+    margin-top: 0;
+  }
+
+  section.sp-ann.sp-ann-bar .sp-ann-dismiss {
+    order: 2;
+    margin-left: auto;
+  }
+
+  section.sp-ann.sp-ann-bar .sp-ann-bar-text {
+    order: 3;
+    flex: 1 1 100%;
+  }
+}
+
+/* ================= REDUCED MOTION ================= */
+@media (prefers-reduced-motion: reduce) {
+  section.sp-ann,
+  section.sp-ann .sp-ann-bar-label::before {
+    animation: none;
+  }
+
+  section.sp-ann .sp-ann-dismiss-btn,
+  section.sp-ann .sp-ann-dismiss-btn span[aria-hidden="true"] {
+    transition: none;
+  }
 }

@@ -26,6 +26,7 @@ function sp_import_student_column_map() {
 		'email_address'   => 'email',
 		'phone'           => 'phone',
 		'mobile'          => 'phone',
+		'address'         => 'address',
 		'enroll_id'       => 'enroll_id',
 		'enrollment_id'   => 'enroll_id',
 		'class_code'   => 'class_code',
@@ -97,13 +98,30 @@ function sp_read_import_csv( $file, $map ) {
 		return new WP_Error( 'sp_empty_csv', 'That file appears to be empty.' );
 	}
 
+	// A spreadsheet export often carries a UTF-8 byte order mark, which would
+	// otherwise glue itself onto the first column name and stop it matching.
+	if ( isset( $headers[0] ) && 0 === strpos( (string) $headers[0], "\xEF\xBB\xBF" ) ) {
+		$headers[0] = substr( (string) $headers[0], 3 );
+	}
+
 	$mapped = array();
 
 	foreach ( $headers as $index => $header ) {
 		$key = strtolower( trim( (string) $header ) );
 		$key = preg_replace( '/[^a-z0-9_]/', '_', $key );
+		// "Password:" and "Password *" both normalise to "password_" and must
+		// still land on the map instead of arriving as an unknown column.
+		$key = trim( (string) $key, '_' );
 		$mapped[ $index ] = isset( $map[ $key ] ) ? $map[ $key ] : $key;
 	}
+
+	/*
+	 * Every mapped field exists on every row, even the ones whose column the
+	 * file does not contain. The planners read them unconditionally, so
+	 * without this a file missing an optional column raised an undefined-key
+	 * warning on each row.
+	 */
+	$known = array_unique( array_values( $map ) );
 
 	$rows = array();
 	$line = 1;
@@ -115,7 +133,7 @@ function sp_read_import_csv( $file, $map ) {
 			continue;
 		}
 
-		$row = array();
+		$row = array_fill_keys( $known, '' );
 
 		foreach ( $mapped as $index => $field ) {
 			$row[ $field ] = isset( $data[ $index ] ) ? trim( (string) $data[ $index ] ) : '';
@@ -183,6 +201,11 @@ function sp_plan_student_import( $rows ) {
 		$code   = sanitize_text_field( $row['class_code'] );
 		$admit  = sp_sanitize_date( $row['admission_date'] );
 
+		// The card prints one short address line, so the import matches the
+		// portal's 100-character field rather than the wider column.
+		$address = isset( $row['address'] ) ? trim( sanitize_textarea_field( (string) $row['address'] ) ) : '';
+		$address = function_exists( 'mb_substr' ) ? mb_substr( $address, 0, 100 ) : substr( $address, 0, 100 );
+
 		$entry = array(
 			'line'    => $line,
 			'action'  => 'create',
@@ -190,9 +213,18 @@ function sp_plan_student_import( $rows ) {
 			'email'   => $email,
 			'phone'   => $phone,
 			'enroll'  => $enroll,
-			'class' => $code,
+			'class'   => $code,
 			'detail'  => '',
 			'admission_date' => $admit,
+			/*
+			 * The commit step works only from this plan, so these must be
+			 * carried through: dropping them meant a password column was
+			 * replaced by a generated one and the dob column was ignored
+			 * without a word.
+			 */
+			'dob'      => isset( $row['dob'] ) ? sp_sanitize_date( $row['dob'] ) : '',
+			'password' => isset( $row['password'] ) ? trim( (string) $row['password'] ) : '',
+			'address'  => $address,
 		);
 
 		if ( '' === $name ) {
@@ -290,6 +322,7 @@ function sp_execute_student_import( $plan ) {
 				'phone'           => $row['phone'],
 				// Optional: blank generates a random password instead.
 				'dob'             => isset( $row['dob'] ) ? $row['dob'] : '',
+				'address'         => isset( $row['address'] ) ? $row['address'] : '',
 				'password'        => isset( $row['password'] ) ? trim( $row['password'] ) : '',
 				'send_email'      => true,
 			)
@@ -349,6 +382,13 @@ function sp_plan_teacher_import( $rows ) {
 			'name'   => $name,
 			'email'  => $email,
 			'phone'  => $phone,
+			/*
+			 * The commit step works only from this plan, so the password has to
+			 * be carried through here. It used to be dropped, which made every
+			 * row fail at commit with "no password supplied" even when the CSV
+			 * column was filled in.
+			 */
+			'password' => isset( $row['password'] ) ? trim( (string) $row['password'] ) : '',
 			'detail' => '',
 		);
 
@@ -367,6 +407,12 @@ function sp_plan_teacher_import( $rows ) {
 			} elseif ( email_exists( $email ) ) {
 				$entry['action'] = 'skip';
 				$entry['detail'] = 'Already has a WordPress account.';
+			} elseif ( '' === $entry['password'] ) {
+				// Required by the single-add form too. The dry run is the place
+				// to say so: the commit step refuses the row outright, and a
+				// failure discovered after confirming cannot be corrected here.
+				$entry['action'] = 'error';
+				$entry['detail'] = 'Missing password. Teachers need one to sign in.';
 			} else {
 				$entry['detail'] = 'Will create a teacher account and email credentials.';
 			}
@@ -437,12 +483,220 @@ function sp_execute_teacher_import( $plan ) {
  */
 function sp_sample_student_csv() {
 	$rows = array(
-		array( 'name', 'email', 'phone', 'enroll_id', 'class_code', 'admission_date', 'dob', 'password' ),
-		array( 'Asha Verma', 'asha@example.com', '9876543210', 'WEB2025001', 'WEB-2025-A', '2025-01-15', '2001-04-12', '' ),
-		array( 'Ravi Kumar', 'ravi@example.com', '9876543211', '', '', '', '2000-09-30', 'Ravi@2025' ),
+		array( 'name', 'email', 'phone', 'enroll_id', 'class_code', 'admission_date', 'dob', 'password', 'address' ),
+		array( 'Asha Verma', 'asha@example.com', '9876543210', 'WEB2025001', 'WEB-2025-A', '2025-01-15', '2001-04-12', '', '12 MG Road, Jaipur 302001' ),
+		array( 'Ravi Kumar', 'ravi@example.com', '9876543211', '', '', '', '2000-09-30', 'Ravi@2025', '' ),
 	);
 
 	return sp_render_csv( $rows );
+}
+
+/**
+ * Curriculum CSV column map.
+ *
+ * @return array
+ */
+function sp_import_curriculum_column_map() {
+	return array(
+		'title'       => 'title',
+		'description' => 'detail',
+		'heading'     => 'is_heading',
+		'group_title' => 'group_title',
+		'parent'      => 'parent_id',
+		'order'       => 'position',
+		'course_code' => 'course_code',
+	);
+}
+
+/**
+ * Sample curriculum CSV.
+ *
+ * @return string
+ */
+function sp_sample_curriculum_csv() {
+	$rows = array(
+		array( 'heading', 'group_title', 'title', 'description', 'course_code', 'order' ),
+		array( '1', 'Computer Fundamentals & Digital Systems', '', '', 'WEB-2025-A', '1' ),
+		array( '0', '', 'Computer Hardware & Central Processing Unit', 'Which component is often called the brain of a computer? (ALU, registers, microarchitecture)', 'WEB-2025-A', '1' ),
+		array( '0', '', 'Design Tool Fundamentals & Vector Prompts', 'Prompt design methods, creative workflow initialization, canvas coordinate spaces', 'WEB-2025-A', '2' ),
+		array( '1', 'Web Fundamentals & Visual Structuring', '', '', 'WEB-2025-A', '2' ),
+		array( '0', '', 'Semantic Web Structure & Content Hierarchy', 'Which language is primarily used to structure content on web pages? (HTML5 syntax & elements)', 'WEB-2025-A', '1' ),
+	);
+
+	return sp_render_csv( $rows );
+}
+
+/**
+ * Dry run a curriculum CSV import.
+ *
+ * @param array $rows Parsed CSV rows.
+ * @return array[] One entry per row: line, action, title, detail, error.
+ */
+function sp_plan_curriculum_import( $rows ) {
+	global $wpdb;
+
+	$plan = array();
+	$course_map = array();
+
+	// First pass: collect all course codes and build a map.
+	foreach ( $rows as $row ) {
+		$course_code = isset( $row['course_code'] ) ? trim( $row['course_code'] ) : '';
+
+		if ( '' !== $course_code && ! isset( $course_map[ $course_code ] ) ) {
+			$class = sp_find_class_by_code( $course_code );
+
+			if ( $class && $class->course_id ) {
+				$course_map[ $course_code ] = (int) $class->course_id;
+			} else {
+				$course = $wpdb->get_row(
+					$wpdb->prepare(
+						"SELECT id FROM " . sp_table( 'courses' ) . " WHERE code = %s",
+						$course_code
+					)
+				);
+
+				if ( $course ) {
+					$course_map[ $course_code ] = (int) $course->id;
+				}
+			}
+		}
+	}
+
+	// Track heading ids by course for parent references.
+	$heading_ids = array();
+
+	foreach ( $rows as $row ) {
+		$line         = (int) $row['__line'];
+		$title        = sanitize_text_field( $row['title'] );
+		$detail       = isset( $row['detail'] ) ? sanitize_textarea_field( $row['detail'] ) : '';
+		$is_heading   = ! empty( $row['is_heading'] );
+		$group_title  = $is_heading ? sanitize_text_field( $row['group_title'] ) : '';
+		$parent_ref   = isset( $row['parent_id'] ) ? trim( $row['parent_id'] ) : '';
+		$position     = isset( $row['position'] ) ? trim( $row['position'] ) : '';
+		$course_code  = isset( $row['course_code'] ) ? trim( $row['course_code'] ) : '';
+
+		$entry = array(
+			'line'  => $line,
+			'action' => 'create',
+			'title' => $title,
+			'detail' => $detail,
+			'error' => '',
+		);
+
+		// Validate course.
+		if ( '' === $course_code ) {
+			$entry['action'] = 'error';
+			$entry['error']  = 'Missing course_code.';
+			$plan[]          = $entry;
+			continue;
+		}
+
+		$course_id = isset( $course_map[ $course_code ] ) ? $course_map[ $course_code ] : 0;
+
+		if ( ! $course_id ) {
+			$entry['action'] = 'error';
+			$entry['error']  = sprintf( 'No course found with code "%s".', $course_code );
+			$plan[]          = $entry;
+			continue;
+		}
+
+		$entry['course_id'] = $course_id;
+
+		// Validate heading.
+		if ( $is_heading && '' === $group_title ) {
+			$entry['action'] = 'error';
+			$entry['error']  = 'Heading rows require a group_title.';
+			$plan[]          = $entry;
+			continue;
+		}
+
+		// Validate topic has parent or is under implicit group.
+		if ( ! $is_heading && '' !== $parent_ref ) {
+			// Parent reference can be "course_code:heading_title" or a heading index.
+			// For simplicity, we track headings by their position in the import.
+		}
+
+		if ( '' === $position || ! ctype_digit( $position ) ) {
+			$entry['action'] = 'error';
+			$entry['error']  = 'Invalid position (must be a number).';
+			$plan[]          = $entry;
+			continue;
+		}
+
+		$entry['is_heading']  = $is_heading;
+		$entry['group_title'] = $group_title;
+		$entry['position']    = (int) $position;
+		$entry['parent_ref']  = $parent_ref;
+
+		$plan[] = $entry;
+	}
+
+	return $plan;
+}
+
+/**
+ * Execute a curriculum import plan.
+ *
+ * @param array $plan Output of sp_plan_curriculum_import().
+ * @return array Counts and errors.
+ */
+function sp_execute_curriculum_import( $plan ) {
+	$created = 0;
+	$errors  = array();
+	$heading_map = array();
+
+	foreach ( $plan as $row ) {
+		if ( 'create' !== $row['action'] ) {
+			if ( ! empty( $row['error'] ) ) {
+				$errors[] = sprintf( 'Line %d: %s', $row['line'], $row['error'] );
+			}
+			continue;
+		}
+
+		$args = array(
+			'course_id'   => $row['course_id'],
+			'title'       => $row['title'],
+			'detail'      => $row['detail'],
+			'is_heading'  => $row['is_heading'],
+			'group_title' => $row['group_title'],
+			'position'    => $row['position'],
+		);
+
+		// Handle parent reference.
+		if ( ! $row['is_heading'] && ! empty( $row['parent_ref'] ) ) {
+			// Try to find the heading by course_code:heading_title format.
+			$parts = explode( ':', $row['parent_ref'] );
+
+			if ( count( $parts ) >= 2 ) {
+				$parent_course_code = trim( $parts[0] );
+				$parent_heading_title = trim( $parts[1] );
+
+				// Look for the heading in our created headings.
+				if ( isset( $heading_map[ $parent_course_code . ':' . $parent_heading_title ] ) ) {
+					$args['parent_id'] = $heading_map[ $parent_course_code . ':' . $parent_heading_title ];
+				}
+			}
+		}
+
+		$result = sp_save_curriculum( $args );
+
+		if ( is_wp_error( $result ) ) {
+			$errors[] = sprintf( 'Line %d (%s): %s', $row['line'], $row['title'], $result->get_error_message() );
+			continue;
+		}
+
+		// Track heading for parent references.
+		if ( $row['is_heading'] ) {
+			$heading_map[ $row['course_id'] . ':' . $row['group_title'] ] = (int) $result;
+		}
+
+		++$created;
+	}
+
+	return array(
+		'created' => $created,
+		'errors'  => $errors,
+	);
 }
 
 /**

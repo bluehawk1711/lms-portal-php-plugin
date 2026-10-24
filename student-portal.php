@@ -3,7 +3,7 @@
  * Plugin Name:       Student & Teacher Portal
  * Plugin URI:        https://example.com/student-portal
  * Description:       Student and teacher portal: accounts, courses, enrollment, attendance, results, course notes and documents. Reads student records from the Certificate Manager plugin without modifying its tables.
- * Version:           0.2.0
+ * Version:           0.2.1
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Gaurav Dadhich 
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'SP_VERSION', '0.2.0' );
+define( 'SP_VERSION', '0.2.9' );
 define( 'SP_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SP_URL', plugin_dir_url( __FILE__ ) );
 
@@ -97,7 +97,7 @@ function sp_deactivate() {
  * Settings -> Permalinks. Comparing a stored version against this constant makes
  * the plugin repair itself on the next request instead.
  */
-define( 'SP_REWRITE_VERSION', '7' );
+define( 'SP_REWRITE_VERSION', '8' );
 
 /**
  * Re-flush the stored rewrite rules when our route definitions have changed.

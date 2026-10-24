@@ -4,14 +4,14 @@
  */
 
 .sp-student-accounts {
-  --sp-student-ink: #17212f;
-  --sp-student-muted: #697586;
-  --sp-student-border: #e5eaf0;
-  --sp-student-surface: #ffffff;
-  --sp-student-soft: #f7f9fc;
-  --sp-student-accent: #3858d6;
-  --sp-student-accent-dark: #2947bf;
-  --sp-student-radius: 16px;
+  --sp-student-ink: var(--sp-theme-ink);
+  --sp-student-muted: var(--sp-theme-muted);
+  --sp-student-border: var(--sp-theme-border);
+  --sp-student-surface: var(--sp-theme-surface);
+  --sp-student-soft: var(--sp-theme-surface-soft);
+  --sp-student-accent: var(--sp-theme-brand);
+  --sp-student-accent-dark: var(--sp-theme-brand-strong);
+  --sp-student-radius: var(--sp-theme-radius-xl);
   box-sizing: border-box;
   max-width: 1500px;
   margin: 18px 20px 32px 2px;
@@ -36,15 +36,15 @@
   gap: 24px;
   padding: 22px 24px;
   margin: 0 0 18px;
-  border: 1px solid #e6eaf2;
+  border: 1px solid var(--sp-theme-border);
   border-radius: var(--sp-student-radius);
   background:
     radial-gradient(
       circle at 96% 0%,
-      rgba(91, 113, 225, 0.11),
+      color-mix(in srgb, var(--sp-theme-brand) 11%, transparent),
       transparent 31%
     ),
-    linear-gradient(135deg, #fff 0%, #fbfcff 100%);
+    linear-gradient(135deg, #fff 0%, var(--sp-theme-surface-hover) 100%);
   box-shadow: 0 3px 12px rgba(25, 39, 70, 0.035);
 }
 
@@ -57,7 +57,7 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  color: #64708a;
+  color: var(--sp-theme-muted);
   font-size: 10px;
   font-weight: 750;
   letter-spacing: 0.13em;
@@ -66,13 +66,13 @@
 }
 
 .sp-student-accounts .sp-student-eyebrow span {
-  color: #a1aabc;
+  color: var(--sp-theme-faint);
 }
 
 .sp-student-accounts .sp-student-page-header h1 {
   margin: 8px 0 5px;
   padding: 0;
-  color: #17212f;
+  color: var(--sp-theme-ink);
   font-size: clamp(25px, 2.2vw, 31px);
   font-weight: 750;
   letter-spacing: -0.045em;
@@ -81,7 +81,7 @@
 
 .sp-student-accounts .sp-student-page-header p {
   margin: 0;
-  color: #697586;
+  color: var(--sp-theme-muted);
   font-size: 13px;
   line-height: 1.65;
 }
@@ -92,7 +92,7 @@
   align-items: center;
   gap: 10px;
   padding: 11px 14px;
-  border: 1px solid #e4e9f4;
+  border: 1px solid var(--sp-theme-border);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.82);
 }
@@ -103,7 +103,7 @@
   height: 31px;
   place-items: center;
   border-radius: 10px;
-  background: #edf2ff;
+  background: var(--sp-theme-brand-wash);
   color: var(--sp-student-accent);
   font-size: 15px;
   font-weight: 800;
@@ -115,14 +115,14 @@
 }
 
 .sp-student-accounts .sp-student-header-note strong {
-  color: #263348;
+  color: var(--sp-theme-ink-2);
   font-size: 12px;
   font-weight: 700;
 }
 
 .sp-student-accounts .sp-student-header-note small {
   margin-top: 3px;
-  color: #7a8495;
+  color: var(--sp-theme-muted);
   font-size: 11px;
 }
 
@@ -160,7 +160,7 @@
 .sp-student-accounts .sp-student-list-heading h2 {
   margin: 6px 0 5px;
   padding: 0;
-  color: #17212f;
+  color: var(--sp-theme-ink);
   font-size: 20px;
   font-weight: 750;
   letter-spacing: -0.025em;
@@ -180,10 +180,10 @@
   align-items: center;
   gap: 8px;
   padding: 8px 11px;
-  border: 1px solid #e5eaf4;
+  border: 1px solid var(--sp-theme-border);
   border-radius: 999px;
-  background: #fafbfe;
-  color: #526078;
+  background: var(--sp-theme-surface-hover);
+  color: var(--sp-theme-ink-2);
   font-size: 11px;
   font-weight: 650;
   white-space: nowrap;
@@ -193,8 +193,8 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #4e69dd;
-  box-shadow: 0 0 0 3px #e9edff;
+  background: var(--sp-theme-brand);
+  box-shadow: 0 0 0 3px var(--sp-theme-brand-soft);
 }
 
 .sp-student-accounts .sp-student-metrics {
@@ -211,13 +211,17 @@
   align-items: flex-start;
   justify-content: center;
   padding: 14px 16px;
-  border: 1px solid #edf0f5;
+  border: 1px solid var(--sp-theme-border-subtle);
   border-radius: 12px;
-  background: linear-gradient(145deg, #fbfcfe 0%, #f8faff 100%);
+  background: linear-gradient(
+    145deg,
+    var(--sp-theme-surface-hover) 0%,
+    var(--sp-theme-surface-tint) 100%
+  );
 }
 
 .sp-student-accounts .sp-student-metric-label {
-  color: #7a8596;
+  color: var(--sp-theme-muted);
   font-size: 11px;
   font-weight: 600;
   line-height: 1.4;
@@ -226,7 +230,7 @@
 .sp-student-accounts .sp-student-metric strong {
   display: block;
   margin-top: 4px;
-  color: #1b2a40;
+  color: var(--sp-theme-brand-ink);
   font-size: 24px;
   font-weight: 750;
   letter-spacing: -0.04em;
@@ -236,7 +240,7 @@
 
 .sp-student-accounts .sp-student-metric-of {
   margin-left: 5px;
-  color: #9aa3b2;
+  color: var(--sp-theme-faint);
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0;
@@ -244,7 +248,7 @@
 
 .sp-student-accounts .sp-student-metric-foot {
   margin-top: 3px;
-  color: #8791a1;
+  color: var(--sp-theme-faint);
   font-size: 10px;
   line-height: 1.45;
 }
@@ -255,9 +259,9 @@
   justify-content: space-between;
   gap: 16px;
   padding: 15px 24px;
-  border-top: 1px solid #edf0f4;
-  border-bottom: 1px solid #e9edf3;
-  background: #fbfcfe;
+  border-top: 1px solid var(--sp-theme-border-subtle);
+  border-bottom: 1px solid var(--sp-theme-border);
+  background: var(--sp-theme-surface-hover);
 }
 
 .sp-student-accounts .sp-student-search-form {
@@ -278,7 +282,7 @@
   height: 18px;
   margin-right: -31px;
   z-index: 1;
-  color: #8792a4;
+  color: var(--sp-theme-faint);
   pointer-events: none;
 }
 
@@ -290,11 +294,11 @@
   height: 38px;
   margin: 0;
   padding: 0 12px 0 39px;
-  border: 1px solid #dfe5ed;
+  border: 1px solid var(--sp-theme-brand-line);
   border-radius: 9px;
-  background: #fff;
+  background: var(--sp-theme-surface);
   box-shadow: 0 1px 2px rgba(18, 31, 54, 0.025);
-  color: #263448;
+  color: var(--sp-theme-brand-ink);
   font-size: 12px;
   line-height: 1.4;
   transition:
@@ -303,13 +307,14 @@
 }
 
 .sp-student-accounts .sp-student-search-form input[type="search"]::placeholder {
-  color: #9aa3b1;
+  color: var(--sp-theme-faint);
 }
 
 .sp-student-accounts .sp-student-search-form input[type="search"]:focus {
-  border-color: #8194ed;
+  border-color: var(--sp-theme-brand-line);
   outline: 0;
-  box-shadow: 0 0 0 3px rgba(56, 88, 214, 0.12);
+  box-shadow: 0 0 0 3px
+    color-mix(in srgb, var(--sp-theme-brand) 12%, transparent);
 }
 
 .sp-student-accounts .sp-student-search-form .button {
@@ -328,7 +333,8 @@
 .sp-student-accounts .sp-student-search-form .sp-student-search-submit {
   border-color: var(--sp-student-accent);
   background: var(--sp-student-accent);
-  box-shadow: 0 2px 4px rgba(56, 88, 214, 0.12);
+  box-shadow: 0 2px 4px
+    color-mix(in srgb, var(--sp-theme-brand) 12%, transparent);
 }
 
 .sp-student-accounts .sp-student-search-form .sp-student-search-submit:hover,
@@ -338,9 +344,9 @@
 }
 
 .sp-student-accounts .sp-student-search-form .sp-student-clear-search {
-  border-color: #e0e5ec;
-  background: #fff;
-  color: #566276;
+  border-color: var(--sp-theme-border);
+  background: var(--sp-theme-surface);
+  color: var(--sp-theme-brand-strong);
 }
 
 .sp-student-accounts .sp-student-page-size {
@@ -348,13 +354,13 @@
   flex: 0 0 auto;
   align-items: center;
   gap: 6px;
-  color: #8490a1;
+  color: var(--sp-theme-faint);
   font-size: 11px;
   white-space: nowrap;
 }
 
 .sp-student-accounts .sp-student-page-size span {
-  color: #687790;
+  color: var(--sp-theme-muted);
   font-size: 16px;
 }
 
@@ -371,7 +377,7 @@
   border: 0;
   border-collapse: separate;
   border-spacing: 0;
-  background: #fff;
+  background: var(--sp-theme-surface);
   box-shadow: none;
 }
 
@@ -379,9 +385,9 @@
   height: 44px;
   padding: 0 18px;
   border-top: 0;
-  border-bottom: 1px solid #e9edf3;
-  background: #f8fafd;
-  color: #7b8799;
+  border-bottom: 1px solid var(--sp-theme-border);
+  background: var(--sp-theme-surface-tint);
+  color: var(--sp-theme-muted);
   font-size: 10px;
   font-weight: 750;
   letter-spacing: 0.075em;
@@ -418,9 +424,9 @@
 
 .sp-student-accounts .sp-student-table tbody td {
   padding: 14px 18px;
-  border-bottom: 1px solid #edf0f4;
-  background: #fff;
-  color: #283548;
+  border-bottom: 1px solid var(--sp-theme-border-subtle);
+  background: var(--sp-theme-surface);
+  color: var(--sp-theme-ink-2);
   font-size: 12px;
   vertical-align: middle;
 }
@@ -434,7 +440,7 @@
 }
 
 .sp-student-accounts .sp-student-table tbody tr.sp-student-data-row:hover > td {
-  background: #fbfcff;
+  background: var(--sp-theme-surface-hover);
 }
 
 .sp-student-accounts
@@ -442,7 +448,7 @@
   tbody
   tr.sp-student-data-row:hover
   .sp-student-avatar {
-  border-color: #d7defe;
+  border-color: var(--sp-theme-brand-line);
 }
 
 .sp-student-accounts .sp-student-identity-cell {
@@ -463,10 +469,14 @@
   justify-content: center;
   width: 39px;
   height: 39px;
-  border: 1px solid #e0e6fa;
+  border: 1px solid var(--sp-theme-brand-line);
   border-radius: 12px;
-  background: linear-gradient(145deg, #f1f4ff, #e9edff);
-  color: #3b55ba;
+  background: linear-gradient(
+    145deg,
+    var(--sp-theme-brand-wash),
+    var(--sp-theme-brand-soft)
+  );
+  color: var(--sp-theme-brand-strong);
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.02em;
@@ -482,7 +492,7 @@
 
 .sp-student-accounts .sp-student-identity-copy > strong {
   overflow: hidden;
-  color: #202d40;
+  color: var(--sp-theme-ink);
   font-size: 12px;
   font-weight: 700;
   line-height: 1.35;
@@ -492,7 +502,7 @@
 
 .sp-student-accounts .sp-student-email {
   overflow: hidden;
-  color: #788497;
+  color: var(--sp-theme-faint);
   font-size: 11px;
   line-height: 1.4;
   text-decoration: none;
@@ -506,7 +516,7 @@
 }
 
 .sp-student-accounts .sp-student-no-email {
-  color: #9aa3b0;
+  color: var(--sp-theme-faint);
   font-style: italic;
 }
 
@@ -517,10 +527,10 @@
   align-items: center;
   min-height: 25px;
   padding: 4px 9px;
-  border: 1px solid #e8ebf0;
+  border: 1px solid var(--sp-theme-border);
   border-radius: 999px;
-  background: #f7f8fa;
-  color: #5d6879;
+  background: var(--sp-theme-surface-soft);
+  color: var(--sp-theme-muted);
   font-size: 10px;
   font-weight: 700;
   line-height: 1.3;
@@ -533,7 +543,7 @@
 
 .sp-student-accounts .sp-student-login-date {
   display: block;
-  color: #354257;
+  color: var(--sp-theme-ink-2);
   font-size: 11px;
   font-weight: 650;
   line-height: 1.4;
@@ -542,7 +552,7 @@
 .sp-student-accounts .sp-student-login-caption {
   display: block;
   margin-top: 4px;
-  color: #9aa3b0;
+  color: var(--sp-theme-faint);
   font-size: 10px;
   line-height: 1.3;
 }
@@ -551,7 +561,7 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  color: #8a94a4;
+  color: var(--sp-theme-faint);
   font-size: 11px;
   white-space: nowrap;
 }
@@ -561,7 +571,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #c4cbd6;
+  background: var(--sp-theme-brand-line);
 }
 
 .sp-student-accounts .sp-student-actions-cell {
@@ -584,11 +594,11 @@
   gap: 6px;
   margin: 0;
   padding: 0 10px;
-  border: 1px solid #dfe5ee;
+  border: 1px solid var(--sp-theme-border);
   border-radius: 8px;
-  background: #fff;
+  background: var(--sp-theme-surface);
   box-shadow: 0 1px 2px rgba(20, 35, 60, 0.025);
-  color: #47546a;
+  color: var(--sp-theme-ink-2);
   font-size: 11px;
   font-weight: 650;
   line-height: 1.2;
@@ -601,18 +611,18 @@
 }
 
 .sp-student-accounts .sp-student-row-actions .sp-student-enroll-button {
-  border-color: #dce3ff;
-  background: #f4f6ff;
-  color: #354fbd;
+  border-color: var(--sp-theme-brand-soft);
+  background: var(--sp-theme-brand-wash);
+  color: var(--sp-theme-brand-strong);
 }
 
 .sp-student-accounts .sp-student-row-actions .sp-student-enroll-button:hover,
 .sp-student-accounts
   .sp-student-row-actions
   .sp-student-enroll-button[aria-expanded="true"] {
-  border-color: #bfcaff;
-  background: #e9edff;
-  color: #2b45ac;
+  border-color: var(--sp-theme-brand-line);
+  background: var(--sp-theme-brand-soft);
+  color: var(--sp-theme-brand-strong);
 }
 
 .sp-student-accounts .sp-student-enroll-plus {
@@ -632,7 +642,7 @@
   width: 34px;
   min-width: 34px;
   padding: 0;
-  color: #69768b;
+  color: var(--sp-theme-muted);
   font-size: 10px;
   letter-spacing: 1.5px;
 }
@@ -641,22 +651,24 @@
 .sp-student-accounts
   .sp-student-row-actions
   .sp-kebab-btn[aria-expanded="true"] {
-  border-color: #cfd8e7;
-  background: #f3f6fa;
-  color: #24354f;
+  border-color: var(--sp-theme-border-strong);
+  background: var(--sp-theme-brand-soft);
+  color: var(--sp-theme-ink-2);
 }
 
 .sp-student-accounts .sp-kebab-menu {
-  position: absolute;
-  top: calc(100% + 7px);
-  right: 0;
+  /* Fixed, and placed from JS: an absolute menu inside the horizontally
+     scrolling table wrapper is clipped by it. */
+  position: fixed;
+  top: 0;
+  left: 0;
   z-index: 1000;
   display: block;
   min-width: 205px;
   padding: 5px;
-  border: 1px solid #e0e6ef;
+  border: 1px solid var(--sp-theme-border);
   border-radius: 11px;
-  background: #fff;
+  background: var(--sp-theme-surface);
   box-shadow:
     0 12px 34px rgba(26, 39, 65, 0.15),
     0 2px 5px rgba(26, 39, 65, 0.05);
@@ -684,7 +696,7 @@
   border: 0;
   border-radius: 7px;
   background: transparent;
-  color: #465268;
+  color: var(--sp-theme-ink-2);
   font-family: inherit;
   font-size: 11px;
   font-weight: 550;
@@ -700,8 +712,8 @@
 .sp-student-accounts .sp-kebab-menu a.sp-kebab-item:focus-visible,
 .sp-student-accounts .sp-kebab-menu button.sp-kebab-item:focus-visible {
   outline: 0;
-  background: #f2f5fa;
-  color: #263b72;
+  background: var(--sp-theme-surface-soft);
+  color: var(--sp-theme-brand-deep);
 }
 
 .sp-student-accounts .sp-student-menu-icon {
@@ -712,32 +724,49 @@
   width: 18px;
   height: 18px;
   border-radius: 5px;
-  color: #7a879c;
+  color: var(--sp-theme-muted);
   font-size: 14px;
   font-weight: 600;
+  line-height: 1;
+}
+
+/* SVG glyphs replaced the old text characters, which fell back to emoji fonts. */
+.sp-student-accounts .sp-student-menu-icon svg,
+.sp-student-accounts .sp-student-header-note-mark svg,
+.sp-student-accounts .sp-student-enroll-panel-icon svg,
+.sp-student-accounts .sp-student-page-size svg,
+.sp-student-accounts .sp-kebab-btn svg {
+  display: block;
+}
+
+.sp-student-accounts .sp-student-page-size span,
+.sp-student-accounts .sp-kebab-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   line-height: 1;
 }
 
 .sp-student-accounts .sp-kebab-divider {
   height: 1px;
   margin: 4px 7px;
-  background: #edf0f4;
+  background: var(--sp-theme-border-subtle);
 }
 
 .sp-student-accounts .sp-kebab-menu button.sp-kebab-danger {
-  color: #b8323b;
+  color: var(--sp-theme-danger);
 }
 
 .sp-student-accounts
   .sp-kebab-menu
   button.sp-kebab-danger
   .sp-student-menu-icon {
-  color: #c24a52;
+  color: var(--sp-theme-danger);
 }
 
 .sp-student-accounts .sp-kebab-menu button.sp-kebab-danger:hover {
-  background: #fff1f2;
-  color: #a51f2a;
+  background: var(--sp-theme-danger-soft);
+  color: var(--sp-theme-danger-ink);
 }
 
 /* Enrolment panel is a full-width detail row directly below its student. */
@@ -747,15 +776,15 @@
 
 .sp-student-accounts .sp-student-table tbody tr.sp-student-enroll-row > td {
   padding: 0 24px 18px;
-  border-bottom: 1px solid #dfe6f4;
-  background: #f7f9ff;
+  border-bottom: 1px solid var(--sp-theme-brand-line);
+  background: var(--sp-theme-brand-wash);
 }
 
 .sp-student-accounts .sp-student-enroll-panel {
   padding: 17px 18px 14px;
-  border: 1px solid #e1e7f7;
+  border: 1px solid var(--sp-theme-brand-line);
   border-radius: 12px;
-  background: #fff;
+  background: var(--sp-theme-surface);
   box-shadow: 0 2px 8px rgba(28, 45, 92, 0.035);
 }
 
@@ -774,8 +803,8 @@
   width: 31px;
   height: 31px;
   border-radius: 9px;
-  background: #edf1ff;
-  color: #3858d6;
+  background: var(--sp-theme-brand-soft);
+  color: var(--sp-theme-brand);
   font-size: 19px;
   line-height: 1;
 }
@@ -786,7 +815,7 @@
 }
 
 .sp-student-accounts .sp-student-enroll-panel-heading strong {
-  color: #25334a;
+  color: var(--sp-theme-ink-2);
   font-size: 12px;
   font-weight: 750;
   line-height: 1.4;
@@ -794,17 +823,16 @@
 
 .sp-student-accounts .sp-student-enroll-panel-heading small {
   margin-top: 3px;
-  color: #8390a3;
+  color: var(--sp-theme-brand);
   font-size: 11px;
   line-height: 1.4;
 }
 
 .sp-student-accounts .sp-inline-enroll {
   display: grid;
-  grid-template-columns: minmax(220px, 1.35fr) minmax(170px, 1fr) minmax(
-      160px,
-      0.85fr
-    ) auto;
+  grid-template-columns:
+    minmax(220px, 1.35fr) minmax(170px, 1fr) minmax(160px, 0.85fr)
+    auto;
   align-items: end;
   gap: 12px;
   margin: 0;
@@ -816,7 +844,7 @@
   flex-direction: column;
   gap: 7px;
   margin: 0;
-  color: #46536a;
+  color: var(--sp-theme-ink-2);
   font-size: 11px;
   font-weight: 700;
   line-height: 1.35;
@@ -829,13 +857,13 @@
 }
 
 .sp-student-accounts .sp-inline-enroll label em {
-  color: #c43c49;
+  color: var(--sp-theme-danger);
   font-size: 12px;
   font-style: normal;
 }
 
 .sp-student-accounts .sp-inline-enroll label small {
-  color: #a0a8b5;
+  color: var(--sp-theme-faint);
   font-size: 10px;
   font-weight: 500;
 }
@@ -849,10 +877,10 @@
   height: 38px;
   margin: 0;
   padding: 0 10px;
-  border: 1px solid #dfe5ef;
+  border: 1px solid var(--sp-theme-border);
   border-radius: 8px;
-  background-color: #fff;
-  color: #344158;
+  background-color: var(--sp-theme-surface);
+  color: var(--sp-theme-ink-2);
   font-size: 11px;
   line-height: 1.4;
   box-shadow: 0 1px 2px rgba(18, 31, 54, 0.02);
@@ -860,9 +888,10 @@
 
 .sp-student-accounts .sp-inline-enroll select:focus,
 .sp-student-accounts .sp-inline-enroll input:focus {
-  border-color: #8194ed;
+  border-color: var(--sp-theme-brand-line);
   outline: 0;
-  box-shadow: 0 0 0 3px rgba(56, 88, 214, 0.11);
+  box-shadow: 0 0 0 3px
+    color-mix(in srgb, var(--sp-theme-brand) 11%, transparent);
 }
 
 .sp-student-accounts .sp-inline-enroll-submit {
@@ -876,8 +905,9 @@
   border-color: var(--sp-student-accent);
   border-radius: 8px;
   background: var(--sp-student-accent);
-  box-shadow: 0 2px 4px rgba(56, 88, 214, 0.12);
-  color: #fff;
+  box-shadow: 0 2px 4px
+    color-mix(in srgb, var(--sp-theme-brand) 12%, transparent);
+  color: var(--sp-theme-on-brand);
   font-size: 11px;
   font-weight: 700;
   white-space: nowrap;
@@ -887,12 +917,12 @@
 .sp-student-accounts .sp-inline-enroll-submit:focus {
   border-color: var(--sp-student-accent-dark);
   background: var(--sp-student-accent-dark);
-  color: #fff;
+  color: var(--sp-theme-on-brand);
 }
 
 .sp-student-accounts .sp-student-enroll-help {
   margin: 11px 0 0;
-  color: #8792a3;
+  color: var(--sp-theme-faint);
   font-size: 10px;
   line-height: 1.5;
 }
@@ -903,10 +933,10 @@
   justify-content: space-between;
   gap: 12px;
   padding: 12px 14px;
-  border: 1px dashed #dfe5f0;
+  border: 1px dashed var(--sp-theme-border);
   border-radius: 9px;
-  background: #fbfcff;
-  color: #6e7a8f;
+  background: var(--sp-theme-surface-hover);
+  color: var(--sp-theme-muted);
   font-size: 11px;
 }
 
@@ -915,10 +945,10 @@
   min-height: 32px;
   align-items: center;
   gap: 8px;
-  border-color: #dfe5ee;
+  border-color: var(--sp-theme-border);
   border-radius: 7px;
-  background: #fff;
-  color: #40506b;
+  background: var(--sp-theme-surface);
+  color: var(--sp-theme-brand-deep);
   font-size: 11px;
   font-weight: 650;
 }
@@ -927,7 +957,7 @@
 .sp-student-accounts .sp-student-table tbody td.sp-student-empty-cell {
   padding: 0;
   border-bottom: 0;
-  background: #fff;
+  background: var(--sp-theme-surface);
 }
 
 .sp-student-accounts .sp-student-empty-state {
@@ -947,14 +977,14 @@
   width: 54px;
   height: 54px;
   margin-bottom: 14px;
-  border: 1px solid #e8ecf5;
+  border: 1px solid var(--sp-theme-border);
   border-radius: 16px;
-  background: #f7f9ff;
-  color: #8392bc;
+  background: var(--sp-theme-brand-wash);
+  color: var(--sp-theme-brand);
 }
 
 .sp-student-accounts .sp-student-empty-state > strong {
-  color: #28364b;
+  color: var(--sp-theme-ink-2);
   font-size: 13px;
   font-weight: 750;
   line-height: 1.5;
@@ -964,7 +994,7 @@
   .sp-student-empty-state
   > span:not(.sp-student-empty-icon) {
   margin-top: 5px;
-  color: #8993a2;
+  color: var(--sp-theme-faint);
   font-size: 11px;
   line-height: 1.6;
 }
@@ -990,19 +1020,19 @@
   gap: 16px;
   min-height: 68px;
   padding: 14px 24px;
-  border-top: 1px solid #e9edf3;
+  border-top: 1px solid var(--sp-theme-border);
   border-radius: 0 0 var(--sp-student-radius) var(--sp-student-radius);
-  background: #fcfdff;
+  background: var(--sp-theme-surface-hover);
 }
 
 .sp-student-accounts .sp-student-results-caption {
-  color: #8791a1;
+  color: var(--sp-theme-faint);
   font-size: 11px;
   line-height: 1.5;
 }
 
 .sp-student-accounts .sp-student-results-caption strong {
-  color: #59667a;
+  color: var(--sp-theme-brand-strong);
   font-weight: 750;
 }
 
@@ -1025,7 +1055,7 @@
   border: 1px solid transparent;
   border-radius: 7px;
   background: transparent;
-  color: #69768b;
+  color: var(--sp-theme-muted);
   font-size: 11px;
   font-weight: 650;
   line-height: 1;
@@ -1038,29 +1068,30 @@
 
 .sp-student-accounts .sp-student-page-link:hover,
 .sp-student-accounts .sp-student-page-link:focus-visible {
-  border-color: #e1e6f0;
+  border-color: var(--sp-theme-border);
   outline: 0;
-  background: #f3f6fc;
-  color: #354fbd;
+  background: var(--sp-theme-brand-soft);
+  color: var(--sp-theme-brand-strong);
 }
 
 .sp-student-accounts .sp-student-page-link.is-current {
   border-color: var(--sp-student-accent);
   background: var(--sp-student-accent);
-  box-shadow: 0 2px 5px rgba(56, 88, 214, 0.15);
-  color: #fff;
+  box-shadow: 0 2px 5px
+    color-mix(in srgb, var(--sp-theme-brand) 15%, transparent);
+  color: var(--sp-theme-on-brand);
 }
 
 .sp-student-accounts .sp-student-page-prev,
 .sp-student-accounts .sp-student-page-next {
-  border-color: #e2e7ef;
-  background: #fff;
-  color: #536178;
+  border-color: var(--sp-theme-border);
+  background: var(--sp-theme-surface);
+  color: var(--sp-theme-ink-2);
 }
 
 .sp-student-accounts .sp-student-page-ellipsis {
   padding: 0 3px;
-  color: #a0a8b5;
+  color: var(--sp-theme-faint);
   font-size: 12px;
 }
 
@@ -1069,7 +1100,7 @@
 .sp-student-accounts a:focus-visible,
 .sp-student-accounts select:focus-visible,
 .sp-student-accounts input:focus-visible {
-  outline: 2px solid rgba(56, 88, 214, 0.65);
+  outline: 2px solid color-mix(in srgb, var(--sp-theme-brand) 65%, transparent);
   outline-offset: 2px;
 }
 
@@ -1244,41 +1275,41 @@
 
 /* ---------- ID card generated badge ---------- */
 .sp-student-idcard-cell {
-    white-space: nowrap;
+  white-space: nowrap;
 }
 
 .sp-student-idcard {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 3px 10px;
-    border-radius: 999px;
-    background: #f1f3f7;
-    color: #697586;
-    font-size: 11px;
-    font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--sp-theme-surface-soft);
+  color: var(--sp-theme-muted);
+  font-size: 11px;
+  font-weight: 700;
 }
 
 .sp-student-idcard::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #aab4c8;
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--sp-theme-faint);
 }
 
 .sp-student-idcard-done {
-    background: #f0fbf4;
-    color: #16804a;
+  background: var(--sp-theme-success-soft);
+  color: var(--sp-theme-success);
 }
 
 .sp-student-idcard-done::before {
-    background: #2fb26a;
+  background: var(--sp-theme-success);
 }
 
 .sp-student-idcard-date {
-    display: block;
-    margin-top: 3px;
-    color: #8b96ab;
-    font-size: 10.5px;
+  display: block;
+  margin-top: 3px;
+  color: var(--sp-theme-faint);
+  font-size: 10.5px;
 }

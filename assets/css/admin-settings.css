@@ -5,14 +5,14 @@
  */
 
 .sp-settings-ui {
-    --sp-set-ink: #172235;
-    --sp-set-muted: #6b778b;
-    --sp-set-border: #e5eaf2;
-    --sp-set-surface: #ffffff;
-    --sp-set-soft: #f7f9fc;
-    --sp-set-accent: #3858d6;
-    --sp-set-accent-dark: #2947bf;
-    --sp-set-radius: 16px;
+    --sp-set-ink: var(--sp-theme-ink);
+    --sp-set-muted: var(--sp-theme-muted);
+    --sp-set-border: var(--sp-theme-border);
+    --sp-set-surface: var(--sp-theme-surface);
+    --sp-set-soft: var(--sp-theme-surface-soft);
+    --sp-set-accent: var(--sp-theme-brand);
+    --sp-set-accent-dark: var(--sp-theme-brand-strong);
+    --sp-set-radius: var(--sp-theme-radius-xl);
     box-sizing: border-box;
     max-width: 1180px;
     margin: 18px 20px 32px 2px;
@@ -36,9 +36,9 @@
     gap: 24px;
     padding: 23px 25px;
     margin: 0 0 17px;
-    border: 1px solid #e6eaf2;
+    border: 1px solid var(--sp-theme-border);
     border-radius: var(--sp-set-radius);
-    background: radial-gradient(circle at 96% 0%, rgba(91, 113, 225, 0.11), transparent 31%), linear-gradient(135deg, #fff 0%, #fbfcff 100%);
+    background: radial-gradient(circle at 96% 0%, color-mix(in srgb, var(--sp-theme-brand) 11%, transparent), transparent 31%), linear-gradient(135deg, #fff 0%, var(--sp-theme-surface-hover) 100%);
     box-shadow: 0 3px 12px rgba(25, 39, 70, 0.035);
 }
 
@@ -48,7 +48,7 @@
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    color: #64708a;
+    color: var(--sp-theme-muted);
     font-size: 10px;
     font-weight: 750;
     letter-spacing: 0.13em;
@@ -56,7 +56,7 @@
     text-transform: uppercase;
 }
 
-.sp-settings-eyebrow span { color: #a1aabc; }
+.sp-settings-eyebrow span { color: var(--sp-theme-faint); }
 
 .sp-settings-page-header h1 {
     margin: 8px 0 5px;
@@ -82,7 +82,7 @@
     align-items: center;
     gap: 10px;
     padding: 11px 14px;
-    border: 1px solid #e4e9f4;
+    border: 1px solid var(--sp-theme-border);
     border-radius: 12px;
     background: rgba(255, 255, 255, 0.82);
 }
@@ -94,7 +94,7 @@
     flex: 0 0 34px;
     place-items: center;
     border-radius: 10px;
-    background: #edf1ff;
+    background: var(--sp-theme-brand-soft);
     color: var(--sp-set-accent);
     font-size: 18px;
     font-weight: 750;
@@ -104,14 +104,14 @@
 .sp-settings-header-note small { display: block; }
 
 .sp-settings-header-note strong {
-    color: #27334a;
+    color: var(--sp-theme-ink-2);
     font-size: 12px;
     font-weight: 750;
 }
 
 .sp-settings-header-note small {
     margin-top: 2px;
-    color: #768197;
+    color: var(--sp-theme-muted);
     font-size: 11px;
 }
 /* Stat cards --------------------------------------------------------------- */
@@ -146,10 +146,10 @@
     font-weight: 750;
 }
 
-.sp-settings-stat-icon-pass { background: #e9f8f0; color: #168452; }
-.sp-settings-stat-icon-edit { background: #edf1ff; color: #3858d6; }
-.sp-settings-stat-icon-logs { background: #f3ebff; color: #7a45bd; }
-.sp-settings-stat-icon-upload { background: #fff5df; color: #a66b0b; }
+.sp-settings-stat-icon-pass { background: var(--sp-theme-success-soft); color: var(--sp-theme-success); }
+.sp-settings-stat-icon-edit { background: var(--sp-theme-brand-soft); color: var(--sp-theme-brand); }
+.sp-settings-stat-icon-logs { background: var(--sp-theme-brand-soft); color: var(--sp-theme-accent-strong); }
+.sp-settings-stat-icon-upload { background: var(--sp-theme-warn-soft); color: var(--sp-theme-warn); }
 
 .sp-settings-stat-card > div {
     display: flex;
@@ -159,7 +159,7 @@
 
 .sp-settings-stat-label {
     overflow: hidden;
-    color: #68758a;
+    color: var(--sp-theme-muted);
     font-size: 11px;
     font-weight: 650;
     text-overflow: ellipsis;
@@ -168,7 +168,7 @@
 
 .sp-settings-stat-card strong {
     margin-top: 1px;
-    color: #182336;
+    color: var(--sp-theme-brand-ink);
     font-size: 25px;
     font-weight: 760;
     letter-spacing: -0.04em;
@@ -178,7 +178,7 @@
 
 .sp-settings-stat-card small {
     margin-top: 2px;
-    color: #8a94a5;
+    color: var(--sp-theme-faint);
     font-size: 10px;
 }
 
@@ -196,14 +196,14 @@
 .sp-settings-panel .form-table th {
     width: 260px;
     padding: 16px 14px 16px 0;
-    border-color: #eef1f6;
+    border-color: var(--sp-theme-border-subtle);
     font-weight: 650;
     vertical-align: top;
 }
 
 .sp-settings-panel .form-table td {
     padding: 16px 0;
-    border-color: #eef1f6;
+    border-color: var(--sp-theme-border-subtle);
     vertical-align: top;
 }
 
@@ -219,7 +219,7 @@
 .sp-settings-panel h2 {
     margin: 26px 0 6px;
     padding-top: 20px;
-    border-top: 1px solid #eef1f6;
+    border-top: 1px solid var(--sp-theme-border-subtle);
     color: var(--sp-set-ink);
     font-size: 15px;
     font-weight: 700;
@@ -238,17 +238,17 @@
 .sp-settings-panel input[type="email"],
 .sp-settings-panel input[type="text"],
 .sp-settings-panel select {
-    border: 1px solid #d7deea;
+    border: 1px solid var(--sp-theme-border-strong);
     border-radius: 8px;
-    background-color: #fff;
-    color: #202c40;
+    background-color: var(--sp-theme-surface);
+    color: var(--sp-theme-ink);
     box-shadow: 0 1px 2px rgba(20, 35, 60, 0.025);
 }
 
 .sp-settings-panel input:focus,
 .sp-settings-panel select:focus {
-    border-color: #8ba1f2;
-    box-shadow: 0 0 0 3px rgba(56, 88, 214, 0.12);
+    border-color: var(--sp-theme-brand-line);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--sp-theme-brand) 12%, transparent);
     outline: none;
 }
 
@@ -273,7 +273,7 @@
     justify-content: space-between;
     gap: 12px;
     padding: 3px 3px 0;
-    color: #929bab;
+    color: var(--sp-theme-faint);
     font-size: 10px;
 }
 
@@ -281,7 +281,7 @@
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    color: #7f8a9e;
+    color: var(--sp-theme-muted);
     font-weight: 700;
 }
 
@@ -289,8 +289,8 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: #6cbf92;
-    box-shadow: 0 0 0 3px #eaf8f0;
+    background: var(--sp-theme-success);
+    box-shadow: 0 0 0 3px var(--sp-theme-success-soft);
 }
 
 /* Responsive ---------------------------------------------------------------- */

@@ -10,6 +10,10 @@
  * screen; only a teacher assigned to the class may tick its topics, and
  * students read the result.
  *
+ * The curriculum now supports headings: a heading row has a `group_title` set
+ * and `parent_id` null, while topic rows have `parent_id` pointing at their
+ * heading. Marking a heading complete marks every topic beneath it.
+ *
  * @package StudentPortal
  */
 
@@ -18,10 +22,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * The ordered outline of a course.
+ * The ordered outline of a course, grouped by headings.
  *
  * @param int $course_id Course id.
- * @return object[] Items ordered by position.
+ * @return array[] List of items, each with 'is_heading', 'title', 'detail',
+ *                 'id', 'parent_id', 'group_title', 'topics' (for headings),
+ *                 'position' keys.
  */
 function sp_get_curriculum( $course_id ) {
 	global $wpdb;
@@ -34,6 +40,88 @@ function sp_get_curriculum( $course_id ) {
 			(int) $course_id
 		)
 	);
+}
+
+/**
+ * The ordered outline of a course, structured with headings and their topics.
+ *
+ * @param int $course_id Course id.
+ * @return array[] List of heading groups with 'id', 'title', 'group_title',
+ *                 'position', 'topics' (array of topic items).
+ */
+function sp_get_curriculum_grouped( $course_id ) {
+	$items = sp_get_curriculum( $course_id );
+
+	$headings = array();
+	$topics  = array();
+
+	foreach ( $items as $item ) {
+		if ( ! empty( $item->group_title ) ) {
+			// This is a heading row.
+			$headings[] = array(
+				'id'         => (int) $item->id,
+				'title'      => $item->title,
+				'group_title' => $item->group_title,
+				'position'   => (int) $item->position,
+				'topics'     => array(),
+			);
+		} else {
+			// This is a topic row.
+			$topics[] = $item;
+		}
+	}
+
+	// Assign topics to their headings based on parent_id.
+	$heading_map = array();
+
+	foreach ( $headings as $heading ) {
+		$heading_map[ $heading['id'] ] = &$heading;
+	}
+
+	foreach ( $topics as $topic ) {
+		$parent_id = (int) $topic->parent_id;
+
+		if ( isset( $heading_map[ $parent_id ] ) ) {
+			$heading_map[ $parent_id ]['topics'][] = array(
+				'id'      => (int) $topic->id,
+				'title'   => $topic->title,
+				'detail'  => $topic->detail,
+				'position' => (int) $topic->position,
+			);
+		} else {
+			// Topic without a heading - add to first heading or create orphan group.
+			if ( empty( $headings ) ) {
+				// No headings exist - treat all topics as under one implicit group.
+				$headings[] = array(
+					'id'         => 0,
+					'title'      => '',
+					'group_title' => '',
+					'position'   => 0,
+					'topics'     => array(),
+				);
+				$heading_map[ 0 ] = &$headings[0];
+			}
+			$heading_map[ 0 ]['topics'][] = array(
+				'id'      => (int) $topic->id,
+				'title'   => $topic->title,
+				'detail'  => $topic->detail,
+				'position' => (int) $topic->position,
+			);
+		}
+	}
+
+	// Sort headings by position and topics within each heading by position.
+	usort( $headings, function ( $a, $b ) {
+		return $a['position'] - $b['position'];
+	} );
+
+	foreach ( $headings as &$heading ) {
+		usort( $heading['topics'], function ( $a, $b ) {
+			return $a['position'] - $b['position'];
+		} );
+	}
+
+	return $headings;
 }
 
 /**
@@ -75,9 +163,9 @@ function sp_count_curriculum( $course_id ) {
 }
 
 /**
- * Create or update an outline item.
+ * Create or update an outline item (heading or topic).
  *
- * @param array $args id, course_id, title, detail.
+ * @param array $args id, course_id, title, detail, is_heading, parent_id, group_title.
  * @return int|WP_Error Item id on success.
  */
 function sp_save_curriculum( $args ) {
@@ -86,16 +174,22 @@ function sp_save_curriculum( $args ) {
 	$args = wp_parse_args(
 		$args,
 		array(
-			'id'        => 0,
-			'course_id' => 0,
-			'title'     => '',
-			'detail'    => '',
+			'id'         => 0,
+			'course_id'  => 0,
+			'title'      => '',
+			'detail'     => '',
+			'is_heading' => false,
+			'parent_id'  => 0,
+			'group_title' => '',
 		)
 	);
 
-	$course_id = (int) $args['course_id'];
-	$title     = sanitize_text_field( $args['title'] );
-	$detail    = sanitize_textarea_field( $args['detail'] );
+	$course_id  = (int) $args['course_id'];
+	$title      = sanitize_text_field( $args['title'] );
+	$detail     = sanitize_textarea_field( $args['detail'] );
+	$is_heading = ! empty( $args['is_heading'] );
+	$parent_id  = (int) $args['parent_id'];
+	$group_title = $is_heading ? sanitize_text_field( $args['group_title'] ) : '';
 
 	if ( '' === $title ) {
 		return new WP_Error( 'sp_no_title', 'Enter a topic title.' );
@@ -105,12 +199,32 @@ function sp_save_curriculum( $args ) {
 		return new WP_Error( 'sp_no_course', 'That course no longer exists.' );
 	}
 
+	// If this is a heading, require a group_title.
+	if ( $is_heading && '' === $group_title ) {
+		return new WP_Error( 'sp_no_group_title', 'Enter a heading title.' );
+	}
+
+	// If this is a topic with a parent, validate the parent exists and belongs to this course.
+	if ( ! $is_heading && $parent_id > 0 ) {
+		$parent = sp_get_curriculum_item( $parent_id );
+
+		if ( ! $parent ) {
+			return new WP_Error( 'sp_no_parent', 'The selected heading no longer exists.' );
+		}
+
+		if ( (int) $parent->course_id !== $course_id ) {
+			return new WP_Error( 'sp_wrong_course', 'That heading belongs to a different course.' );
+		}
+	}
+
 	$data   = array(
-		'course_id' => $course_id,
-		'title'     => $title,
-		'detail'    => $detail ? $detail : null,
+		'course_id'  => $course_id,
+		'title'      => $title,
+		'detail'     => $detail ? $detail : null,
+		'parent_id'  => $is_heading ? null : ( $parent_id > 0 ? $parent_id : null ),
+		'group_title' => $is_heading ? $group_title : null,
 	);
-	$format = array( '%d', '%s', '%s' );
+	$format = array( '%d', '%s', '%s', '%d', '%s' );
 	$item_id = (int) $args['id'];
 
 	if ( $item_id > 0 ) {
@@ -135,7 +249,7 @@ function sp_save_curriculum( $args ) {
 		)
 	);
 
-	$data['position']  = $position;
+	$data['position']   = $position;
 	$data['created_by'] = get_current_user_id();
 
 	$wpdb->insert( sp_table( 'curriculum' ), $data, array_merge( $format, array( '%d', '%d' ) ) );
@@ -150,6 +264,9 @@ function sp_save_curriculum( $args ) {
 /**
  * Delete an outline item and every coverage row recorded against it.
  *
+ * A heading's child topics are detached (parent_id -> null) rather than
+ * deleted, so removing a section never silently destroys the lessons under it.
+ *
  * @param int $item_id Item id.
  * @return true|WP_Error
  */
@@ -162,12 +279,40 @@ function sp_delete_curriculum_item( $item_id ) {
 		return new WP_Error( 'sp_no_item', 'That outline item no longer exists.' );
 	}
 
+	// Detach any children first so they fall back to top level, not an orphan id.
+	$wpdb->update(
+		sp_table( 'curriculum' ),
+		array( 'parent_id' => null ),
+		array( 'parent_id' => (int) $item->id ),
+		array( '%d' ),
+		array( '%d' )
+	);
+
 	$wpdb->delete( sp_table( 'curriculum_progress' ), array( 'item_id' => (int) $item->id ), array( '%d' ) );
 	$wpdb->delete( sp_table( 'curriculum' ), array( 'id' => (int) $item->id ), array( '%d' ) );
 
 	sp_log_activity( 'curriculum.deleted', 'course', (int) $item->course_id, $item->title );
 
 	return true;
+}
+
+/**
+ * The heading title a topic sits under, resolved from its parent_id.
+ *
+ * Used by the wp-admin outline list to label nested topics. Returns an empty
+ * string when the item has no parent or the parent no longer exists.
+ *
+ * @param int $parent_id Parent heading item id.
+ * @return string
+ */
+function sp_curriculum_item_heading_title( $parent_id ) {
+	$parent = $parent_id ? sp_get_curriculum_item( (int) $parent_id ) : null;
+
+	if ( ! $parent ) {
+		return '';
+	}
+
+	return ! empty( $parent->group_title ) ? (string) $parent->group_title : (string) $parent->title;
 }
 
 /**
@@ -269,7 +414,12 @@ function sp_get_class_progress( $class_id ) {
 }
 
 /**
- * Tick a topic as covered, or untick it.
+ * Tick a topic or heading as covered, or untick it.
+ *
+ * When a heading is marked, all topics beneath it are also marked (cascade).
+ * When a heading is unmarked, all topics beneath it are also unmarked.
+ * When a topic is marked/unmarked, any parent heading is updated to reflect
+ * partial or full completion.
  *
  * The item must belong to the same course the class teaches — a stale form
  * posting an id from another course is rejected rather than recorded.
@@ -297,6 +447,53 @@ function sp_toggle_curriculum_item( $class_id, $item_id, $user_id ) {
 		return new WP_Error( 'sp_wrong_course', 'That topic belongs to a different course.' );
 	}
 
+	$is_heading = ! empty( $item->group_title );
+
+	if ( $is_heading ) {
+		// Cascade: get all topic ids under this heading.
+		$topic_ids = sp_get_topic_ids_for_heading( (int) $item_id );
+		$all_ids   = array_merge( array( (int) $item_id ), $topic_ids );
+
+		$existing = $wpdb->get_col(
+			$wpdb->prepare(
+				'SELECT id FROM ' . sp_table( 'curriculum_progress' ) . ' WHERE class_id = %d AND item_id IN (' . implode( ',', array_fill( 0, count( $all_ids ), '%d' ) ) . ')',
+				(int) $class_id,
+				...$all_ids
+			)
+		);
+
+		if ( $existing ) {
+			// Unmark the heading and all its topics.
+			foreach ( $all_ids as $id ) {
+				$wpdb->delete( sp_table( 'curriculum_progress' ), array( 'class_id' => (int) $class_id, 'item_id' => $id ), array( '%d', '%d' ) );
+			}
+
+			sp_log_activity( 'curriculum.unmarked', 'class', (int) $class_id, $item->title );
+
+			return 'unmarked';
+		}
+
+		// Mark the heading and all its topics.
+		$now = current_time( 'mysql' );
+		foreach ( $all_ids as $id ) {
+			$wpdb->insert(
+				sp_table( 'curriculum_progress' ),
+				array(
+					'class_id'     => (int) $class_id,
+					'item_id'      => $id,
+					'completed_at' => $now,
+					'completed_by' => (int) $user_id,
+				),
+				array( '%d', '%d', '%s', '%d' )
+			);
+		}
+
+		sp_log_activity( 'curriculum.marked', 'class', (int) $class_id, $item->title );
+
+		return 'marked';
+	}
+
+	// Regular topic toggle.
 	$existing = $wpdb->get_var(
 		$wpdb->prepare(
 			'SELECT id FROM ' . sp_table( 'curriculum_progress' ) . ' WHERE class_id = %d AND item_id = %d', // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from sp_table().
@@ -330,7 +527,27 @@ function sp_toggle_curriculum_item( $class_id, $item_id, $user_id ) {
 }
 
 /**
+ * Get all topic ids that belong to a heading.
+ *
+ * @param int $heading_id Heading item id.
+ * @return int[] List of topic ids.
+ */
+function sp_get_topic_ids_for_heading( $heading_id ) {
+	global $wpdb;
+
+	$table = sp_table( 'curriculum' );
+
+	return $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT id FROM {$table} WHERE parent_id = %d ORDER BY position ASC", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from sp_table().
+			(int) $heading_id
+		)
+	);
+}
+
+/**
  * Coverage totals for one class against its course's outline.
+ * Counts topics only (not headings) towards the total.
  *
  * @param int $course_id Course id.
  * @param int $class_id  Class id.
@@ -339,10 +556,15 @@ function sp_toggle_curriculum_item( $class_id, $item_id, $user_id ) {
 function sp_curriculum_summary( $course_id, $class_id ) {
 	$items    = sp_get_curriculum( $course_id );
 	$progress = sp_get_class_progress( $class_id );
-	$total    = count( $items );
+
+	// Count only topics (those without group_title), not headings.
+	$topics   = array_filter( $items, function ( $item ) {
+		return empty( $item->group_title );
+	} );
+	$total    = count( $topics );
 	$done     = 0;
 
-	foreach ( $items as $item ) {
+	foreach ( $topics as $item ) {
 		if ( isset( $progress[ (int) $item->id ] ) ) {
 			++$done;
 		}
