@@ -134,6 +134,26 @@
   --sp-theme-muted: #64748b; /* labels, secondary text */
   --sp-theme-faint: #94a3b8; /* placeholders, captions, disabled */
 
+  /* ── Slate ──────────────────────────────────────────────────────────────
+   * Cool-grey accent for the profile banner and hover states.
+   */
+  --sp-theme-slate-50: #f8fafc;
+  --sp-theme-slate-100: #f1f5f9;
+  --sp-theme-slate-200: #e2e8f0;
+  --sp-theme-slate-300: #cbd5e1;
+  --sp-theme-slate-400: #94a3b8;
+  --sp-theme-slate-500: #64748b;
+  --sp-theme-slate-600: #475569;
+  --sp-theme-slate-700: #334155;
+  --sp-theme-slate-800: #1e293b;
+  --sp-theme-slate-900: #0f172a;
+
+  --sp-theme-hero-from: var(--sp-theme-slate-900);
+  --sp-theme-hero-to: var(--sp-theme-slate-700);
+  --sp-theme-hover-bg: var(--sp-theme-slate-100);
+  --sp-theme-hover-border: var(--sp-theme-slate-300);
+  --sp-theme-hover-ink: var(--sp-theme-slate-800);
+
   /* ── Surfaces ───────────────────────────────────────────────────────────
    * Page canvas down to the faintest wash used on cards.
    */

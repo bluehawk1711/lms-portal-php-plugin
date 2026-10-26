@@ -298,14 +298,73 @@
   position: relative;
 }
 
-.sp-portal-title {
+/* Breadcrumb + active-course header (replaces the old single title). */
+.sp-crumbs {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-right: auto;
+  min-width: 0;
 }
 
-.sp-portal-title {
-  font-size: clamp(1.35rem, 2vw, 1.7rem);
+.sp-crumb {
+  border-radius: var(--sp-radius-sm);
+  color: var(--sp-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.sp-crumb:hover,
+.sp-crumb:focus-visible {
+  color: var(--sp-text);
+  text-decoration: underline;
+}
+
+.sp-crumb-sep {
+  color: var(--sp-border);
+  font-size: 0.9rem;
+  user-select: none;
+}
+
+.sp-crumb-current {
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  font-weight: 700;
   letter-spacing: -0.015em;
+  line-height: 1.2;
   margin: 0;
 }
+
+.sp-course-pill {
+  align-items: center;
+  background: var(--sp-surface);
+  border: 1px solid var(--sp-border);
+  border-radius: 999px;
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 0.5rem;
+  max-width: 100%;
+  padding: 0.35rem 0.75rem;
+}
+
+.sp-course-dot {
+  background: var(--sp-good);
+  border-radius: 50%;
+  flex: 0 0 auto;
+  height: 0.5rem;
+  width: 0.5rem;
+}
+
+.sp-course-pill-text {
+  color: var(--sp-text);
+  font-size: 0.78rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .sp-notice-bell {
   align-items: center;
   background: transparent;
@@ -318,13 +377,14 @@
   gap: 0.4rem;
   justify-content: center;
   line-height: 1;
-  margin-left: auto;
+  margin-left: 0;
   padding: 0.45rem 0.6rem;
   position: relative;
   transition: border-color 0.15s ease, background 0.15s ease;
 }
 
 .sp-notice-bell:hover {
+  color: var(--sp-primary);
   background: var(--sp-primary-soft);
   border-color: var(--sp-primary);
 }
@@ -646,7 +706,7 @@ body.sp-standalone h4 {
   bottom: 0;
   right: 0; */
   height: auto;
-  max-height: 88vh;
+  max-height: 78vh;
   object-fit: contain;
   width: 100%;
 }
@@ -790,9 +850,9 @@ body.sp-standalone h4 {
   text-align: center;
 }
 
-.sp-student-portal .sp-portal-title {
-  font-weight: 750;
-}
+/* .sp-student-portal .sp-crumb-current {
+  font-weight: 800;
+} */
 
 .sp-student-portal .sp-portal-nav-link:hover {
   transform: translateX(2px);

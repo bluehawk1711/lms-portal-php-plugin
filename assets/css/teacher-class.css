@@ -174,13 +174,14 @@
   padding: clamp(20px, 3vw, 28px) clamp(20px, 3vw, 32px);
   border: 1px solid color-mix(in srgb, var(--sp-border) 80%, transparent);
   border-radius: var(--sp-ui-radius);
-  background:
+  /* background:
     radial-gradient(
       circle at 100% 0%,
       color-mix(in srgb, var(--sp-brand) 8%, transparent) 0%,
       transparent 38%
     ),
-    linear-gradient(180deg, var(--sp-surface) 0%, var(--sp-surface-alt) 100%);
+    linear-gradient(180deg, var(--sp-surface) 0%, var(--sp-surface-alt) 100%); */
+    background: var(--sp-surface);
   box-shadow: var(--sp-ui-shadow);
 }
 
@@ -192,11 +193,11 @@
   width: 280px;
   height: 280px;
   border-radius: 50%;
-  background: radial-gradient(
+  /* background: radial-gradient(
     circle,
     color-mix(in srgb, var(--sp-brand) 12%, transparent) 0%,
     transparent 60%
-  );
+  ); */
   filter: blur(40px);
   pointer-events: none;
   z-index: 0;
@@ -1187,6 +1188,7 @@
   border-radius: var(--sp-ui-radius-md);
   background: var(--sp-surface);
   box-shadow: var(--sp-ui-shadow-pop);
+  z-index: 1000;
 }
 
 .sp-teacher-portal .sp-row-menu-pop a {

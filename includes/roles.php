@@ -33,6 +33,13 @@ function sp_install_roles() {
 
 		add_role( $slug, $label, $caps );
 	}
+
+	// Grant the admin cap used to gate the portal's admin screens even when
+	// the Certificate Manager plugin (which normally provides it) is absent.
+	$admin = get_role( 'administrator' );
+	if ( $admin instanceof WP_Role ) {
+		$admin->add_cap( 'manage_certificates' );
+	}
 }
 
 /**

@@ -28,41 +28,26 @@
   align-items: center;
   background: linear-gradient(
     135deg,
-    var(--sp-primary, var(--sp-theme-brand-deep)) 0%,
-    var(--sp-primary-dark, var(--sp-theme-brand-ink)) 100%
+    var(--sp-theme-hero-from, #0f172a) 0%,
+    var(--sp-theme-hero-to, #334155) 100%
   );
+  border: 1px solid var(--sp-theme-slate-700, #334155);
   border-radius: var(--sp-radius, 12px);
-  box-shadow: var(--sp-shadow, 0 8px 24px rgba(15, 30, 70, 0.14));
+  box-shadow: 0 16px 32px -14px rgba(15, 23, 42, 0.5);
   color: var(--sp-theme-on-brand);
   display: grid;
   gap: 1.25rem;
   grid-template-columns: auto 1fr auto;
   margin-bottom: 1.25rem;
   padding: 1.5rem;
-  position: relative;
-  overflow: hidden;
-}
-.sp-hero::after {
-  background: radial-gradient(
-    circle at 100% 0,
-    rgba(255, 255, 255, 0.16),
-    transparent 55%
-  );
-  content: "";
-  inset: 0;
-  pointer-events: none;
-  position: absolute;
-}
-.sp-hero > * {
-  position: relative;
-  z-index: 1;
 }
 
 .sp-avatar {
   align-items: center;
-  background: rgba(255, 255, 255, 0.18);
-  border: 2px solid rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid var(--sp-theme-brand-bright, #ff9933);
   border-radius: 50%;
+  box-shadow: 0 0 0 4px rgba(255, 153, 51, 0.15);
   display: flex;
   font-size: 1.6rem;
   font-weight: 700;
@@ -86,7 +71,7 @@
   margin: 0;
 }
 .sp-hero-meta {
-  color: rgba(255, 255, 255, 0.82);
+  color: var(--sp-theme-slate-300, #cbd5e1);
   display: flex;
   flex-wrap: wrap;
   font-size: 0.92rem;
@@ -121,14 +106,19 @@
   margin: 0;
 }
 .sp-stat {
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(148, 163, 184, 0.28);
   border-radius: 10px;
   min-width: 112px;
   padding: 0.65rem 0.9rem;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.sp-stat:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--sp-theme-brand-bright, #ff9933);
 }
 .sp-stat dt {
-  color: rgba(255, 255, 255, 0.78);
+  color: var(--sp-theme-slate-300, #cbd5e1);
   font-size: 0.74rem;
   letter-spacing: 0.03em;
   text-transform: uppercase;
@@ -453,6 +443,72 @@
   font-size: 0.85rem;
   margin-right: 0.6rem;
   padding: 0.3rem 0.7rem;
+}
+
+/* ---------- Slate hover accents ---------- */
+.sp-card,
+.sp-enrol,
+.sp-enrol-icon {
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    color 0.15s ease;
+}
+.sp-card:hover {
+  border-color: var(--sp-theme-hover-border, #cbd5e1);
+  box-shadow: var(--sp-theme-shadow-md, 0 10px 25px -5px rgba(15, 23, 42, 0.06));
+}
+
+.sp-enrol:hover {
+  background: var(--sp-theme-hover-bg, #f1f5f9);
+  border-color: var(--sp-theme-hover-border, #cbd5e1);
+}
+.sp-enrol:hover .sp-enrol-icon {
+  background: var(--sp-theme-slate-800, #1e293b);
+  color: var(--sp-theme-brand-bright, #ff9933);
+}
+
+.sp-copy:hover:not(.is-copied) {
+  background: var(--sp-theme-slate-200, #e2e8f0);
+  color: var(--sp-theme-hover-ink, #1e293b);
+}
+
+.sp-link:hover {
+  color: var(--sp-theme-hover-ink, #1e293b);
+  text-decoration: underline;
+}
+
+/* Inputs: slate border on hover, saffron ring stays for focus */
+.sp-field :is(input:not([type="checkbox"]), select, textarea):not(:focus):not(:disabled):hover {
+  border-color: var(--sp-theme-slate-500, #64748b);
+}
+.sp-field input[type="file"]::file-selector-button:hover {
+  background: var(--sp-theme-slate-200, #e2e8f0);
+  border-color: var(--sp-theme-slate-400, #94a3b8);
+}
+
+/* Buttons */
+.sp-portal .sp-btn-primary:hover:not([disabled]),
+.sp-portal .sp-btn-primary:focus-visible {
+  background: var(--sp-theme-slate-800, #1e293b);
+  border-color: var(--sp-theme-slate-800, #1e293b);
+  color: var(--sp-theme-on-brand);
+}
+.sp-portal .sp-btn-ghost:hover,
+.sp-portal .sp-btn-ghost:focus-visible {
+  background: var(--sp-theme-hover-bg, #f1f5f9);
+  border-color: var(--sp-theme-hover-border, #cbd5e1);
+  color: var(--sp-theme-slate-900, #0f172a);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sp-card,
+  .sp-enrol,
+  .sp-enrol-icon,
+  .sp-stat {
+    transition: none;
+  }
 }
 
 /* The hero avatar shows the photo once the student has uploaded one. */

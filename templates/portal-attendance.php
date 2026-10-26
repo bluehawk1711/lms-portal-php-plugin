@@ -79,7 +79,7 @@ foreach ( $sp_enrollments as $sp_pane_enrol ) {
         </select>
     </div>
 
-    <button type="submit" class="sp-btn sp-btn-quiet sp-class-filter-btn"
+    <button type="submit" class="sp-btn sp-btn-quiet sp-att2-switch-btn"
         style="height: 40px; min-width: 80px; flex-shrink: 0; margin: 0; display: inline-flex; align-items: center; justify-content: center;">
         Switch
     </button>
@@ -106,9 +106,11 @@ foreach ( $sp_enrollments as $sp_pane_enrol ) {
 
         <ul class="sp-chips">
             <li class="sp-chip sp-chip-good">Present
-                <strong><?php echo esc_html( $sp_pane['stats']['present'] ); ?></strong></li>
+                <strong><?php echo esc_html( $sp_pane['stats']['present'] ); ?></strong>
+            </li>
             <li class="sp-chip sp-chip-bad">Absent
-                <strong><?php echo esc_html( $sp_pane['stats']['absent'] ); ?></strong></li>
+                <strong><?php echo esc_html( $sp_pane['stats']['absent'] ); ?></strong>
+            </li>
             <li class="sp-chip sp-chip-warn">Late <strong><?php echo esc_html( $sp_pane['stats']['late'] ); ?></strong>
             </li>
             <li class="sp-chip">Excused <strong><?php echo esc_html( $sp_pane['stats']['excused'] ); ?></strong></li>

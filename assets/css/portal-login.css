@@ -2,6 +2,8 @@
  * portal/login
  * Split from portal.css by private/tools/sp-split-css.php.
  * One stylesheet per template/page; base holds the shared shell and design system.
+ *
+ * Student login: a single centred card on a plain panel (no split hero column).
  */
 
 .sp-notice {
@@ -14,31 +16,71 @@
 
 .sp-notice-error { background: var(--sp-bad-bg); color: var(--sp-bad); }
 
+/* --- Layout: one centred card ------------------------------------------ */
+
 .sp-auth {
-	display: grid;
-	grid-template-columns: minmax(340px, 44%) 1fr;
+	/* Lighter orange palette for the login screens only, so the darker
+	 * portal accent (used across the dashboard) stays untouched. */
+	--sp-accent: #ff8a3d;
+	--sp-accent-dark: #f97316;
+	--sp-accent-ink: #b14e12;
+	--sp-accent-soft: #fff1e6;
+
+	--sp-theme-accent: #ff8a3d;
+	--sp-theme-accent-strong: #f97316;
+	--sp-theme-accent-ink: #b14e12;
+	--sp-theme-accent-soft: #fff1e6;
+
+	align-items: center;
+	background: var(--sp-bg);
+	display: flex;
 	min-height: 100vh;
+	justify-content: center;
+	padding: clamp(1.5rem, 5vw, 3.5rem) 1.25rem;
 }
 
 .sp-auth-panel {
-	align-items: center;
-	background: var(--sp-surface);
 	display: flex;
+	align-items: center;
 	justify-content: center;
-	padding: clamp(2rem, 6vw, 4.5rem);
+	width: 100%;
 }
 
 .sp-auth-card {
+	background: var(--sp-surface);
+	border: 1px solid var(--sp-border);
+	border-radius: var(--sp-radius);
+	box-shadow: var(--sp-shadow);
 	margin: 0;
-	max-width: 400px;
+	max-width: 420px;
+	padding: clamp(1.6rem, 4vw, 2.25rem);
 	width: 100%;
 }
+
+/* --- Brand row --------------------------------------------------------- */
+
+.sp-auth-brand {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+	margin: 0 0 1.6rem;
+}
+
+.sp-auth-logo {
+	display: block;
+	height: auto;
+	max-height: 58px;
+	max-width: 100%;
+	width: auto;
+}
+
+/* --- Headings ---------------------------------------------------------- */
 
 body.sp-standalone .sp-auth-title {
 	color: var(--sp-text);
 	font-family: var(--sp-font);
-	font-size: clamp(1.9rem, 2.6vw, 2.35rem);
-	font-weight: 700;
+	font-size: clamp(1.5rem, 3vw, 1.75rem);
+	font-weight: 800;
 	letter-spacing: -0.02em;
 	line-height: 1.15;
 	margin: 0 0 0.35rem;
@@ -46,71 +88,91 @@ body.sp-standalone .sp-auth-title {
 
 .sp-auth-sub {
 	color: var(--sp-muted);
-	font-size: 0.95rem;
-	margin: 0 0 1.75rem;
+	font-size: 0.92rem;
+	line-height: 1.5;
+	margin: 0 0 1.6rem;
 }
+
+/* --- Form -------------------------------------------------------------- */
 
 .sp-auth-form {
 	display: grid;
-	gap: 1.15rem;
+	gap: 1.1rem;
 }
 
-.sp-float {
+.sp-field {
+	display: grid;
+	gap: 0.45rem;
+}
+
+/* Password field puts its label and "Forgot password?" on one row. */
+.sp-field-head {
+	align-items: baseline;
+	display: flex;
+	gap: 1rem;
+	justify-content: space-between;
+}
+
+body.sp-standalone .sp-auth .sp-field-label {
+	color: var(--sp-text);
+	font-family: var(--sp-font);
+	font-size: 0.85rem;
+	font-weight: 600;
+	line-height: 1.3;
+}
+
+/* --- Inputs: boxed with a leading icon --------------------------------- */
+
+.sp-input {
 	position: relative;
 }
 
-body.sp-standalone .sp-auth .sp-float input {
+.sp-input-icon {
+	color: var(--sp-muted);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	left: 0.85rem;
+	pointer-events: none;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	z-index: 1;
+}
+
+body.sp-standalone .sp-auth .sp-input input {
 	-webkit-appearance: none;
 	appearance: none;
-	background-color: transparent;
-	border: 0;
-	border-bottom: 1px solid var(--sp-border);
-	border-radius: 0;
+	background: var(--sp-surface);
+	border: 1px solid var(--sp-border);
+	border-radius: 10px;
 	box-shadow: none;
 	color: var(--sp-text);
 	display: block;
 	font-family: var(--sp-font);
-	font-size: 1rem;
+	font-size: 0.95rem;
 	font-weight: 400;
-	height: auto;
+	height: 2.9rem;
 	line-height: 1.35;
 	margin: 0;
-	padding: 1.85rem 0 0.6rem;
+	padding: 0 0.9rem 0 2.6rem;
 	transition: border-color 0.16s ease, box-shadow 0.16s ease;
 	width: 100%;
 }
 
-body.sp-standalone .sp-auth .sp-float input::placeholder {
-	color: transparent;
+body.sp-standalone .sp-auth .sp-input input::placeholder {
+	color: var(--sp-faint);
+	opacity: 1;
 }
 
-body.sp-standalone .sp-auth .sp-float input:focus {
-	border-bottom-color: var(--sp-accent);
-	box-shadow: 0 1px 0 0 var(--sp-accent);
+body.sp-standalone .sp-auth .sp-input input:focus {
+	border-color: var(--sp-accent);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--sp-theme-accent) 18%, transparent);
 	outline: none;
 }
 
-body.sp-standalone .sp-auth .sp-float label {
-	color: var(--sp-muted);
-	font-family: var(--sp-font);
-	font-size: 1rem;
-	font-weight: 500;
-	left: 0;
-	line-height: 1.2;
-	pointer-events: none;
-	position: absolute;
-	top: 1.7rem;
-	transform-origin: left top;
-	transition: color 0.16s ease, transform 0.16s ease;
-}
-
-body.sp-standalone .sp-auth .sp-float input:focus + label,
-body.sp-standalone .sp-auth .sp-float input:not(:placeholder-shown) + label {
-	color: var(--sp-accent);
-	transform: translateY(-1.45rem) scale(0.74);
-}
-
-body.sp-standalone .sp-auth .sp-float-pw input {
+/* Reserve room for the password reveal toggle. */
+body.sp-standalone .sp-auth .sp-input-pw input {
 	padding-right: 2.9rem;
 }
 
@@ -123,13 +185,14 @@ body.sp-standalone .sp-auth input:-webkit-autofill:focus {
 	transition: background-color 100000s ease-out;
 }
 
+/* --- Password reveal toggle -------------------------------------------- */
+
 body.sp-standalone .sp-auth .sp-pw-toggle {
 	-webkit-appearance: none;
 	appearance: none;
 	background: transparent;
 	border: 0;
 	border-radius: 6px;
-	bottom: 0.4rem;
 	color: var(--sp-muted);
 	cursor: pointer;
 	display: grid;
@@ -140,8 +203,9 @@ body.sp-standalone .sp-auth .sp-pw-toggle {
 	padding: 0;
 	place-items: center;
 	position: absolute;
-	right: 0;
-	top: auto;
+	right: 0.4rem;
+	top: 50%;
+	transform: translateY(-50%);
 	transition: background-color 0.16s ease, color 0.16s ease;
 	width: 2rem;
 }
@@ -159,35 +223,34 @@ body.sp-standalone .sp-auth .sp-pw-icon {
 	pointer-events: none;
 }
 
-body.sp-standalone .sp-auth .sp-auth-row {
-	align-items: center;
-	display: flex;
-	font-size: 0.9rem;
-	gap: 1rem;
-	justify-content: space-between;
-}
+/* --- Remember-me checkbox ---------------------------------------------- */
 
 body.sp-standalone .sp-auth .sp-check {
 	align-items: center;
 	color: var(--sp-muted);
+	cursor: pointer;
 	display: inline-flex;
 	font-family: var(--sp-font);
-	font-size: 0.9rem;
+	font-size: 0.88rem;
 	font-weight: 400;
-	gap: 0.45rem;
+	gap: 0.55rem;
 	line-height: 1.3;
+	margin: 0.1rem 0 0.1rem;
 }
 
 body.sp-standalone .sp-auth .sp-check input {
 	accent-color: var(--sp-accent);
 	flex: 0 0 auto;
-	height: 1rem;
-	width: 1rem;
+	height: 1.05rem;
+	width: 1.05rem;
 }
+
+/* --- Links ------------------------------------------------------------- */
 
 .sp-auth-link,
 .sp-auth-alt a {
-	color: var(--sp-muted);
+	color: var(--sp-accent-dark);
+	font-weight: 600;
 	text-decoration: none;
 }
 
@@ -195,9 +258,10 @@ body.sp-standalone .sp-auth .sp-check input {
 .sp-auth-link:focus-visible,
 .sp-auth-alt a:hover,
 .sp-auth-alt a:focus-visible {
-	color: var(--sp-accent-dark);
 	text-decoration: underline;
 }
+
+/* --- Submit button ----------------------------------------------------- */
 
 body.sp-standalone .sp-auth .sp-auth-submit {
 	-webkit-appearance: none;
@@ -205,14 +269,14 @@ body.sp-standalone .sp-auth .sp-auth-submit {
 	appearance: none;
 	background: var(--sp-accent);
 	border: 0;
-	border-radius: 8px;
+	border-radius: 10px;
 	color: var(--sp-theme-on-brand);
 	cursor: pointer;
 	display: inline-flex;
 	font-family: var(--sp-font);
 	font-size: 1rem;
 	font-weight: 600;
-	gap: 0.55rem;
+	gap: 0.5rem;
 	justify-content: center;
 	line-height: 1.35;
 	margin-top: 0.35rem;
@@ -254,16 +318,13 @@ body.sp-standalone .sp-auth .sp-auth-submit.is-loading::before {
 	width: 1rem;
 }
 
+/* --- Footer links ------------------------------------------------------ */
+
 .sp-auth-alt {
 	color: var(--sp-muted);
 	font-size: 0.88rem;
-	margin: 1.75rem 0 0;
+	margin: 1.6rem 0 0;
 	text-align: center;
-}
-
-.sp-auth-alt a {
-	color: var(--sp-text);
-	font-weight: 600;
 }
 
 .sp-auth .sp-notice {
@@ -274,72 +335,7 @@ body.sp-standalone .sp-auth .sp-auth-submit.is-loading::before {
 	margin-top: 1.25rem;
 }
 
-.sp-auth-hero {
-	align-items: center;
-	background: var(--sp-accent);
-	color: var(--sp-theme-on-brand);
-	display: flex;
-	overflow: hidden;
-	padding: clamp(2rem, 5vw, 4rem);
-	position: relative;
-}
-
-.sp-auth-hero::before,
-.sp-auth-hero::after {
-	border-radius: 48% 52% 60% 40% / 45% 40% 60% 55%;
-	content: "";
-	position: absolute;
-}
-
-.sp-auth-hero::before {
-	background: rgba(255, 255, 255, 0.12);
-	height: 460px;
-	right: -90px;
-	top: -130px;
-	width: 460px;
-}
-
-.sp-auth-hero::after {
-	background: rgba(255, 255, 255, 0.09);
-	bottom: -150px;
-	height: 400px;
-	left: -100px;
-	width: 400px;
-}
-
-.sp-auth-hero-inner {
-	margin: 0 auto;
-	max-width: 560px;
-	position: relative;
-	width: 100%;
-	z-index: 1;
-}
-
-body.sp-standalone .sp-auth-hero-title {
-	color: var(--sp-theme-on-brand);
-	font-family: var(--sp-font);
-	font-size: clamp(2rem, 3.4vw, 3.1rem);
-	font-weight: 800;
-	letter-spacing: -0.02em;
-	line-height: 1.06;
-	margin: 0;
-}
-
-.sp-auth-hero-title span {
-	display: block;
-	font-weight: 300;
-	text-transform: capitalize;
-}
-
-.sp-auth-hero-sub {
-	font-size: clamp(0.9rem, 1.2vw, 1.05rem);
-	margin: 0.85rem 0 0;
-	opacity: 0.85;
-}
-
-.sp-auth-art-wrap {
-	margin-top: clamp(1.5rem, 4vw, 3rem);
-}
+/* --- Notices ----------------------------------------------------------- */
 
 .sp-notice {
 	border-radius: var(--sp-radius-sm);
@@ -360,31 +356,15 @@ body.sp-standalone .sp-auth-hero-title {
 	color: var(--sp-theme-danger-strong);
 }
 
-@media (max-width: 900px) {
-	.sp-auth {
-		grid-template-columns: 1fr;
-	}
-
-	.sp-auth-hero {
-		align-items: flex-start;
-		min-height: auto;
-		padding: 1.75rem 1.5rem;
-	}
-
-	.sp-auth-art-wrap {
-		display: none;
-	}
-
-	body.sp-standalone .sp-auth-hero-title {
-		font-size: 1.65rem;
-	}
-
-}
+/* --- Responsive -------------------------------------------------------- */
 
 @media (max-width: 480px) {
-	.sp-auth-panel {
-		padding: 2rem 1.25rem;
+	.sp-auth {
+		padding: 1.25rem;
+	}
+
+	.sp-auth-card {
+		padding: 1.5rem 1.25rem;
 	}
 
 }
-

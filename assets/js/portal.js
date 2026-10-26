@@ -532,17 +532,79 @@
 	 * keeps ?class= in the URL. Without JavaScript the same form falls back to
 	 * a plain reload, so the filter always works.
 	 */
-	function initClassFilter() {
-		var form = document.querySelector( '[data-sp-class-filter]' );
+	function initMaterialsFilter() {
+		var scope = document.querySelector( '[data-sp-materials]' );
 
-		if ( ! form ) {
+		if ( ! scope ) {
 			return;
 		}
 
-		var select = form.querySelector( '[data-sp-class-select]' );
+		var search = scope.querySelector( '[data-mat-search]' );
+		var pills = Array.prototype.slice.call( scope.querySelectorAll( '[data-mat-filter]' ) );
+		var items = Array.prototype.slice.call( scope.querySelectorAll( '[data-mat-item]' ) );
+		var empty = scope.querySelector( '[data-mat-noresult]' );
+
+		if ( ! items.length ) {
+			return;
+		}
+
+		var activeFilter = 'all';
+
+		function apply() {
+			var term = search ? search.value.trim().toLowerCase() : '';
+			var visible = 0;
+
+			items.forEach( function ( item ) {
+				var matchesTerm =
+					! term ||
+					( item.getAttribute( 'data-mat-title' ) || '' ).indexOf( term ) !== -1 ||
+					( item.getAttribute( 'data-mat-class' ) || '' ).toLowerCase().indexOf( term ) !== -1;
+
+				var matchesFilter = true;
+
+				if ( activeFilter !== 'all' ) {
+					var parts = activeFilter.split( ':' );
+					var key = parts[ 0 ] === 'kind' ? 'data-mat-kind' : 'data-mat-class';
+					matchesFilter = item.getAttribute( key ) === parts[ 1 ];
+				}
+
+				var show = matchesTerm && matchesFilter;
+				item.hidden = ! show;
+
+				if ( show ) {
+					visible++;
+				}
+			} );
+
+			if ( empty ) {
+				empty.hidden = visible !== 0;
+			}
+		}
+
+		pills.forEach( function ( pill ) {
+			pill.addEventListener( 'click', function () {
+				activeFilter = pill.getAttribute( 'data-mat-filter' ) || 'all';
+
+				pills.forEach( function ( other ) {
+					var on = other === pill;
+					other.classList.toggle( 'is-active', on );
+					other.setAttribute( 'aria-pressed', on ? 'true' : 'false' );
+				} );
+
+				apply();
+			} );
+		} );
+
+		if ( search ) {
+			search.addEventListener( 'input', apply );
+		}
+	}
+
+	function initClassFilter() {
+		var forms = document.querySelectorAll( '[data-sp-class-filter]' );
 		var panes = document.querySelectorAll( '[data-sp-class-pane]' );
 
-		if ( ! select || ! panes.length ) {
+		if ( ! forms.length || ! panes.length ) {
 			return;
 		}
 
@@ -567,7 +629,10 @@
 				return;
 			}
 
-			select.value = wanted;
+			// Keep every switcher (one per pane) in sync with the active class.
+			Array.prototype.forEach.call( document.querySelectorAll( '[data-sp-class-select]' ), function ( sel ) {
+				sel.value = wanted;
+			} );
 
 			if ( push ) {
 				history.pushState(
@@ -584,14 +649,22 @@
 			return match ? match[1] : '';
 		}
 
-		select.addEventListener( 'change', function () {
-			apply( select.value, true );
-		} );
+		Array.prototype.forEach.call( forms, function ( form ) {
+			var select = form.querySelector( '[data-sp-class-select]' );
 
-		// Without JS this submits ?class= and the server picks the pane.
-		form.addEventListener( 'submit', function ( event ) {
-			event.preventDefault();
-			apply( select.value, false );
+			if ( ! select ) {
+				return;
+			}
+
+			select.addEventListener( 'change', function () {
+				apply( select.value, true );
+			} );
+
+			// Without JS this submits ?class= and the server picks the pane.
+			form.addEventListener( 'submit', function ( event ) {
+				event.preventDefault();
+				apply( select.value, false );
+			} );
 		} );
 
 		window.addEventListener( 'popstate', function ( event ) {
@@ -600,6 +673,91 @@
 			if ( id ) {
 				apply( id, false );
 			}
+		} );
+	}
+
+	function initCurriculumUi() {
+		var panes = document.querySelectorAll( '[data-sp-class-pane]' );
+
+		if ( ! panes.length ) {
+			return;
+		}
+
+		Array.prototype.forEach.call( panes, function ( pane ) {
+			var filters = Array.prototype.slice.call( pane.querySelectorAll( '[data-cur-filter]' ) );
+			var topics = Array.prototype.slice.call( pane.querySelectorAll( '[data-cur-topic]' ) );
+			var modules = Array.prototype.slice.call( pane.querySelectorAll( '[data-cur-module]' ) );
+
+			if ( ! filters.length ) {
+				return;
+			}
+
+			function applyFilter( value ) {
+				topics.forEach( function ( topic ) {
+					var status = topic.getAttribute( 'data-cur-status' );
+
+					topic.hidden = value !== 'all' && status !== value;
+				} );
+
+				if ( 'all' === value ) {
+					modules.forEach( function ( mod ) {
+						mod.hidden = false;
+					} );
+
+					return;
+				}
+
+				// Hide a module card once none of its topics survive the filter.
+				modules.forEach( function ( mod ) {
+					mod.hidden = ! mod.querySelector( '[data-cur-topic]:not([hidden])' );
+				} );
+			}
+
+			filters.forEach( function ( pill ) {
+				pill.addEventListener( 'click', function () {
+					var value = pill.getAttribute( 'data-cur-filter' ) || 'all';
+
+					filters.forEach( function ( other ) {
+						var on = other === pill;
+
+						other.classList.toggle( 'is-active', on );
+						other.setAttribute( 'aria-pressed', on ? 'true' : 'false' );
+					} );
+
+					modules.forEach( function ( mod ) {
+						if ( 'all' === value ) {
+							// Restore the default collapse for untouched modules.
+							mod.classList.toggle( 'is-collapsed', mod.getAttribute( 'data-cur-collapsible' ) === '1' );
+						} else {
+							// Reveal everything so collapse never masks a filtered topic.
+							mod.classList.remove( 'is-collapsed' );
+						}
+					} );
+
+					applyFilter( value );
+				} );
+			} );
+		} );
+
+		document.addEventListener( 'click', function ( event ) {
+			var btn = event.target && event.target.closest ? event.target.closest( '[data-cur-expand]' ) : null;
+
+			if ( ! btn ) {
+				return;
+			}
+
+			var mod = btn.closest( '[data-cur-module]' );
+
+			if ( ! mod ) {
+				return;
+			}
+
+			var collapsed = mod.classList.toggle( 'is-collapsed' );
+
+			btn.setAttribute( 'aria-expanded', collapsed ? 'false' : 'true' );
+			btn.textContent = collapsed
+				? ( btn.getAttribute( 'data-label-collapsed' ) || 'Expand module' )
+				: ( btn.getAttribute( 'data-label-expanded' ) || 'Collapse module' );
 		} );
 	}
 
@@ -613,6 +771,8 @@
 		initQuizNav();
 		initQuizDrawer();
 		initClassFilter();
+		initCurriculumUi();
+		initMaterialsFilter();
 		initExamRunner();
 	}
 } )();

@@ -503,6 +503,7 @@ function sp_save_material( $args ) {
 	);
 
 	$class_id = (int) $args['class_id'];
+	$material_id = (int) $args['id'];
 	$title       = sanitize_text_field( $args['title'] );
 	$kind        = in_array( $args['kind'], array( 'note', 'file' ), true ) ? $args['kind'] : 'note';
 	$status      = in_array( $args['status'], array( 'draft', 'published' ), true ) ? $args['status'] : 'draft';
@@ -514,6 +515,8 @@ function sp_save_material( $args ) {
 	if ( '' === $title ) {
 		return new WP_Error( 'sp_no_title', 'Enter a title.' );
 	}
+
+	$existing = $material_id > 0 ? sp_get_material( $material_id ) : null;
 
 	if ( 'note' === $kind ) {
 		$content = wp_kses_post( $args['content'] );
@@ -528,6 +531,10 @@ function sp_save_material( $args ) {
 		$file_size         = 0;
 	} else {
 		$file_path = sanitize_text_field( $args['file_path'] );
+
+		if ( '' === $file_path && $material_id > 0 && isset( $existing ) && ! empty( $existing->file_path ) ) {
+			$file_path = (string) $existing->file_path;
+		}
 
 		if ( '' === $file_path ) {
 			return new WP_Error( 'sp_no_file', 'Attach a file before saving.' );
@@ -552,7 +559,6 @@ function sp_save_material( $args ) {
 	);
 
 	$formats          = array( '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s' );
-	$material_id      = (int) $args['id'];
 	$just_published   = false;
 
 	if ( $material_id > 0 ) {

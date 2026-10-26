@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name:       Student & Teacher Portal
- * Plugin URI:        https://example.com/student-portal
+ * Plugin URI:        https://gaurav-dadhich-portfolio.vercel.app
  * Description:       Student and teacher portal: accounts, courses, enrollment, attendance, results, course notes and documents. Reads student records from the Certificate Manager plugin without modifying its tables.
- * Version:           0.2.1
+ * Version:           0.2.9
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Gaurav Dadhich 
@@ -57,6 +57,7 @@ register_activation_hook( __FILE__, 'sp_activate' );
 register_deactivation_hook( __FILE__, 'sp_deactivate' );
 
 add_action( 'plugins_loaded', 'sp_maybe_upgrade' );
+add_action( 'plugins_loaded', 'sp_install_roles' );
 add_action( 'init', 'sp_register_rewrite_rules', 5 );
 add_action( 'init', 'sp_maybe_flush_rewrite_rules', 20 );
 

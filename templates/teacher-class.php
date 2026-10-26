@@ -419,7 +419,8 @@
                                 aria-label="<?php echo esc_attr('View ' . $sp_student->full_name); ?>">
                                 <?php echo sp_class_icon('eye'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG helper. ?>
                             </button>
-                            <details class="sp-row-menu">
+                            <!-- TODO: action menu opens inside table requires fix -->
+                            <!-- <details class="sp-row-menu">
                                 <summary class="sp-icon-btn"
                                     aria-label="<?php echo esc_attr('More actions for ' . $sp_student->full_name); ?>">
                                     <?php echo sp_class_icon('dots'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG helper. ?>
@@ -434,7 +435,7 @@
                                         <span>View attendance</span>
                                     </a>
                                 </div>
-                            </details>
+                            </details> -->
                         </td>
                     </tr>
                     <?php endforeach; ?>

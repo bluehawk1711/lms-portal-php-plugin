@@ -74,7 +74,7 @@ function sp_get_curriculum_grouped( $course_id ) {
 	// Assign topics to their headings based on parent_id.
 	$heading_map = array();
 
-	foreach ( $headings as $heading ) {
+	foreach ( $headings as &$heading ) {
 		$heading_map[ $heading['id'] ] = &$heading;
 	}
 
@@ -99,7 +99,17 @@ function sp_get_curriculum_grouped( $course_id ) {
 					'position'   => 0,
 					'topics'     => array(),
 				);
-				$heading_map[ 0 ] = &$headings[0];
+				$heading_map[ 0 ] = &$headings[ count( $headings ) - 1 ];
+			} elseif ( ! isset( $heading_map[ 0 ] ) ) {
+				// Headings exist but this topic has no parent heading - create an orphan group.
+				$headings[] = array(
+					'id'         => 0,
+					'title'      => '',
+					'group_title' => '',
+					'position'   => PHP_INT_MAX,
+					'topics'     => array(),
+				);
+				$heading_map[ 0 ] = &$headings[ count( $headings ) - 1 ];
 			}
 			$heading_map[ 0 ]['topics'][] = array(
 				'id'      => (int) $topic->id,

@@ -1,5 +1,5 @@
 <?php
-/**
+    /**
  * Portal chrome: sidebar shell, top bar and page opening.
  *
  * Three columns around every screen, the layout the mockup asks for: a left
@@ -14,82 +14,86 @@
  * @package StudentPortal
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+    if (! defined('ABSPATH')) {
+    exit;
+    }
 
-$sp_current         = isset( $slug ) ? $slug : 'home';
-$sp_has_rail        = ( 'home' === $sp_current );
-$sp_routes          = sp_portal_routes();
-$sp_nav_current     = isset( $sp_routes[ $sp_current ]['parent'] ) ? $sp_routes[ $sp_current ]['parent'] : $sp_current;
-$sp_user            = wp_get_current_user();
-$sp_portal_notice   = sp_portal_notice();
-$sp_portal_error    = sp_portal_notice( 'sp_notice_error' );
-$sp_title           = isset( $sp_routes[ $sp_nav_current ]['label'] ) ? $sp_routes[ $sp_nav_current ]['label'] : '';
-$sp_display_name    = ( $profile && ! empty( $profile->full_name ) ) ? $profile->full_name : $sp_user->display_name;
-$sp_contact_phone   = trim( (string) sp_setting( 'institute_phone', '' ) );
-$sp_contact_email   = trim( (string) sp_setting( 'institute_email', '' ) );
-$sp_contact_visible = ( '' !== $sp_contact_phone || '' !== $sp_contact_email );
+    $sp_current         = isset($slug) ? $slug : 'home';
+    $sp_has_rail        = ('home' === $sp_current);
+    $sp_routes          = sp_portal_routes();
+    $sp_nav_current     = isset($sp_routes[$sp_current]['parent']) ? $sp_routes[$sp_current]['parent'] : $sp_current;
+    $sp_user            = wp_get_current_user();
+    $sp_portal_notice   = sp_portal_notice();
+    $sp_portal_error    = sp_portal_notice('sp_notice_error');
+    $sp_title           = isset($sp_routes[$sp_nav_current]['label']) ? $sp_routes[$sp_nav_current]['label'] : '';
+    $sp_display_name    = ($profile && ! empty($profile->full_name)) ? $profile->full_name : $sp_user->display_name;
+    $sp_contact_phone   = trim((string) sp_setting('institute_phone', ''));
+    $sp_contact_email   = trim((string) sp_setting('institute_email', ''));
+    $sp_contact_visible = ('' !== $sp_contact_phone || '' !== $sp_contact_email);
+
+    // Top bar context: the student's current active course, shown as a pill.
+    $sp_top_enrollments = (! empty($profile)) ? sp_get_enrollments_for_profile($profile->id, ['active']) : [];
+    $sp_top_course      = (! empty($sp_top_enrollments[0])) ? $sp_top_enrollments[0] : null;
 ?>
 <div class="sp-portal sp-student-portal">
 	<div class="sp-portal-shell<?php echo $sp_has_rail ? ' has-rail' : ' no-rail'; ?>">
 		<aside class="sp-portal-side" id="sp-portal-side">
 			<div class="sp-side-brand">
-				<a class="sp-side-brand-link" href="<?php echo esc_url( sp_portal_url() ); ?>">
+				<a class="sp-side-brand-link" href="<?php echo esc_url(sp_portal_url()); ?>">
 					<span class="sp-side-mark" aria-hidden="true">
-						<?php $sp_logo = get_theme_mod( 'custom_logo' ); ?>
-						<?php if ( $sp_logo ) : ?>
-							<span class="sp-side-mark-img"><?php echo wp_kses_post( $sp_logo ); ?></span>
-						<?php else : ?>
+						<?php $sp_logo = get_theme_mod('custom_logo'); ?>
+						<?php if ($sp_logo): ?>
+							<span class="sp-side-mark-img"><?php echo wp_kses_post($sp_logo); ?></span>
+						<?php else: ?>
 							<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 12 4l9 4.5-9 4.5z" /><path d="M7 11v4.5c0 1.4 2.2 2.5 5 2.5s5-1.1 5-2.5V11" /><path d="M21 8.5V14" /></svg>
 						<?php endif; ?>
 					</span>
 					<span class="sp-side-brand-text">
-						<strong><?php echo esc_html( get_bloginfo( 'name' ) ); ?></strong>
+						<strong><?php echo esc_html(get_bloginfo('name')); ?></strong>
 						<span>Student portal</span>
 					</span>
 				</a>
 			</div>
 
 			<nav id="sp-portal-nav" class="sp-portal-nav" aria-label="Portal sections">
-				<?php foreach ( $sp_routes as $sp_key => $sp_def ) : ?>
-					<?php if ( empty( $sp_def['hidden'] ) ) : ?>
+				<?php foreach ($sp_routes as $sp_key => $sp_def): ?>
+					<?php if (empty($sp_def['hidden'])): ?>
 						<?php $sp_side_active = $sp_key === $sp_nav_current; ?>
 						<a
 							class="sp-portal-nav-link<?php echo $sp_side_active ? ' is-active' : ''; ?>"
-							href="<?php echo esc_url( sp_portal_url( 'home' === $sp_key ? '' : $sp_key ) ); ?>"
+							href="<?php echo esc_url(sp_portal_url('home' === $sp_key ? '' : $sp_key)); ?>"
 							<?php echo $sp_side_active ? ' aria-current="page"' : ''; ?>
 						>
-							<?php echo sp_portal_nav_icon( $sp_key ); // phpcs:ignore WordPress.Security.EscapeOutputOutputNotEscaped -- inline SVG. ?>
-							<span><?php echo esc_html( $sp_def['label'] ); ?></span>
+							<?php echo sp_portal_nav_icon($sp_key); // phpcs:ignore WordPress.Security.EscapeOutputOutputNotEscaped -- inline SVG. ?>
+							<span><?php echo esc_html($sp_def['label']); ?></span>
 						</a>
 					<?php endif; ?>
 				<?php endforeach; ?>
 			</nav>
 
-			<?php if ( $sp_contact_visible ) : ?>
+			<?php if ($sp_contact_visible): ?>
 				<div class="sp-side-contact">
 					<p class="sp-side-contact-title">Need help?</p>
 					<p class="sp-side-contact-text">Contact the office &mdash; we are happy to help.</p>
-					<?php if ( '' !== $sp_contact_phone ) : ?>
-						<a class="sp-side-contact-link" href="tel:<?php echo esc_attr( preg_replace( '/[^0-9+]/', '', $sp_contact_phone ) ); ?>">
-							<?php echo esc_html( $sp_contact_phone ); ?>
+					<?php if ('' !== $sp_contact_phone): ?>
+						<a class="sp-side-contact-link" href="tel:<?php echo esc_attr(preg_replace('/[^0-9+]/', '', $sp_contact_phone)); ?>">
+							<?php echo esc_html($sp_contact_phone); ?>
 						</a>
 					<?php endif; ?>
 					<?php
-					$sp_contact_mail = '' !== $sp_contact_email ? $sp_contact_email : get_option( 'admin_email' );
-					?>
-					<a class="sp-side-contact-link" href="<?php echo esc_url( 'mailto:' . antispambot( $sp_contact_mail ) ); ?>">
-						<?php echo esc_html( antispambot( $sp_contact_mail ) ); ?>
+                        $sp_contact_mail = '' !== $sp_contact_email ? $sp_contact_email : get_option('admin_email');
+                    ?>
+					<a class="sp-side-contact-link" href="<?php echo esc_url('mailto:' . antispambot($sp_contact_mail)); ?>">
+						<?php echo esc_html(antispambot($sp_contact_mail)); ?>
 					</a>
 				</div>
 			<?php endif; ?>
 
 			<div class="sp-side-user">
-				<span class="sp-side-avatar" aria-hidden="true"><?php echo esc_html( sp_portal_initials( $sp_display_name ) ); ?></span>
+				<span class="sp-side-avatar" aria-hidden="true"><?php echo esc_html(sp_portal_initials($sp_display_name)); ?></span>
 				<span class="sp-side-user-text">
-					<strong><?php echo esc_html( $sp_display_name ); ?></strong>
-					<a href="<?php echo esc_url( sp_portal_logout_url( 'student' ) ); ?>">Log out</a>
+					<strong><?php echo esc_html($sp_display_name); ?></strong>
+					<a href="<?php echo esc_url(sp_portal_logout_url('student')); ?>">Log out</a>
 				</span>
 			</div>
 		</aside>
@@ -105,13 +109,203 @@ $sp_contact_visible = ( '' !== $sp_contact_phone || '' !== $sp_contact_email );
 					<span class="sp-nav-toggle-bar" aria-hidden="true"></span>
 				</button>
 
-				<h1 class="sp-portal-title"><?php echo esc_html( $sp_title ); ?></h1>
-			<button type="button" class="sp-notice-bell" id="sp_notice_bell"				aria-label="Notifications"				aria-haspopup="true"				aria-expanded="false"				aria-controls="sp_notice_dropdown">				<span class="sp-notice-bell-icon" aria-hidden="true">🔔</span>				<span class="sp-notice-badge" id="sp_notice_badge" hidden>0</span>			</button>			<div class="sp-notice-dropdown" id="sp_notice_dropdown" hidden>				<div class="sp-notice-dropdown-header">					<span class="sp-notice-dropdown-title">Announcements</span>					<a href="<?php echo esc_url( sp_portal_url( 'notifications' ) ); ?>" class="sp-notice-view-all">View all</a>				</div>				<div class="sp-notice-dropdown-list" id="sp_notice_list"></div>			</div>		</header>		<?php		$sp_ann_rows = sp_announcements_visible( 'student', 20 );		if ( $sp_ann_rows ) :			$sp_notice_payload = array_map(				function ( $row ) {					return array(						'id'      => (int) $row->id,						'title'   => (string) $row->title,						'body'    => (string) $row->body,						'display' => (string) $row->display,					);				},				$sp_ann_rows			);			?>			<script>				document.addEventListener( 'DOMContentLoaded', function () {					var list = document.getElementById( 'sp_notice_list' );					var badge = document.getElementById( 'sp_notice_badge' );					var bell = document.getElementById( 'sp_notice_bell' );					var dropdown = document.getElementById( 'sp_notice_dropdown' );					var announcements = <?php echo wp_json_encode( $sp_notice_payload ); ?>;					var lastSeen = <?php echo (int) sp_announcement_last_seen_id(); ?>;					var ajaxUrl = <?php echo wp_json_encode( admin_url( 'admin-ajax.php' ) ); ?>;					var ajaxNonce = <?php echo wp_json_encode( wp_create_nonce( 'sp_portal_action_dismiss_announcement' ) ); ?>;					function escHtml( str ) {						var div = document.createElement( 'div' );						div.textContent = str;						return div.innerHTML;					}					function unseenCount() {						var n = 0;						announcements.forEach( function ( ann ) {							if ( ann.id > lastSeen ) {								n++;							}						} );						return n;					}					function renderAnnouncements() {						if ( ! announcements || announcements.length === 0 ) {							list.innerHTML = '<div class="sp-notice-empty">No announcements</div>';							badge.hidden = true;							return;						}						var html = '';						announcements.forEach( function ( ann ) {							var bodyText = ann.body.length > 70 ? ann.body.substring( 0, 70 ) + '…' : ann.body;							var isNew = ann.id > lastSeen;							html += '<article class="sp-notice-item' + ( isNew ? ' is-new' : '' ) + '" data-id="' + ann.id + '">' +								'<div class="sp-notice-item-title">' + escHtml( ann.title || 'Announcement' ) + '</div>' +								'<div class="sp-notice-item-body">' + escHtml( bodyText ) + '</div>' +								'</article>';						} );						list.innerHTML = html;						var count = unseenCount();						badge.textContent = count;						badge.hidden = 0 === count;					}					function markSeen() {						var newest = 0;						announcements.forEach( function ( ann ) {							if ( ann.id > newest ) {								newest = ann.id;							}						} );						if ( ! newest || newest <= lastSeen ) {							return;						}						lastSeen = newest;						var body = new URLSearchParams();						body.append( 'action', 'sp_mark_announcements_seen' );						body.append( 'announcement_id', newest );						body.append( 'nonce', ajaxNonce );						fetch( ajaxUrl, {							method: 'POST',							headers: { 'Content-Type': 'application/x-www-form-urlencoded' },							body: body.toString()						} ).catch( function () {} );					}					function setOpen( isOpen ) {						bell.classList.toggle( 'is-open', isOpen );						bell.setAttribute( 'aria-expanded', isOpen ? 'true' : 'false' );						dropdown.hidden = ! isOpen;						if ( isOpen ) {							markSeen();							renderAnnouncements();						}					}					renderAnnouncements();					// A brand new announcement opens the dropdown on its own.					if ( unseenCount() > 0 ) {						setTimeout( function () {							setOpen( true );						}, 350 );					}					bell.addEventListener( 'click', function ( e ) {						e.stopPropagation();						setOpen( ! bell.classList.contains( 'is-open' ) );					} );					document.addEventListener( 'click', function ( e ) {						if ( ! bell.contains( e.target ) && ! dropdown.contains( e.target ) ) {							setOpen( false );						}					} );					document.addEventListener( 'keydown', function ( e ) {						if ( 'Escape' === e.key ) {							setOpen( false );						}					} );				} );			</script>		<?php endif; ?>
+				<nav class="sp-crumbs" aria-label="Breadcrumb">
+					<a class="sp-crumb" href="<?php echo esc_url(sp_portal_url()); ?>">Portal</a>
+					<span class="sp-crumb-sep" aria-hidden="true">/</span>
+					<h1 class="sp-crumb-current"><?php echo esc_html($sp_title); ?></h1>
+				</nav>
+
+				<?php if ($sp_top_course): ?>
+					<div class="sp-course-pill">
+						<span class="sp-course-dot" aria-hidden="true"></span>
+						<span class="sp-course-pill-text">
+							<?php
+                                echo esc_html($sp_top_course->class_title);
+                                if (! empty($sp_top_course->enroll_id)) {
+                                    echo ' (' . esc_html($sp_top_course->enroll_id) . ')';
+                                }
+                            ?>
+							&middot; Active
+						</span>
+					</div>
+				<?php endif; ?>
+			<button
+    type="button"
+    class="sp-notice-bell"
+    id="sp_notice_bell"
+    aria-label="Notifications"
+    aria-haspopup="true"
+    aria-expanded="false"
+    aria-controls="sp_notice_dropdown"
+>
+    <span class="sp-notice-bell-icon" aria-hidden="true">
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            focusable="false"
+        >
+            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" />
+            <path d="M10 21h4" />
+        </svg>
+    </span>
+
+    <span class="sp-notice-badge" id="sp_notice_badge" hidden>0</span>
+</button>
+
+			<div class="sp-notice-dropdown" id="sp_notice_dropdown" hidden>
+				<div class="sp-notice-dropdown-header">
+					<span class="sp-notice-dropdown-title">Announcements</span>
+					<a href="<?php echo esc_url(sp_portal_url('notifications')); ?>" class="sp-notice-view-all">View all</a>
+				</div>
+				<div class="sp-notice-dropdown-list" id="sp_notice_list"></div>
+			</div>
+		</header>
+
+		<?php
+            $sp_ann_rows = sp_announcements_visible('student', 20);
+            if ($sp_ann_rows):
+                $sp_notice_payload = array_map(
+                    function ($row) {
+            return [
+                'id'      => (int) $row->id,
+                'title'   => (string) $row->title,
+                'body'    => (string) $row->body,
+                'display' => (string) $row->display,
+            ];
+                    },
+                    $sp_ann_rows
+                );
+        ?>
+			<script>
+				document.addEventListener( 'DOMContentLoaded', function () {
+					var list = document.getElementById( 'sp_notice_list' );
+					var badge = document.getElementById( 'sp_notice_badge' );
+					var bell = document.getElementById( 'sp_notice_bell' );
+					var dropdown = document.getElementById( 'sp_notice_dropdown' );
+
+					var announcements = <?php echo wp_json_encode($sp_notice_payload); ?>;
+					var lastSeen = <?php echo (int) sp_announcement_last_seen_id(); ?>;
+					var ajaxUrl = <?php echo wp_json_encode(admin_url('admin-ajax.php')); ?>;
+					var ajaxNonce = <?php echo wp_json_encode(wp_create_nonce('sp_portal_action_dismiss_announcement')); ?>;
+
+					function escHtml( str ) {
+						var div = document.createElement( 'div' );
+						div.textContent = str;
+						return div.innerHTML;
+					}
+
+					function unseenCount() {
+						var n = 0;
+						announcements.forEach( function ( ann ) {
+							if ( ann.id > lastSeen ) {
+								n++;
+							}
+						} );
+						return n;
+					}
+
+					function renderAnnouncements() {
+						if ( ! announcements || announcements.length === 0 ) {
+							list.innerHTML = '<div class="sp-notice-empty">No announcements</div>';
+							badge.hidden = true;
+							return;
+						}
+
+						var html = '';
+						announcements.forEach( function ( ann ) {
+							var bodyText = ann.body.length > 70 ? ann.body.substring( 0, 70 ) + '…' : ann.body;
+							var isNew = ann.id > lastSeen;
+
+							html += '<article class="sp-notice-item' + ( isNew ? ' is-new' : '' ) + '" data-id="' + ann.id + '">' +
+								'<div class="sp-notice-item-title">' + escHtml( ann.title || 'Announcement' ) + '</div>' +
+								'<div class="sp-notice-item-body">' + escHtml( bodyText ) + '</div>' +
+								'</article>';
+						} );
+
+						list.innerHTML = html;
+
+						var count = unseenCount();
+						badge.textContent = count;
+						badge.hidden = 0 === count;
+					}
+
+					function markSeen() {
+						var newest = 0;
+						announcements.forEach( function ( ann ) {
+							if ( ann.id > newest ) {
+								newest = ann.id;
+							}
+						} );
+
+						if ( ! newest || newest <= lastSeen ) {
+							return;
+						}
+
+						lastSeen = newest;
+
+						var body = new URLSearchParams();
+						body.append( 'action', 'sp_mark_announcements_seen' );
+						body.append( 'announcement_id', newest );
+						body.append( 'nonce', ajaxNonce );
+
+						fetch( ajaxUrl, {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+							body: body.toString()
+						} ).catch( function () {} );
+					}
+
+					function setOpen( isOpen ) {
+						bell.classList.toggle( 'is-open', isOpen );
+						bell.setAttribute( 'aria-expanded', isOpen ? 'true' : 'false' );
+						dropdown.hidden = ! isOpen;
+
+						if ( isOpen ) {
+							markSeen();
+							renderAnnouncements();
+						}
+					}
+
+					renderAnnouncements();
+
+					// A brand new announcement opens the dropdown on its own.
+					if ( unseenCount() > 0 ) {
+						setTimeout( function () {
+							setOpen( true );
+						}, 350 );
+					}
+
+					bell.addEventListener( 'click', function ( e ) {
+						e.stopPropagation();
+						setOpen( ! bell.classList.contains( 'is-open' ) );
+					} );
+
+					document.addEventListener( 'click', function ( e ) {
+						if ( ! bell.contains( e.target ) && ! dropdown.contains( e.target ) ) {
+							setOpen( false );
+						}
+					} );
+
+					document.addEventListener( 'keydown', function ( e ) {
+						if ( 'Escape' === e.key ) {
+							setOpen( false );
+						}
+					} );
+				} );
+			</script>
+		<?php endif; ?>
 			<main class="sp-portal-main">
-				<?php if ( $sp_portal_error ) : ?>
-					<div class="sp-notice sp-notice-error"><?php echo esc_html( $sp_portal_error ); ?></div>
+				<?php if ($sp_portal_error): ?>
+					<div class="sp-notice sp-notice-error"><?php echo esc_html($sp_portal_error); ?></div>
 				<?php endif; ?>
 
-				<?php if ( $sp_portal_notice ) : ?>
-					<div class="sp-notice sp-notice-good"><?php echo esc_html( $sp_portal_notice ); ?></div>
+				<?php if ($sp_portal_notice): ?>
+					<div class="sp-notice sp-notice-good"><?php echo esc_html($sp_portal_notice); ?></div>
 				<?php endif; ?>
