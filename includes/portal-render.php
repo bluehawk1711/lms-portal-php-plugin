@@ -171,6 +171,47 @@ function sp_render_portal( $slug, $profile ) {
 }
 
 /**
+ * Stop full-page caches from storing portal screens.
+ *
+ * The student and teacher portals render login forms whose nonces are minted
+ * per request. A full-page cache (for example LiteSpeed Cache) that stores one
+ * of these screens and later serves it back will hand the browser a stale
+ * nonce, which then fails wp_verify_nonce() and falsely reports that the
+ * student's session expired. These screens are inherently personalised and must
+ * never be cached.
+ *
+ * Defines DONOTCACHEPAGE, which LiteSpeed Cache (and most other caches) honour,
+ * and fires LiteSpeed's own no-cache action when available.
+ */
+function sp_disable_portal_page_cache() {
+	if ( ! defined( 'DONOTCACHEPAGE' ) ) {
+		define( 'DONOTCACHEPAGE', true );
+	}
+
+	// LiteSpeed Cache reads this action to mark the response uncacheable.
+	do_action( 'litespeed_control_set_nocache', 'Student/teacher portal screen' );
+}
+
+/**
+ * Client-side no-cache guard for attendance screens.
+ *
+ * Attendance is per-user data, so it must never be served from a cache. The
+ * server side is already covered — the portal dispatchers define
+ * DONOTCACHEPAGE and sp_portal_document_start() calls nocache_headers() — but
+ * those run before the attendance template is included, once the response
+ * headers have been sent. This emits the equivalent meta hint so a browser or
+ * intermediary that respects meta-based cache control still refuses to store
+ * or reuse the rendered page. Harmless where it is ignored.
+ */
+function sp_attendance_no_cache_guard() {
+	?>
+	<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, private" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	<?php
+}
+
+/**
  * Open the portal's own HTML document.
  *
  * No theme markup at all: a bare document with our stylesheet and script,
@@ -322,6 +363,10 @@ function sp_portal_login_error() {
 	switch ( sanitize_key( wp_unslash( $_GET['sp_error'] ) ) ) {
 		case 'login':
 			return 'That email address and password combination was not recognised.';
+		case 'expired':
+			// The sign-in form was submitted with a stale nonce. The form is
+			// re-rendered with a fresh one, so the student can just sign in.
+			return 'Your sign-in form had expired. Please try again.';
 		case 'disabled':
 			// Only reachable after the password verified, so it can be specific.
 			return 'That account has been disabled. Contact your institute to have it reactivated.';

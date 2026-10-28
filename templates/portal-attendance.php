@@ -13,6 +13,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/*
+ * Belt-and-suspenders guard: attendance is per-user data, so it must never be
+ * cached anywhere. The server side is already protected (DONOTCACHEPAGE for
+ * page caches and nocache_headers() in sp_portal_document_start()), but by the
+ * time this template runs the response headers are gone, so we also emit the
+ * equivalent client-side hint for any browser or intermediary that honours
+ * meta-based cache control.
+ */
+sp_attendance_no_cache_guard();
+
 if ( empty( $profile ) ) {
 	?>
 <div class="sp-notice sp-notice-warn">

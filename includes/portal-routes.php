@@ -138,6 +138,11 @@ function sp_maybe_render_portal() {
 		return;
 	}
 
+	// Personalised screens with a session-bound login nonce must never be
+	// stored by a full-page cache, or a stale nonce is served back and sign-in
+	// falsely reports "Your session expired".
+	sp_disable_portal_page_cache();
+
 	$routes = sp_portal_routes();
 	$slug   = sanitize_key( $route );
 
@@ -200,7 +205,11 @@ function sp_handle_portal_login() {
 	$nonce = isset( $_POST['sp_portal_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['sp_portal_nonce'] ) ) : '';
 
 	if ( ! wp_verify_nonce( $nonce, 'sp_portal_login' ) ) {
-		wp_die( esc_html__( 'Your session expired. Please try again.', 'student-portal' ), '', array( 'response' => 403 ) );
+		// A stale nonce (for example one served by a page cache) should not
+		// dead-end the student: send them back to a freshly rendered form with
+		// a new nonce so they can simply sign in again.
+		wp_safe_redirect( add_query_arg( 'sp_error', 'expired', sp_portal_home_url( 'student' ) ) );
+		exit;
 	}
 
 	$email    = isset( $_POST['sp_email'] ) ? sanitize_email( wp_unslash( $_POST['sp_email'] ) ) : '';

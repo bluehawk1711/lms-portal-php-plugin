@@ -43,7 +43,19 @@
 					<span class="sp-side-mark" aria-hidden="true">
 						<?php $sp_logo = get_theme_mod('custom_logo'); ?>
 						<?php if ($sp_logo): ?>
-							<span class="sp-side-mark-img"><?php echo wp_kses_post($sp_logo); ?></span>
+							<span class="sp-side-mark-img">
+								<?php
+								echo wp_get_attachment_image(
+									(int) $sp_logo,
+									'full',
+									false,
+									array(
+										'class' => 'sp-side-logo',
+										'alt'   => get_bloginfo('name'),
+									)
+								);
+								?>
+							</span>
 						<?php else: ?>
 							<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 12 4l9 4.5-9 4.5z" /><path d="M7 11v4.5c0 1.4 2.2 2.5 5 2.5s5-1.1 5-2.5V11" /><path d="M21 8.5V14" /></svg>
 						<?php endif; ?>

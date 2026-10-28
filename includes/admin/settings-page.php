@@ -177,7 +177,7 @@ function sp_admin_page_sp_settings() {
 				<th scope="row"><label for="sp_institute_phone">Institute contact</label></th>
 				<td>
 					<input type="text" id="sp_institute_phone" name="sp_settings[institute_phone]"
-						value="<?php echo esc_attr( $settings['institute_phone'] ); ?>" class="regular-text" placeholder="Phone number" maxlength="10" />
+						value="<?php echo esc_attr( $settings['institute_phone'] ); ?>" class="regular-text" placeholder="Phone number" maxlength="12" />
 					<br />
 					<input type="email" id="sp_institute_email" name="sp_settings[institute_email]"
 						value="<?php echo esc_attr( $settings['institute_email'] ); ?>" class="regular-text" placeholder="Email address" />
