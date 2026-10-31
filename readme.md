@@ -132,6 +132,8 @@ date of birth are self-service (see *Student self-service profile*).
 | `/?sp_material={id}` | Gated file stream (streams, never redirects; `inline=1` serves renderable types inline) |
 | `?sp_sample=students` | Sample student CSV (admin only) |
 | `?sp_sample=teachers` | Sample teacher CSV (admin only) |
+| `?sp_sample=curriculum` | Sample course-outline CSV — headings + topics (admin only) |
+| `?sp_sample=questions` | Sample question-bank CSV (teacher portal) |
 
 ### Rewrite rules
 

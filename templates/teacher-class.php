@@ -86,7 +86,10 @@
     }
 ?>
 <?php
-    $sp_student_count = sp_count_class_students($sp_class_id);
+    // Count exactly what the Students list shows (active + completed), so the
+    // tab badge and header can never disagree with the rows below.
+    $sp_count_rows    = sp_get_enrollments_for_class($sp_class_id, ['active', 'completed'], 0);
+    $sp_student_count = is_array($sp_count_rows) ? count($sp_count_rows) : 0;
     $sp_head_timings  = sp_get_class_timings($sp_class_id);
     $sp_head_timing   = $sp_head_timings ? $sp_head_timings[0] : null;
 
@@ -283,12 +286,26 @@
 
     <?php if ('roster' === $sp_tab): ?>
     <?php
-        $sp_students = sp_get_enrollments_for_class($sp_class_id, ['active', 'completed'], 0);
+        $sp_students = is_array($sp_count_rows) ? $sp_count_rows : [];
         if (! $sp_students):
     ?>
     <div class="sp-empty">
-        No students are enrolled in this class yet. Ask an administrator to enroll them from
-        Student Portal &rarr; Enrollments.
+        No students are in this class yet. Use <strong>Enroll Student</strong> to search for
+        students and add them.
+    </div>
+    <div class="sp-class-roster-actions sp-class-roster-actions-empty">
+        <?php if (current_user_can('manage_options')): ?>
+        <a class="sp-btn sp-btn-primary"
+            href="<?php echo esc_url(admin_url('admin.php?page=sp-enrollments&class=' . (int) $sp_class_id)); ?>">
+            <?php echo sp_class_icon('plus'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG helper. ?>
+            <span>Enroll Student</span>
+        </a>
+        <?php else: ?>
+        <button type="button" class="sp-btn sp-btn-primary" data-sp-enroll-info>
+            <?php echo sp_class_icon('plus'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG helper. ?>
+            <span>Enroll Student</span>
+        </button>
+        <?php endif; ?>
     </div>
     <?php else: ?>
     <div class="sp-card sp-class-roster-card" data-sp-roster data-sp-per-page="10">
@@ -419,6 +436,21 @@
                                 aria-label="<?php echo esc_attr('View ' . $sp_student->full_name); ?>">
                                 <?php echo sp_class_icon('eye'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG helper. ?>
                             </button>
+                            <form method="post" class="sp-roster-remove-form"
+                                onsubmit="return confirm('Remove <?php echo esc_js($sp_student->full_name); ?> from this class? Their profile and attendance history are kept.');">
+                                <?php wp_nonce_field('sp_teacher_action_remove_student', 'sp_teacher_nonce'); ?>
+                                <input type="hidden" name="sp_action" value="remove_student" />
+                                <input type="hidden" name="sp_redirect"
+                                    value="<?php echo esc_url(add_query_arg('tab', 'roster', $sp_base_url)); ?>" />
+                                <input type="hidden" name="class_id" value="<?php echo esc_attr($sp_class_id); ?>" />
+                                <input type="hidden" name="enrollment_id"
+                                    value="<?php echo esc_attr((int) $sp_student->enrollment_id); ?>" />
+                                <button type="submit" class="sp-icon-btn sp-icon-btn-danger"
+                                    title="Remove from class"
+                                    aria-label="<?php echo esc_attr('Remove ' . $sp_student->full_name . ' from this class'); ?>">
+                                    <?php echo sp_class_icon('cross'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG helper. ?>
+                                </button>
+                            </form>
                             <!-- TODO: action menu opens inside table requires fix -->
                             <!-- <details class="sp-row-menu">
                                 <summary class="sp-icon-btn"
@@ -454,6 +486,7 @@
             <nav class="sp-pager" data-sp-roster-pager aria-label="Roster pages"></nav>
         </div>
     </div>
+    <?php endif; ?>
 
     <dialog class="sp-student-dialog" data-sp-student-dialog aria-label="Student details">
         <div class="sp-student-dialog-head">
@@ -489,14 +522,32 @@
     </dialog>
 
     <dialog class="sp-enroll-dialog" data-sp-enroll-dialog aria-label="Enroll students">
-        <form method="dialog" class="sp-enroll-dialog-inner">
+        <form method="post" class="sp-enroll-dialog-inner" data-sp-enroll-form>
+            <?php wp_nonce_field('sp_teacher_action_add_students', 'sp_teacher_nonce'); ?>
+            <input type="hidden" name="sp_action" value="add_students" />
+            <input type="hidden" name="sp_redirect"
+                value="<?php echo esc_url(add_query_arg('tab', 'roster', $sp_base_url)); ?>" />
+            <input type="hidden" name="class_id" value="<?php echo esc_attr($sp_class_id); ?>" />
             <h2>Enroll students</h2>
-            <p>Students are enrolled by an administrator. Ask your administrator to add students to
-                this class from Student Portal &rarr; Enrollments.</p>
-            <button class="sp-btn sp-btn-primary" value="ok">Got it</button>
+            <p>Search for a student by name or email, tick the ones you want, then add them to this
+                class. Each student can get a custom enrolment ID and admission date — leave them
+                blank to auto-generate. Tick <strong>Email student</strong> to notify them.</p>
+            <label class="sp-enroll-search-label" for="sp-enroll-search">Search students</label>
+            <input class="sp-class-search-input sp-enroll-search-input" type="search" id="sp-enroll-search"
+                placeholder="Search by name or email…" autocomplete="off" data-sp-enroll-search
+                aria-describedby="sp-enroll-search-note" />
+            <p class="sp-enroll-search-note" id="sp-enroll-search-note" data-sp-enroll-note aria-live="polite">
+                Type a name or email to find students.
+            </p>
+            <ul class="sp-enroll-results" data-sp-enroll-results hidden></ul>
+            <div class="sp-enroll-dialog-foot">
+                <button type="button" class="sp-btn sp-btn-ghost" data-sp-enroll-cancel>Cancel</button>
+                <button type="submit" class="sp-btn sp-btn-primary" data-sp-enroll-submit>Add
+                    students</button>
+            </div>
         </form>
     </dialog>
-    <?php endif; ?>
+
 
     <?php elseif ('attendance' === $sp_tab):
             $sp_date       = isset($_GET['date']) ? sp_sanitize_date(wp_unslash($_GET['date'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only date selection.

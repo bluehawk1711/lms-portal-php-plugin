@@ -2,9 +2,9 @@
 /**
  * Classes, teacher assignment and enrollment management.
  *
- * Enrollment writes are admin-only: teachers read their roster, they never
- * change it. Every write is capability-checked at the point of use as well as
- * in the route.
+ * Enrolment writes come from two places: the admin Enrollments screen, and a
+ * teacher adding or removing students in a class they are assigned to. Every
+ * write is capability-checked at the point of use as well as in the route.
  *
  * @package StudentPortal
  */
@@ -160,6 +160,81 @@ function sp_assign_teacher( $teacher_id, $class_id, $is_primary = false, $notify
 	}
 
 	return true;
+}
+
+/**
+ * Make a teacher the class's single lead, assigning them if needed.
+ *
+ * Used by the class edit form's teacher dropdown: the chosen teacher is
+ * assigned when new to the class, and any other teacher keeps their
+ * assignment but loses the lead flag — a class always has at most one lead.
+ *
+ * @param int $class_id   Class id.
+ * @param int $teacher_id Teacher row id.
+ * @return true|WP_Error
+ */
+function sp_assign_class_lead_teacher( $class_id, $teacher_id ) {
+	global $wpdb;
+
+	$class_id   = (int) $class_id;
+	$teacher_id = (int) $teacher_id;
+
+	$class   = sp_get_class( $class_id );
+	$teacher = $teacher_id ? $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . sp_table( 'teachers' ) . ' WHERE id = %d', $teacher_id ) ) : null;
+
+	if ( ! $class ) {
+		return new WP_Error( 'sp_no_class', 'That class no longer exists.' );
+	}
+
+	if ( ! $teacher ) {
+		return new WP_Error( 'sp_no_teacher', 'That teacher no longer exists.' );
+	}
+
+	// One lead per class: demote everyone first, then promote the pick.
+	$wpdb->update(
+		sp_table( 'teacher_classes' ),
+		array( 'is_primary' => 0 ),
+		array( 'class_id' => $class_id ),
+		array( '%d' ),
+		array( '%d' )
+	);
+
+	$result = sp_assign_teacher( $teacher_id, $class_id, true, false );
+
+	if ( is_wp_error( $result ) ) {
+		return $result;
+	}
+
+	sp_log_activity(
+		'teacher.lead_assigned',
+		'class',
+		$class_id,
+		'Teacher ' . $teacher_id . ' set as lead of class ' . $class_id
+	);
+
+	return true;
+}
+
+/**
+ * The lead (or first assigned) teacher of a class, for prefilling forms.
+ *
+ * @param int $class_id Class id.
+ * @return object|null Teachers row with an is_primary flag, or null.
+ */
+function sp_get_class_lead_teacher( $class_id ) {
+	$teachers = sp_get_class_teachers( $class_id );
+
+	if ( ! is_array( $teachers ) || ! $teachers ) {
+		return null;
+	}
+
+	foreach ( $teachers as $teacher ) {
+		if ( ! empty( $teacher->is_primary ) ) {
+			return $teacher;
+		}
+	}
+
+	return $teachers[0];
 }
 
 /**

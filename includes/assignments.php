@@ -730,6 +730,27 @@ function sp_delete_question( $question_id ) {
 }
 
 /**
+ * A sample CSV for the class question-bank importer.
+ *
+ * Shows every column and every question type the importer accepts:
+ * `mcq` (answer is the option letter), `truefalse` (TRUE/FALSE) and
+ * `fill` (answer is the expected text; option cells stay blank).
+ *
+ * @return string
+ */
+function sp_sample_question_csv() {
+	$rows = array(
+		array( 'type', 'prompt', 'option_a', 'option_b', 'option_c', 'option_d', 'answer' ),
+		array( 'mcq', 'Which data structure follows FIFO order?', 'Stack', 'Queue', 'Tree', 'Graph', 'B' ),
+		array( 'mcq', 'Which number system uses only 0 and 1?', 'Decimal', 'Octal', 'Binary', 'Hexadecimal', 'C' ),
+		array( 'truefalse', 'RAM is volatile memory — its contents are lost when power is removed.', 'True', 'False', '', '', 'TRUE' ),
+		array( 'fill', 'The language used to structure content on a web page is ____.', '', '', '', '', 'HTML' ),
+	);
+
+	return sp_render_csv( $rows );
+}
+
+/**
  * Import questions from CSV into a class's bank.
  *
  * Columns: type, prompt, option_a..option_d, answer — a header row is

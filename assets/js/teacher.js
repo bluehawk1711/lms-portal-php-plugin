@@ -590,18 +590,193 @@
 			} );
 		}
 
-		// "Enroll Student" explainer dialog for teachers.
-		var enrollBtn  = document.querySelector( '[data-sp-enroll-info]' );
+		// "Enroll Student" dialog for teachers: search students, tick, add.
+		var enrollBtn    = document.querySelector( '[data-sp-enroll-info]' );
 		var enrollDialog = document.querySelector( '[data-sp-enroll-dialog]' );
 
-		if ( enrollBtn && enrollDialog ) {
-			enrollBtn.addEventListener( 'click', function () {
+		if ( enrollDialog ) {
+			var openEnrollDialog = function () {
 				if ( typeof enrollDialog.showModal === 'function' ) {
 					enrollDialog.showModal();
 				} else {
 					enrollDialog.setAttribute( 'open', 'open' );
 				}
-			} );
+
+				var enrollSearch = enrollDialog.querySelector( '[data-sp-enroll-search]' );
+				if ( enrollSearch ) {
+					enrollSearch.focus();
+				}
+			};
+
+			if ( enrollBtn ) {
+				enrollBtn.addEventListener( 'click', openEnrollDialog );
+			}
+
+			var enrollForm    = enrollDialog.querySelector( '[data-sp-enroll-form]' );
+			var enrollSearch  = enrollDialog.querySelector( '[data-sp-enroll-search]' );
+			var enrollResults = enrollDialog.querySelector( '[data-sp-enroll-results]' );
+			var enrollNote    = enrollDialog.querySelector( '[data-sp-enroll-note]' );
+			var enrollCancel  = enrollDialog.querySelector( '[data-sp-enroll-cancel]' );
+			var enrollTimer   = null;
+			var enrollSeq     = 0;
+
+			var closeEnrollDialog = function () {
+				if ( typeof enrollDialog.close === 'function' ) {
+					enrollDialog.close();
+				} else {
+					enrollDialog.removeAttribute( 'open' );
+				}
+			};
+
+			if ( enrollCancel ) {
+				enrollCancel.addEventListener( 'click', closeEnrollDialog );
+			}
+
+			var renderEnrollResults = function ( rows ) {
+				if ( ! enrollResults || ! enrollNote ) {
+					return;
+				}
+
+				enrollResults.innerHTML = '';
+
+				if ( ! rows.length ) {
+					enrollResults.setAttribute( 'hidden', 'hidden' );
+					enrollNote.textContent = 'No matching students found. Check the spelling, or add the student from the admin area first.';
+					return;
+				}
+
+				enrollResults.removeAttribute( 'hidden' );
+				enrollNote.textContent = 'Tick the students you want, then choose “Add students”.';
+
+				rows.forEach( function ( row ) {
+					var item = document.createElement( 'li' );
+					item.className = 'sp-enroll-result';
+
+					var label = document.createElement( 'label' );
+
+					var box = document.createElement( 'input' );
+					box.type  = 'checkbox';
+					box.name  = 'profile_id[]';
+					box.value = String( row.id );
+
+					var copy = document.createElement( 'span' );
+					copy.className = 'sp-enroll-result-copy';
+
+					var name = document.createElement( 'span' );
+					name.className = 'sp-enroll-result-name';
+					name.textContent = row.full_name || '';
+
+					var meta = document.createElement( 'span' );
+					meta.className = 'sp-enroll-result-meta';
+					meta.textContent = row.email || '';
+
+					copy.appendChild( name );
+					copy.appendChild( meta );
+					label.appendChild( box );
+					label.appendChild( copy );
+					item.appendChild( label );
+
+					// Optional per-student enrolment details, mirroring the
+					// admin Enrollments screen: ID, admission date, notify.
+					var fields = document.createElement( 'span' );
+					fields.className = 'sp-enroll-result-fields';
+
+					var idInput = document.createElement( 'input' );
+					idInput.type        = 'text';
+					idInput.className   = 'sp-enroll-field';
+					idInput.name        = 'enroll_id[' + row.id + ']';
+					idInput.placeholder = 'Enrolment ID (auto)';
+					idInput.autocomplete = 'off';
+					idInput.setAttribute( 'aria-label', 'Enrolment ID for ' + ( row.full_name || '' ) );
+
+					var dateInput = document.createElement( 'input' );
+					dateInput.type      = 'date';
+					dateInput.className = 'sp-enroll-field';
+					dateInput.name      = 'admission_date[' + row.id + ']';
+					dateInput.setAttribute( 'aria-label', 'Admission date for ' + ( row.full_name || '' ) );
+
+					var notifyLabel = document.createElement( 'label' );
+					notifyLabel.className = 'sp-enroll-notify';
+
+					var notifyBox = document.createElement( 'input' );
+					notifyBox.type  = 'checkbox';
+					notifyBox.name  = 'notify[' + row.id + ']';
+					notifyBox.value = '1';
+
+					var notifyText = document.createElement( 'span' );
+					notifyText.textContent = 'Email student';
+
+					notifyLabel.appendChild( notifyBox );
+					notifyLabel.appendChild( notifyText );
+					fields.appendChild( idInput );
+					fields.appendChild( dateInput );
+					fields.appendChild( notifyLabel );
+					item.appendChild( fields );
+
+					enrollResults.appendChild( item );
+				} );
+			};
+
+			if ( enrollSearch ) {
+				enrollSearch.addEventListener( 'input', function () {
+					var term = enrollSearch.value.trim();
+					window.clearTimeout( enrollTimer );
+
+					if ( '' === term ) {
+						if ( enrollResults ) {
+							enrollResults.innerHTML = '';
+							enrollResults.setAttribute( 'hidden', 'hidden' );
+						}
+						if ( enrollNote ) {
+							enrollNote.textContent = 'Type a name or email to find students.';
+						}
+						return;
+					}
+
+					enrollTimer = window.setTimeout( function () {
+						var seq   = ++enrollSeq;
+						var url   = window.location.pathname + window.location.search +
+							( window.location.search ? '&' : '?' ) +
+							'sp_enroll_search=' + encodeURIComponent( term );
+
+						fetch( url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } } )
+							.then( function ( response ) {
+								return response.json();
+							} )
+							.then( function ( payload ) {
+								if ( seq !== enrollSeq ) {
+									return; // A newer search already answered.
+								}
+
+								if ( payload && payload.success ) {
+									renderEnrollResults( payload.data || [] );
+								} else if ( enrollNote ) {
+									enrollNote.textContent = ( payload && payload.data && payload.data.message )
+										? payload.data.message
+										: 'Search failed. Try again.';
+								}
+							} )
+							.catch( function () {
+								if ( seq === enrollSeq && enrollNote ) {
+									enrollNote.textContent = 'Search failed. Check your connection and try again.';
+								}
+							} );
+					}, 300 );
+				} );
+			}
+
+			if ( enrollForm ) {
+				enrollForm.addEventListener( 'submit', function ( event ) {
+					var picked = enrollForm.querySelectorAll( 'input[name="profile_id[]"]:checked' );
+
+					if ( ! picked.length ) {
+						event.preventDefault();
+						if ( enrollNote ) {
+							enrollNote.textContent = 'Tick at least one student to add.';
+						}
+					}
+				} );
+			}
 		}
 
 		render();

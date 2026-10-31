@@ -1045,6 +1045,29 @@ function sp_admin_action_save_class() {
 		sp_admin_redirect( 'sp-classes', $class_id->get_error_message(), 'error', $back );
 	}
 
+	/*
+	 * The form's teacher dropdown assigns the chosen teacher as the class's
+	 * single lead. Zero means "no teacher picked" and never unassigns anyone —
+	 * removing teachers stays an explicit act on the staffing panel.
+	 */
+	$teacher_id = isset( $_POST['teacher_id'] ) ? (int) $_POST['teacher_id'] : 0;
+	$lead_saved = false;
+
+	if ( $teacher_id > 0 ) {
+		$lead = sp_assign_class_lead_teacher( (int) $class_id, $teacher_id );
+
+		if ( is_wp_error( $lead ) ) {
+			sp_admin_redirect(
+				'sp-classes',
+				sprintf( 'Class saved, but the teacher was not assigned: %s', $lead->get_error_message() ),
+				'error',
+				array( 'edit' => (int) $class_id )
+			);
+		}
+
+		$lead_saved = true;
+	}
+
 	$saved = sp_save_class_timings( $class_id, $timings );
 
 	if ( is_wp_error( $saved ) ) {
@@ -1059,9 +1082,10 @@ function sp_admin_action_save_class() {
 	sp_admin_redirect(
 		'sp-classes',
 		sprintf(
-			'Class #%d saved%s.',
+			'Class #%d saved%s%s.',
 			$class_id,
-			$saved ? sprintf( ' with %d weekly timing%s', $saved, 1 === $saved ? '' : 's' ) : ''
+			$saved ? sprintf( ' with %d weekly timing%s', $saved, 1 === $saved ? '' : 's' ) : '',
+			$lead_saved ? ' and the teacher assigned' : ''
 		)
 	);
 }
@@ -1339,6 +1363,7 @@ function sp_admin_action_import_curriculum() {
 	$detail_col = 1;
 	$type_col   = null;
 	$parent_col = null;
+	$header_seen = false;
 
 	// Heading title -> id, so a topic's `parent` cell can resolve within this run.
 	$heading_map = array();
@@ -1353,11 +1378,30 @@ function sp_admin_action_import_curriculum() {
 			break;
 		}
 
-		if ( 1 === count( $line ) && '' === trim( (string) $line[0] ) ) {
+		// Excel writes a UTF-8 BOM; unstripped it glues itself to the first
+		// cell and stops the header row being recognised, so the header is
+		// imported as if it were a topic.
+		if ( 1 === $row_no && isset( $line[0] ) ) {
+			$line[0] = preg_replace( '/^\xEF\xBB\xBF/', '', (string) $line[0] );
+		}
+
+		// Skip rows where every cell is empty — a leading blank line must not
+		// consume the header check either.
+		$sp_all_empty = true;
+
+		foreach ( $line as $sp_cell ) {
+			if ( '' !== trim( (string) $sp_cell ) ) {
+				$sp_all_empty = false;
+				break;
+			}
+		}
+
+		if ( $sp_all_empty ) {
 			continue;
 		}
 
-		if ( 1 === $row_no ) {
+		if ( ! $header_seen ) {
+			$header_seen = true;
 			$first = strtolower( trim( (string) $line[0] ) );
 
 			if ( in_array( $first, array( 'title', 'topic', 'name', 'detail', 'description', 'notes', 'type', 'parent', 'heading' ), true ) ) {
@@ -1378,7 +1422,10 @@ function sp_admin_action_import_curriculum() {
 					}
 				}
 
-				if ( null === $detail_col && count( $line ) > 1 ) {
+				// A two-column file whose second header we do not recognise
+				// still means "detail" — but never let the type or parent
+				// column be mistaken for the detail text.
+				if ( null === $detail_col && 2 === count( $line ) && 1 !== $type_col && 1 !== $parent_col ) {
 					$detail_col = 1;
 				}
 

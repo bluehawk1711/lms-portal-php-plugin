@@ -2726,3 +2726,152 @@
     justify-content: center;
   }
 }
+
+/* ──────────────────────────────────────────────────────────────────────
+ * Enroll students dialog — search, pick, add
+ * ────────────────────────────────────────────────────────────────────── */
+.sp-teacher-portal .sp-enroll-dialog-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+}
+
+.sp-teacher-portal .sp-enroll-search-label {
+  color: var(--sp-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.sp-teacher-portal .sp-enroll-search-input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sp-teacher-portal .sp-enroll-search-note {
+  margin: 0;
+  color: var(--sp-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.sp-teacher-portal .sp-enroll-results {
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  max-height: 260px;
+  overflow-y: auto;
+  border: 1px solid var(--sp-border);
+  border-radius: var(--sp-ui-radius-md);
+  background: var(--sp-surface);
+}
+
+.sp-teacher-portal .sp-enroll-results[hidden] {
+  display: none;
+}
+
+.sp-teacher-portal .sp-enroll-result + .sp-enroll-result {
+  border-top: 1px solid color-mix(in srgb, var(--sp-border) 70%, transparent);
+}
+
+.sp-teacher-portal .sp-enroll-result label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.sp-teacher-portal .sp-enroll-result label:hover {
+  background: color-mix(in srgb, var(--sp-brand-tint, var(--sp-surface)) 60%, var(--sp-surface));
+}
+
+.sp-teacher-portal .sp-enroll-result input[type='checkbox'] {
+  margin-top: 3px;
+  accent-color: var(--sp-brand, #f59e0b);
+}
+
+.sp-teacher-portal .sp-enroll-result-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sp-teacher-portal .sp-enroll-result-name {
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.sp-teacher-portal .sp-enroll-result-meta {
+  color: var(--sp-muted);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.sp-teacher-portal .sp-enroll-result-fields {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 8px 8px 32px;
+}
+
+.sp-teacher-portal .sp-enroll-field {
+  flex: 1 1 110px;
+  min-width: 0;
+  padding: 5px 8px;
+  border: 1px solid var(--sp-border);
+  border-radius: 8px;
+  background: var(--sp-surface);
+  color: var(--sp-ink);
+  font-size: 12.5px;
+}
+
+.sp-teacher-portal .sp-enroll-field:focus {
+  outline: none;
+  border-color: var(--sp-brand-tint, var(--sp-border));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--sp-brand-tint, transparent) 45%, transparent);
+}
+
+.sp-teacher-portal .sp-enroll-notify {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--sp-muted);
+  font-size: 12.5px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.sp-teacher-portal .sp-enroll-dialog-foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.sp-teacher-portal .sp-class-roster-actions-empty {
+  justify-content: flex-start;
+  margin: 14px 0 4px;
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+ * Remove a student from the roster
+ * ────────────────────────────────────────────────────────────────────── */
+.sp-teacher-portal .sp-roster-remove-form {
+  display: inline-block;
+}
+
+.sp-teacher-portal .sp-icon-btn-danger {
+  color: var(--sp-danger-ink);
+}
+
+.sp-teacher-portal .sp-icon-btn-danger:hover,
+.sp-teacher-portal .sp-icon-btn-danger:focus-visible {
+  background: var(--sp-danger-soft);
+  border-color: var(--sp-danger-line);
+  color: var(--sp-danger);
+}

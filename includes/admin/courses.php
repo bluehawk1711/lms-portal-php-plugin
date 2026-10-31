@@ -411,8 +411,8 @@ function sp_admin_page_sp_courses() {
                     <div class="sp-import-head">
                         <div class="sp-import-icon"><span class="dashicons dashicons-media-spreadsheet" aria-hidden="true"></span></div>
                         <div>
-                            <h3>Import topics from CSV</h3>
-                            <p class="sp-admin-muted">Bulk-load an outline in one go — rows append after the topics below, in file order.</p>
+                            <h3>Import outline from CSV</h3>
+                            <p class="sp-admin-muted">Bulk-load headings and topics in one go — rows append after the outline below, in file order.</p>
                         </div>
                     </div>
 
@@ -422,14 +422,23 @@ function sp_admin_page_sp_courses() {
 
                         <div class="sp-import-drop">
                             <input type="file" name="import_file" id="sp_import_file" accept=".csv,text/csv" required />
-                            <?php submit_button( 'Import topics', 'secondary', 'submit', false ); ?>
+                            <?php submit_button( 'Import outline', 'secondary', 'submit', false ); ?>
                         </div>
 
                         <p class="sp-hint">
-                            One topic per row: <code>title</code> (required) and <code>detail</code> (optional).
-                            An optional header row labelled <code>title</code>/<code>topic</code>/<code>name</code>
-                            is skipped, and rows are appended after the existing outline in file order.
+                            One item per row: <code>title</code> (required), <code>detail</code> (optional),
+                            <code>type</code> (<code>heading</code> or <code>topic</code>) and
+                            <code>parent</code> (the heading title a topic sits under).
+                            A header row is recognised and skipped; rows are appended after the existing
+                            outline in file order. A <code>parent</code> that does not exist yet creates
+                            that heading for you, so a flat syllabus still nests.
                         </p>
+
+                        <a class="button button-small"
+                            href="<?php echo esc_url( add_query_arg( 'sp_sample', 'curriculum', admin_url( 'admin.php' ) ) ); ?>">
+                            <span class="dashicons dashicons-download" aria-hidden="true"></span>
+                            Download sample CSV
+                        </a>
                     </form>
                 </div>
 

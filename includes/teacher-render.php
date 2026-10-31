@@ -196,6 +196,12 @@ function sp_render_teacher_portal( $slug, $teacher ) {
 
 	$route = $routes[ $slug ];
 
+	// The enrolment dialog's live search answers with JSON before any output.
+	sp_maybe_serve_enroll_search();
+
+	// A demo CSV for the question-bank importer downloads before any output.
+	sp_maybe_serve_sample_csv();
+
 	// Form submissions are handled before any output so each action can act
 	// and then redirect, which keeps a browser refresh from re-posting.
 	sp_teacher_handle_post();
@@ -211,6 +217,99 @@ function sp_render_teacher_portal( $slug, $teacher ) {
 	}
 
 	sp_portal_document_end();
+}
+
+/**
+ * Answer the "Add students" dialog's live search with JSON, when asked.
+ *
+ * Only responds to requests that carry the X-Requested-With header and the
+ * `sp_enroll_search` query arg, so an ordinary page load never produces JSON.
+ * Candidates exclude students already active or completed in the class;
+ * dropped students stay searchable so a teacher can re-add them.
+ */
+function sp_maybe_serve_enroll_search() {
+	if ( empty( $_GET['sp_enroll_search'] ) || empty( $_SERVER['HTTP_X_REQUESTED_WITH'] ) ) {
+		return;
+	}
+
+	if ( 'xmlhttprequest' !== strtolower( sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_REQUESTED_WITH'] ) ) ) ) {
+		return;
+	}
+
+	// Rewrite matches populate the query vars, not $_GET, so read it from there.
+	$class_id = (int) get_query_var( 'sp_teacher_id' );
+	$teacher  = $class_id ? sp_require_assigned_teacher( $class_id ) : null;
+
+	if ( is_wp_error( $teacher ) || ! $teacher ) {
+		wp_send_json_error( array( 'message' => 'You cannot add students to that class.' ), 403 );
+	}
+
+	$search = sanitize_text_field( wp_unslash( $_GET['sp_enroll_search'] ) );
+
+	if ( '' === $search ) {
+		wp_send_json_success( array() );
+	}
+
+	global $wpdb;
+
+	$profiles = sp_table( 'student_profiles' );
+	$enroll   = sp_table( 'enrollments' );
+	$like     = '%' . $wpdb->esc_like( $search ) . '%';
+
+	$rows = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT p.id, p.full_name, p.email
+			 FROM {$profiles} p
+			 WHERE p.status = 'active'
+			   AND ( p.full_name LIKE %s OR p.email LIKE %s )
+			   AND NOT EXISTS (
+				 SELECT 1 FROM {$enroll} e
+				 WHERE e.profile_id = p.id AND e.class_id = %d
+				   AND e.status IN ( 'active', 'completed' )
+			   )
+			 ORDER BY p.full_name ASC
+			 LIMIT 8",
+			$like,
+			$like,
+			$class_id
+		) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table names from sp_table().
+	);
+
+	wp_send_json_success( $rows );
+}
+
+/**
+ * Send a demo CSV for the question-bank importer when asked.
+ *
+ * Only responds to `?sp_sample=questions` on a teacher portal request, so an
+ * ordinary page load is never turned into a download.
+ */
+function sp_maybe_serve_sample_csv() {
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only download.
+	if ( empty( $_GET['sp_sample'] ) ) {
+		return;
+	}
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only download.
+	$type = sanitize_key( wp_unslash( $_GET['sp_sample'] ) );
+
+	if ( 'questions' !== $type ) {
+		return;
+	}
+
+	if ( ! is_user_logged_in() || ( ! sp_is_teacher() && ! current_user_can( 'manage_options' ) ) ) {
+		wp_die( esc_html__( 'You do not have permission to do that.', 'student-portal' ), '', array( 'response' => 403 ) );
+	}
+
+	$csv = sp_sample_question_csv();
+
+	nocache_headers();
+	header( 'Content-Type: text/csv; charset=utf-8' );
+	header( 'Content-Disposition: attachment; filename="questions-sample.csv"' );
+	header( 'Content-Length: ' . strlen( $csv ) );
+
+	echo $csv; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSV download.
+	exit;
 }
 
 /**
@@ -248,6 +347,12 @@ function sp_teacher_handle_post() {
 			break;
 		case 'update_class':
 			sp_teacher_action_update_class( $redirect );
+			break;
+		case 'add_students':
+			sp_teacher_action_add_students( $redirect );
+			break;
+		case 'remove_student':
+			sp_teacher_action_remove_student( $redirect );
 			break;
 	case 'save_session':
 		sp_teacher_action_save_session( $redirect );
@@ -605,6 +710,137 @@ function sp_teacher_action_update_class( $redirect ) {
 	}
 
 	sp_teacher_redirect( $redirect, 'class_updated' );
+}
+
+/**
+ * Enrol one or more students into the teacher's own class.
+ *
+ * Teachers may add students to classes they are assigned to — the same
+ * capability the admin Enrollments screen uses, minus the admin screens.
+ * Enrolment IDs are auto-generated unless one was typed, students
+ * already in the class are reported back instead of silently ignored, and a
+ * per-student notify tick mirrors the admin screen's email option.
+ *
+ * @param string $redirect Destination after the action.
+ */
+function sp_teacher_action_add_students( $redirect ) {
+	$class_id = isset( $_POST['class_id'] ) ? (int) $_POST['class_id'] : 0;
+
+	$teacher = sp_require_assigned_teacher( $class_id );
+
+	if ( is_wp_error( $teacher ) ) {
+		sp_teacher_redirect( $redirect, '', $teacher->get_error_message() );
+	}
+
+	$profile_ids = isset( $_POST['profile_id'] ) && is_array( $_POST['profile_id'] )
+		? array_filter( array_map( 'absint', $_POST['profile_id'] ) )
+		: array();
+
+	$profile_ids = array_values( array_unique( $profile_ids ) );
+
+	if ( ! $profile_ids ) {
+		sp_teacher_redirect( $redirect, '', 'Tick at least one student to add to this class.' );
+	}
+
+	$enroll_ids      = isset( $_POST['enroll_id'] ) && is_array( $_POST['enroll_id'] ) ? wp_unslash( $_POST['enroll_id'] ) : array();
+	$admission_dates = isset( $_POST['admission_date'] ) && is_array( $_POST['admission_date'] ) ? wp_unslash( $_POST['admission_date'] ) : array();
+	// The notify checkboxes arrive as notify[<profile id>] = 1, so the
+	// students to email are the array's keys, not its values.
+	$notify_ids = array();
+
+	if ( isset( $_POST['notify'] ) && is_array( $_POST['notify'] ) ) {
+		foreach ( array_keys( $_POST['notify'] ) as $sp_notify_key ) {
+			$notify_ids[] = (int) $sp_notify_key;
+		}
+	}
+
+	$added   = 0;
+	$skipped = array();
+
+	foreach ( $profile_ids as $profile_id ) {
+		$enroll_id = isset( $enroll_ids[ $profile_id ] ) ? sanitize_text_field( $enroll_ids[ $profile_id ] ) : '';
+		$admission = isset( $admission_dates[ $profile_id ] ) ? sanitize_text_field( $admission_dates[ $profile_id ] ) : '';
+		$notify    = in_array( $profile_id, $notify_ids, true );
+
+		$result = sp_enroll_student( $profile_id, $class_id, $admission, $notify, $enroll_id );
+
+		if ( is_wp_error( $result ) ) {
+			$skipped[] = $result->get_error_message();
+			continue;
+		}
+
+		++$added;
+	}
+
+	if ( ! $added ) {
+		sp_teacher_redirect( $redirect, '', 'No students were added. ' . reset( $skipped ) );
+	}
+
+	$message = sprintf(
+		/* translators: %d: number of students added. */
+		__( '%d student(s) added to this class.', 'student-portal' ),
+		$added
+	);
+
+	if ( $skipped ) {
+		$message .= ' ' . sprintf(
+			/* translators: %d: number of students skipped, %s: first reason. */
+			__( '%d skipped: %s', 'student-portal' ),
+			count( $skipped ),
+			reset( $skipped )
+		);
+	}
+
+	sp_teacher_redirect( $redirect, '', $message );
+}
+
+/**
+ * Remove a student's enrolment from the teacher's own class.
+ *
+ * The enrolment row is deleted (attendance history is keyed on the session,
+ * not the enrolment, so past registers keep their marks). The student's
+ * profile and login are untouched — only the class membership goes.
+ *
+ * @param string $redirect Destination after the action.
+ */
+function sp_teacher_action_remove_student( $redirect ) {
+	global $wpdb;
+
+	$class_id       = isset( $_POST['class_id'] ) ? (int) $_POST['class_id'] : 0;
+	$enrollment_id  = isset( $_POST['enrollment_id'] ) ? (int) $_POST['enrollment_id'] : 0;
+
+	$teacher = sp_require_assigned_teacher( $class_id );
+
+	if ( is_wp_error( $teacher ) ) {
+		sp_teacher_redirect( $redirect, '', $teacher->get_error_message() );
+	}
+
+	$row = $wpdb->get_row(
+		$wpdb->prepare(
+			'SELECT * FROM ' . sp_table( 'enrollments' ) . ' WHERE id = %d AND class_id = %d',
+			$enrollment_id,
+			$class_id
+		) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from sp_table().
+	);
+
+	if ( ! $row ) {
+		sp_teacher_redirect( $redirect, '', 'That enrolment no longer exists.' );
+	}
+
+	$wpdb->delete(
+		sp_table( 'enrollments' ),
+		array( 'id' => $enrollment_id ),
+		array( '%d' )
+	);
+
+	sp_log_activity(
+		'enrollment.removed',
+		'enrollment',
+		$enrollment_id,
+		sprintf( 'Profile %d removed from class %d by a teacher', (int) $row->profile_id, $class_id )
+	);
+
+	sp_teacher_redirect( $redirect, '', 'Student removed from this class.' );
 }
 
 /**
@@ -1130,6 +1366,7 @@ function sp_teacher_render_certificate_form( $enrollment_id, $class_id ) {
 				$sp_key    = isset( $sp_field['key'] ) ? (string) $sp_field['key'] : '';
 				$sp_type   = isset( $sp_field['type'] ) ? (string) $sp_field['type'] : 'text';
 				$sp_source = isset( $sp_field['source'] ) ? (string) $sp_field['source'] : '';
+				$sp_options = sp_certificate_field_options( $sp_field );
 
 				$sp_value = '';
 
@@ -1150,7 +1387,21 @@ function sp_teacher_render_certificate_form( $enrollment_id, $class_id ) {
 						<?php endif; ?>
 					</label>
 
-					<?php if ( 'textarea' === $sp_type ) : ?>
+					<?php if ( $sp_options ) : ?>
+						<select id="<?php echo esc_attr( $sp_label_id ); ?>"
+							name="<?php echo esc_attr( $sp_input_name ); ?>">
+							<?php if ( '' === $sp_value ) : ?>
+								<option value=""><?php echo esc_html( ! empty( $sp_field['required'] ) ? 'Select…' : '— none —' ); ?></option>
+							<?php endif; ?>
+							<?php if ( '' !== $sp_value && ! in_array( $sp_value, $sp_options, true ) ) : ?>
+								<option value="<?php echo esc_attr( $sp_value ); ?>" selected><?php echo esc_html( $sp_value ); ?></option>
+							<?php endif; ?>
+							<?php foreach ( $sp_options as $sp_option ) : ?>
+								<option value="<?php echo esc_attr( $sp_option ); ?>"
+									<?php selected( $sp_value, $sp_option ); ?>><?php echo esc_html( $sp_option ); ?></option>
+							<?php endforeach; ?>
+						</select>
+					<?php elseif ( 'textarea' === $sp_type ) : ?>
 						<textarea id="<?php echo esc_attr( $sp_label_id ); ?>"
 							name="<?php echo esc_attr( $sp_input_name ); ?>" rows="3"><?php echo esc_textarea( $sp_value ); ?></textarea>
 					<?php elseif ( 'date' === $sp_type ) : ?>

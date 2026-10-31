@@ -191,7 +191,7 @@ $sp_help_url = (string) apply_filters( 'sp_portal_helpdesk_url', '' );
                 (<?php echo esc_html( (string) $sp_counts['done'] ); ?>)</button>
         </div>
         <?php if ( '' !== $sp_cohort ) : ?>
-        <p class="sp-tasks-cohort">Cohort: <strong><?php echo esc_html( $sp_cohort ); ?></strong></p>
+        <p class="sp-tasks-cohort">Class: <strong><?php echo esc_html( $sp_cohort ); ?></strong></p>
         <?php endif; ?>
     </div>
 

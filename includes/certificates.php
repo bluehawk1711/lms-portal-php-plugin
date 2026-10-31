@@ -69,7 +69,61 @@ function sp_certificate_field_types() {
 		'textarea' => 'Paragraph',
 		'date'     => 'Date',
 		'number'   => 'Number',
+		'select'   => 'Select (list)',
 	);
+}
+
+/**
+ * The grade choices a select field offers.
+ *
+ * Prefers the Certificate Manager's own list — the only grades it renders —
+ * then the configured grade scale, then the built-in fallback list.
+ *
+ * @return string[]
+ */
+function sp_certificate_grade_options() {
+	$sp_options = array();
+
+	if ( function_exists( 'cert_mgr_grade_options' ) ) {
+		foreach ( (array) cert_mgr_grade_options() as $sp_option ) {
+			$sp_option = trim( (string) $sp_option );
+
+			if ( '' !== $sp_option ) {
+				$sp_options[] = $sp_option;
+			}
+		}
+	}
+
+	if ( ! $sp_options ) {
+		foreach ( sp_normalized_grade_scale() as $sp_row ) {
+			$sp_options[] = (string) $sp_row['grade'];
+		}
+	}
+
+	if ( ! $sp_options ) {
+		$sp_options = array( 'A+', 'A', 'B', 'C', 'D' );
+	}
+
+	return array_values( array_unique( $sp_options ) );
+}
+
+/**
+ * The choices for one field when it should render as a select.
+ *
+ * Only the Grade field has a fixed list the portal can offer; every other
+ * field has no defined choices and renders as its configured type instead.
+ *
+ * @param array $field Field definition.
+ * @return string[] Empty when the field is not a select.
+ */
+function sp_certificate_field_options( $field ) {
+	$sp_source = is_array( $field ) && isset( $field['source'] ) ? (string) $field['source'] : '';
+
+	if ( 'grade' === $sp_source ) {
+		return sp_certificate_grade_options();
+	}
+
+	return array();
 }
 
 /**
@@ -77,16 +131,24 @@ function sp_certificate_field_types() {
  *
  * Every entry: key (stable, generated), label, type, source, required.
  *
+ * A field auto-filled from the grade always renders as a select of the
+ * supported grades, so a stored `text`/`number` definition is normalised here
+ * (the settings screen then shows and saves it as a select).
+ *
  * @return array[]
  */
 function sp_certificate_fields() {
 	$stored = get_option( 'sp_certificate_fields', null );
 
-	if ( is_array( $stored ) ) {
-		return $stored;
+	$fields = is_array( $stored ) ? $stored : sp_certificate_default_fields();
+
+	foreach ( $fields as $sp_index => $sp_field ) {
+		if ( is_array( $sp_field ) && isset( $sp_field['source'] ) && 'grade' === $sp_field['source'] ) {
+			$fields[ $sp_index ]['type'] = 'select';
+		}
 	}
 
-	return sp_certificate_default_fields();
+	return $fields;
 }
 
 /**
@@ -103,7 +165,7 @@ function sp_certificate_default_fields() {
 		array( 'label' => 'Enrolment ID', 'type' => 'text', 'source' => 'enroll_id', 'required' => true ),
 		array( 'label' => 'Class', 'type' => 'text', 'source' => 'class_title', 'required' => true ),
 		array( 'label' => 'Course', 'type' => 'text', 'source' => 'course_name', 'required' => false ),
-		array( 'label' => 'Grade', 'type' => 'text', 'source' => 'grade', 'required' => true ),
+		array( 'label' => 'Grade', 'type' => 'select', 'source' => 'grade', 'required' => true ),
 		array( 'label' => 'Percentage', 'type' => 'text', 'source' => 'percentage', 'required' => false ),
 		array( 'label' => 'Attendance', 'type' => 'text', 'source' => 'attendance', 'required' => false ),
 		array( 'label' => 'Theory marks', 'type' => 'text', 'source' => 'theory', 'required' => false ),
@@ -492,6 +554,7 @@ function sp_issue_certificate( $enrollment_id, $submitted = array() ) {
 	$fields  = sp_certificate_fields();
 	$values  = array();
 	$missing = array();
+	$grade_from_form = '';
 
 	foreach ( $fields as $field ) {
 		$key  = isset( $field['key'] ) ? (string) $field['key'] : '';
@@ -503,6 +566,10 @@ function sp_issue_certificate( $enrollment_id, $submitted = array() ) {
 
 		if ( ! empty( $field['required'] ) && '' === $want ) {
 			$missing[] = $field['label'];
+		}
+
+		if ( 'grade' === ( isset( $field['source'] ) ? (string) $field['source'] : '' ) && '' !== $want ) {
+			$grade_from_form = $want;
 		}
 
 		$values[ $key ] = $want;
@@ -519,7 +586,13 @@ function sp_issue_certificate( $enrollment_id, $submitted = array() ) {
 		'enrollment_id' => (int) $enrollment_id,
 		'profile_id'    => (int) $enrollment->profile_id,
 		'class_id'      => (int) $enrollment->class_id,
-		'grade'         => $result && $result->grade ? (string) $result->grade : null,
+		/*
+		 * The grade the form actually issued: a hand-corrected reissue wins over
+		 * the result's grade, which is only the fallback for legacy rows.
+		 */
+		'grade'         => '' !== $grade_from_form
+			? $grade_from_form
+			: ( $result && $result->grade ? (string) $result->grade : null ),
 		'issued_date'   => ! empty( $auto['issued'] ) ? $auto['issued'] : current_time( 'Y-m-d' ),
 		'values'        => wp_json_encode( $values ),
 		'status'        => 'issued',
@@ -654,6 +727,41 @@ function sp_certificate_values( $certificate ) {
 	$decoded = json_decode( (string) $certificate->values, true );
 
 	return is_array( $decoded ) ? $decoded : array();
+}
+
+/**
+ * The grade a certificate actually shows when opened.
+ *
+ * A reissue can correct the grade by hand on the form; those stored values
+ * are what the printed certificate and the Certificate Manager receive, so
+ * they win over the `grade` column (kept as the fallback for rows issued
+ * before stored values carried one).
+ *
+ * @param object $certificate sp_certificates row.
+ * @return string Empty when no grade was recorded.
+ */
+function sp_certificate_display_grade( $certificate ) {
+	if ( ! $certificate ) {
+		return '';
+	}
+
+	$values = sp_certificate_values( $certificate );
+
+	foreach ( sp_certificate_fields() as $field ) {
+		$source = is_array( $field ) && isset( $field['source'] ) ? (string) $field['source'] : '';
+
+		if ( 'grade' !== $source ) {
+			continue;
+		}
+
+		$key = isset( $field['key'] ) ? (string) $field['key'] : '';
+
+		if ( $key && isset( $values[ $key ] ) && '' !== trim( (string) $values[ $key ] ) ) {
+			return trim( (string) $values[ $key ] );
+		}
+	}
+
+	return $certificate->grade ? trim( (string) $certificate->grade ) : '';
 }
 
 /**
@@ -999,6 +1107,7 @@ function sp_admin_render_certificate_form( $enrollment_id, $class_id = 0 ) {
 					$sp_key  = isset( $sp_field['key'] ) ? (string) $sp_field['key'] : '';
 					$sp_type = isset( $sp_field['type'] ) ? (string) $sp_field['type'] : 'text';
 					$sp_source = isset( $sp_field['source'] ) ? (string) $sp_field['source'] : '';
+					$sp_options = sp_certificate_field_options( $sp_field );
 
 					$sp_value = '';
 
@@ -1020,7 +1129,21 @@ function sp_admin_render_certificate_form( $enrollment_id, $class_id = 0 ) {
 							</label>
 						</th>
 						<td>
-							<?php if ( 'textarea' === $sp_type ) : ?>
+							<?php if ( $sp_options ) : ?>
+								<select id="sp_cert_<?php echo esc_attr( $sp_key ); ?>"
+									name="<?php echo esc_attr( $sp_input_name ); ?>">
+									<?php if ( '' === $sp_value ) : ?>
+										<option value=""><?php echo esc_html( ! empty( $sp_field['required'] ) ? 'Select…' : '— none —' ); ?></option>
+									<?php endif; ?>
+									<?php if ( '' !== $sp_value && ! in_array( $sp_value, $sp_options, true ) ) : ?>
+										<option value="<?php echo esc_attr( $sp_value ); ?>" selected><?php echo esc_html( $sp_value ); ?></option>
+									<?php endif; ?>
+									<?php foreach ( $sp_options as $sp_option ) : ?>
+										<option value="<?php echo esc_attr( $sp_option ); ?>"
+											<?php selected( $sp_value, $sp_option ); ?>><?php echo esc_html( $sp_option ); ?></option>
+									<?php endforeach; ?>
+								</select>
+							<?php elseif ( 'textarea' === $sp_type ) : ?>
 								<textarea id="sp_cert_<?php echo esc_attr( $sp_key ); ?>"
 									name="<?php echo esc_attr( $sp_input_name ); ?>"
 									class="large-text" rows="3"><?php echo esc_textarea( $sp_value ); ?></textarea>

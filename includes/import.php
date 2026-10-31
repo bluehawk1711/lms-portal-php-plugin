@@ -509,18 +509,61 @@ function sp_import_curriculum_column_map() {
 }
 
 /**
- * Sample curriculum CSV.
+ * Sample course-outline CSV for the Courses screen importer.
+ *
+ * Mirrors the exact columns `sp_admin_action_import_curriculum()` reads:
+ * `title` (required), `detail` (optional), `type` (`heading` or `topic`)
+ * and `parent` (the heading title a topic sits under). A `parent` that does
+ * not exist yet is created as a heading on the fly, so the last row below
+ * shows both patterns working from one file.
  *
  * @return string
  */
 function sp_sample_curriculum_csv() {
 	$rows = array(
-		array( 'heading', 'group_title', 'title', 'description', 'course_code', 'order' ),
-		array( '1', 'Computer Fundamentals & Digital Systems', '', '', 'WEB-2025-A', '1' ),
-		array( '0', '', 'Computer Hardware & Central Processing Unit', 'Which component is often called the brain of a computer? (ALU, registers, microarchitecture)', 'WEB-2025-A', '1' ),
-		array( '0', '', 'Design Tool Fundamentals & Vector Prompts', 'Prompt design methods, creative workflow initialization, canvas coordinate spaces', 'WEB-2025-A', '2' ),
-		array( '1', 'Web Fundamentals & Visual Structuring', '', '', 'WEB-2025-A', '2' ),
-		array( '0', '', 'Semantic Web Structure & Content Hierarchy', 'Which language is primarily used to structure content on web pages? (HTML5 syntax & elements)', 'WEB-2025-A', '1' ),
+		array( 'title', 'detail', 'type', 'parent' ),
+		array(
+			'Computer Fundamentals & Digital Systems',
+			'Foundational computing, hardware components, number logic & storage primitives',
+			'heading',
+			'',
+		),
+		array(
+			'Computer Hardware & Central Processing Unit',
+			'Which component is often called the brain of a computer? (ALU, registers, microarchitecture)',
+			'topic',
+			'Computer Fundamentals & Digital Systems',
+		),
+		array(
+			'Number Systems, Binary & Logic Fundamentals',
+			'Which number system uses only 0 and 1? Binary conversion and hexadecimal colors',
+			'topic',
+			'Computer Fundamentals & Digital Systems',
+		),
+		array(
+			'Web Fundamentals & Visual Structuring',
+			'Document structure, CSS styling, URL protocols & web clients',
+			'heading',
+			'',
+		),
+		array(
+			'Semantic Web Structure & Content Hierarchy',
+			'Which language is primarily used to structure content on web pages? (HTML5 syntax & elements)',
+			'topic',
+			'Web Fundamentals & Visual Structuring',
+		),
+		array(
+			'CSS Styling & Visual Presentation Engine',
+			'Which technology is mainly used to style web pages? Cascade rules, flexbox, box models',
+			'topic',
+			'Web Fundamentals & Visual Structuring',
+		),
+		array(
+			'Orientation & Course Induction',
+			'A top-level topic with no heading — leave the parent cell blank',
+			'topic',
+			'',
+		),
 	);
 
 	return sp_render_csv( $rows );

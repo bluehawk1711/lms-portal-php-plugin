@@ -60,12 +60,12 @@ if ( ! function_exists( 'sp_teacher_nav_icon' ) ) {
 		<aside class="sp-side" id="sp-teacher-side">
 			<div class="sp-side-brand">
 				<a class="sp-side-brand-link" href="<?php echo esc_url( sp_teacher_url() ); ?>">
-					<span class="sp-side-mark" aria-hidden="true">
-						<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 12 4l9 4.5-9 4.5z" /><path d="M7 11v4.5c0 1.4 2.2 2.5 5 2.5s5-1.1 5-2.5V11" /><path d="M21 8.5V14" /></svg>
-					</span>
-					<span class="sp-side-brand-text">
-						<strong><?php echo esc_html( get_bloginfo( 'name' ) ); ?></strong>
-						<span>Teacher portal</span>
+					<span class="sp-side-brand-stack">
+						<img class="sp-side-logo"
+							src="<?php echo esc_url( SP_URL . 'assets/images/logo.png' ); ?>"
+							alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>"
+							width="2360" height="292" decoding="async" />
+						<span class="sp-side-portal-tag">Teacher portal</span>
 					</span>
 				</a>
 			</div>

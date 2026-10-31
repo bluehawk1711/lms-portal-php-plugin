@@ -23,11 +23,31 @@ if ( empty( $profile ) ) {
 
 $sp_date_fmt = get_option( 'date_format' );
 
-// Assumed helper: returns the teacher's active classes (objects with class_title, class_code,
-// student_count, schedule_label). Adjust the name to match your plugin.
-$sp_classes = function_exists( 'sp_get_classes_for_teacher' )
-	? (array) sp_get_classes_for_teacher( $profile->id, array( 'active' ) )
-	: array();
+// The teacher's assigned classes — the same source as the "My classes" page.
+// (This used to call a non-existent sp_get_classes_for_teacher(), so the
+// section always claimed no class was assigned.)
+$sp_classes = array();
+
+foreach ( (array) sp_get_classes(
+	array(
+		'teacher_id' => $profile->id,
+		'orderby'    => 'start_date',
+		'order'      => 'DESC',
+	)
+) as $sp_one_class ) {
+	// Archived classes have stopped being taught; the rest belong here.
+	if ( 'archived' === (string) $sp_one_class->status ) {
+		continue;
+	}
+
+	$sp_one_timings      = sp_get_class_timings( (int) $sp_one_class->id );
+	$sp_one_class->class_title    = (string) $sp_one_class->title;
+	$sp_one_class->class_code     = $sp_one_class->code ? (string) $sp_one_class->code : '';
+	$sp_one_class->student_count  = (int) sp_count_class_students( (int) $sp_one_class->id );
+	$sp_one_class->schedule_label = $sp_one_timings ? sp_timing_set_label( $sp_one_timings ) : '';
+
+	$sp_classes[] = $sp_one_class;
+}
 
 $sp_active_classes = count( $sp_classes );
 $sp_students       = 0;
@@ -165,7 +185,7 @@ $sp_status_class = 'sp-pill-' . sanitize_html_class( $sp_status ? $sp_status : '
                 </div>
             </dl>
 
-            <p class="sp-t-eyebrow">Current cohorts</p>
+            <p class="sp-t-eyebrow">Current classes</p>
             <?php if ( ! $sp_classes ) : ?>
             <p class="sp-muted">You are not assigned to a class yet.</p>
             <?php else : ?>

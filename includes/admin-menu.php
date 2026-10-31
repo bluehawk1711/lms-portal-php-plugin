@@ -486,7 +486,13 @@ function sp_admin_sample_csv() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only download.
 	$type = sanitize_key( wp_unslash( $_GET['sp_sample'] ) );
 
-	if ( ! in_array( $type, array( 'students', 'teachers' ), true ) ) {
+	$samples = array(
+		'students'   => array( 'sp_sample_student_csv', 'students-sample.csv' ),
+		'teachers'   => array( 'sp_sample_teacher_csv', 'teachers-sample.csv' ),
+		'curriculum' => array( 'sp_sample_curriculum_csv', 'course-outline-sample.csv' ),
+	);
+
+	if ( ! isset( $samples[ $type ] ) ) {
 		return;
 	}
 
@@ -494,8 +500,8 @@ function sp_admin_sample_csv() {
 		wp_die( esc_html__( 'You do not have permission to do that.', 'student-portal' ), '', array( 'response' => 403 ) );
 	}
 
-	$csv    = ( 'teachers' === $type ) ? sp_sample_teacher_csv() : sp_sample_student_csv();
-	$name   = ( 'teachers' === $type ) ? 'teachers-sample.csv' : 'students-sample.csv';
+	$csv  = call_user_func( $samples[ $type ][0] );
+	$name = $samples[ $type ][1];
 
 	nocache_headers();
 	header( 'Content-Type: text/csv; charset=utf-8' );

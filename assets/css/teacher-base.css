@@ -261,6 +261,29 @@ body.sp-standalone h4 {
 	flex: none;
 }
 
+/* Full branded logo lockup: mark + name + tagline baked into one image. */
+.sp-teacher-portal .sp-side-brand-stack {
+	display: flex;
+	flex-direction: column;
+	gap: 0.3rem;
+	min-width: 0;
+	width: 100%;
+}
+
+.sp-teacher-portal .sp-side-logo {
+	display: block;
+	height: auto;
+	width: 100%;
+}
+
+.sp-teacher-portal .sp-side-portal-tag {
+	font-size: 0.68rem;
+	font-weight: 600;
+	color: var(--sp-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+}
+
 .sp-teacher-portal .sp-side-brand-text {
 	display: flex;
 	flex-direction: column;

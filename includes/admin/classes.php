@@ -38,6 +38,19 @@ function sp_admin_page_sp_classes() {
     $focus_data = $focus ? sp_get_class( $focus ) : null;
     $editing_timings = $editing ? sp_get_class_timings( $editing->id ) : array();
 
+    // Which teachers the editing class already has, and who leads it — used
+    // to prefill and label the teacher dropdown on the form.
+    $sp_assigned_now = array();
+
+    if ( $editing ) {
+        foreach ( (array) sp_get_class_teachers( $editing->id ) as $sp_ct_row ) {
+            $sp_assigned_now[ (int) $sp_ct_row->id ] = ! empty( $sp_ct_row->is_primary );
+        }
+    }
+
+    $sp_lead    = $editing ? sp_get_class_lead_teacher( $editing->id ) : null;
+    $sp_lead_id = $sp_lead && isset( $sp_assigned_now[ (int) $sp_lead->id ] ) ? (int) $sp_lead->id : 0;
+
     // All days share one timing pair, so prefill from the first stored row.
     $sp_first_timing = $editing_timings ? reset( $editing_timings ) : null;
 
@@ -196,6 +209,34 @@ function sp_admin_page_sp_classes() {
                         <label for="sp_o_desc">Description <span class="sp-classes-optional">Optional</span></label>
                         <textarea id="sp_o_desc" name="description" rows="3" placeholder="Add a short description, batch details or internal notes…"><?php echo esc_textarea( $editing ? $editing->description : '' ); ?></textarea>
                     </div>
+
+                    <div class="sp-classes-divider"></div>
+                    <div class="sp-classes-form-section-title"><span>04</span><div><strong>Teacher</strong><small>Choose the teacher who leads this class.</small></div></div>
+
+                    <?php if ( $teachers ) : ?>
+                        <div class="sp-classes-field">
+                            <label for="sp_o_teacher">Lead teacher</label>
+                            <select id="sp_o_teacher" name="teacher_id">
+                                <option value="0">No teacher assigned</option>
+                                <?php foreach ( $teachers as $sp_form_teacher ) :
+                                    $sp_ft_id   = (int) $sp_form_teacher->id;
+                                    $sp_ft_role = isset( $sp_assigned_now[ $sp_ft_id ] )
+                                        ? ( $sp_assigned_now[ $sp_ft_id ] ? ' — lead teacher' : ' — assigned' )
+                                        : ( $sp_form_teacher->email ? ' — ' . $sp_form_teacher->email : '' );
+                                ?>
+                                    <option value="<?php echo esc_attr( $sp_ft_id ); ?>" <?php selected( $sp_lead_id, $sp_ft_id ); ?>>
+                                        <?php echo esc_html( $sp_form_teacher->full_name . $sp_ft_role ); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <p class="description">The selected teacher becomes the class's single lead and can manage it from the teacher portal. Other assigned teachers keep their access — pick <em>No teacher assigned</em> to leave staffing unchanged, or use the Assign panel to manage multiple teachers. <a href="<?php echo esc_url( admin_url( 'admin.php?page=sp-teachers' ) ); ?>">Manage teachers</a></p>
+                        </div>
+                    <?php else : ?>
+                        <div class="sp-classes-field">
+                            <label>Lead teacher</label>
+                            <p class="description">No teacher accounts exist yet — <a href="<?php echo esc_url( admin_url( 'admin.php?page=sp-teachers' ) ); ?>">add a teacher</a> first, then assign them here.</p>
+                        </div>
+                    <?php endif; ?>
 
                     <div class="sp-classes-form-footer">
                         <p><span class="sp-required">*</span> Required field</p>

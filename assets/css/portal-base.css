@@ -130,6 +130,29 @@
   width: auto;
 }
 
+/* Full branded logo lockup: mark + name + tagline baked into one image. */
+.sp-side-brand-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+  width: 100%;
+}
+
+.sp-side-logo {
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
+.sp-side-portal-tag {
+  color: var(--sp-muted);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .sp-side-brand-text {
   display: flex;
   flex-direction: column;

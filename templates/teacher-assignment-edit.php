@@ -414,6 +414,16 @@ $sp_dash = '<span class="sp-muted" aria-hidden="true">&mdash;</span><span class=
 			<p class="sp-ae-note">
 				Columns: <code>type, prompt, option_a, option_b, option_c, option_d, answer</code>.
 				A header row is optional. Rows that fail validation are reported and skipped.
+				<code>type</code> is <code>mcq</code> (answer is the option letter, e.g. <code>B</code>),
+				<code>truefalse</code> (<code>TRUE</code>/<code>FALSE</code>) or <code>fill</code>
+				(answer is the expected text — leave the option cells blank).
+			</p>
+
+			<p>
+				<a class="sp-btn sp-btn-ghost sp-btn-sm"
+					href="<?php echo esc_url( add_query_arg( 'sp_sample', 'questions', $sp_base_url ) ); ?>">
+					Download sample CSV
+				</a>
 			</p>
 
 			<form class="sp-form" method="post" enctype="multipart/form-data" action="<?php echo esc_url( $sp_base_url ); ?>">
